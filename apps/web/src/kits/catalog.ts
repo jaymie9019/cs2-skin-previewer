@@ -85,6 +85,10 @@ export type ViewerKit = {
   paintMetalness: number;
   maskMode: MaskMode;
   grainWindow: GrainWindow | null;
+  /** UV-aligned extra roughness (Redline F_ROUGHNESS_TEXTURE). */
+  roughnessPath: string | null;
+  /** UV-aligned extra normal (Fuel Injector F_OVERRIDE_NORMAL). */
+  normalPath: string | null;
   aliases: readonly string[];
 };
 
@@ -145,6 +149,8 @@ type ViewerKitExtras = {
   grainWindow?: GrainWindow | null;
   uvAligned?: boolean;
   patternAsAlbedo?: boolean;
+  roughnessPath?: string | null;
+  normalPath?: string | null;
   aliases: readonly string[];
 };
 
@@ -172,6 +178,8 @@ function viewerKitFromRow(row: OfficialKit, extras: ViewerKitExtras): ViewerKit 
     paintMetalness: extras.paintMetalness,
     maskMode: extras.maskMode,
     grainWindow: extras.grainWindow ?? null,
+    roughnessPath: extras.roughnessPath ?? null,
+    normalPath: extras.normalPath ?? null,
     aliases: extras.aliases,
   };
 }
@@ -300,7 +308,8 @@ export const KIT_BLUE_LAMINATE: ViewerKit = viewerKit(226, {
  * Kit 282 / cu_ak47_cobra / style 7 Custom Paint Job.
  * UV-authored full-color wrap (elegantredv1_1.png). Not nested RGB.
  * Receiver / metal only — furniture stays wood (Redline in-game intent).
- * F_PAINT_STYLE 6, g_bIgnoreWeaponSizeScale 1, g_flPaintMetalness 1.
+ * F_PAINT_STYLE 6, F_ROUGHNESS_TEXTURE 1 (elegantredv1_1_rough.png),
+ * g_bIgnoreWeaponSizeScale 1, g_flPaintMetalness 1.
  */
 export const KIT_REDLINE: ViewerKit = viewerKit(282, {
   slug: "redline",
@@ -319,6 +328,7 @@ export const KIT_REDLINE: ViewerKit = viewerKit(282, {
   paintRoughness: 0.4,
   paintMetalness: 1,
   maskMode: "metal",
+  roughnessPath: "/assets/paints/cu_ak47_cobra/elegantredv1_1_rough.png",
   aliases: ["282", "redline", "cobra", "cu_ak47_cobra", "红线"],
 });
 
@@ -326,7 +336,8 @@ export const KIT_REDLINE: ViewerKit = viewerKit(282, {
  * Kit 456 / am_bamboo_jungle / style 5 Anodized Multicolored.
  * Nested RGB of bamboo_jungle.png + mask G/B overrides (same formula
  * as hydrographic). Anodized candy coat on metal (masks.r), not furniture.
- * F_PAINT_STYLE 4, g_bIgnoreWeaponSizeScale 1, scale 1.4, roughness 0.6.
+ * F_PAINT_STYLE 4, g_bIgnoreWeaponSizeScale 1, scale 1.4, roughness 0.6,
+ * g_flPearlescentScale 0 — chrome undercoat on wear, no pearlescence.
  */
 export const KIT_HYDROPONIC: ViewerKit = viewerKit(456, {
   slug: "hydroponic",
@@ -349,8 +360,9 @@ export const KIT_HYDROPONIC: ViewerKit = viewerKit(456, {
 /**
  * Kit 524 / gs_ak47_supercharged / style 9 Gunsmith.
  * Custom-like albedo (ak47_supercharged.png) on all paintable parts.
- * Patina-on-metal split is not implemented — approximation of the
- * workshop "patina + custom" combo. F_PAINT_STYLE 8, metalness 0, roughness 0.4.
+ * F_OVERRIDE_NORMAL 1 wires ak47_supercharged_normal.png (real extra map).
+ * Kit masks exist but are a decal/layout sheet, not a patina split — unused.
+ * F_PAINT_STYLE 8, metalness 0, roughness 0.4. PearlescentScale 0.
  */
 export const KIT_FUEL_INJECTOR: ViewerKit = viewerKit(524, {
   slug: "fuelinjector",
@@ -369,6 +381,7 @@ export const KIT_FUEL_INJECTOR: ViewerKit = viewerKit(524, {
   paintRoughness: 0.4,
   paintMetalness: 0,
   maskMode: "spray",
+  normalPath: "/assets/paints/gs_ak47_supercharged/ak47_supercharged_normal.png",
   aliases: ["524", "fuel", "fuelinjector", "fuel-injector", "gs_ak47_supercharged", "燃料喷射器"],
 });
 
@@ -517,10 +530,13 @@ export function formatWearRange(kit: OfficialAk47Kit): string {
 
 /**
  * Kit 38 / aa_fade / style 6 Anodized Airbrushed. Glock-18 only.
- * vmat F_PAINT_STYLE 5, g_tPattern fade.png (1D color ramp),
+ * vmat F_PAINT_STYLE 5, g_tPattern fade.png (wavy 1D color ramp),
  * g_vColor0..3 silver / gold / pink / purple, ignoreWeaponSizeScale,
- * roughness 0.25. Workshop: gradient along the weapon.
+ * roughness 0.25, offset [-0.7,-0.7], rotation -55, pearlescent 0.
+ * Workshop: gradient along the weapon. M12: community fade % 80–100
+ * from seed rotation (not a Skincraft LUT).
  *   https://www.counter-strike.net/workshop/workshopfinishes/
+ *   https://skinport.com/blog/csgo-fade-percentage-update
  * Do not add this row to KITS / AK catalog.
  */
 export const KIT_FADE: ViewerKit = viewerKitFromRow(officialGlockKit(38), {
@@ -543,7 +559,9 @@ export const KIT_FADE: ViewerKit = viewerKitFromRow(officialGlockKit(38), {
 
 /**
  * Kit 3 / so_red / style 1 Solid Color. Glock-18 Candy Apple / 红苹果.
- * No g_tPattern in so_red.vmat — Color1 candy red on metal. Wear 0–0.3.
+ * so_red.vmat has no g_tPattern, no F_PAINT_STYLE (solid default),
+ * g_flPearlescentScale 0 — truly solid Color1, not anodized/pearl.
+ * Deepen Hydroponic (style 5) for candy-over-chrome instead.
  */
 export const KIT_CANDY_APPLE: ViewerKit = viewerKitFromRow(officialGlockKit(3), {
   slug: "candyapple",

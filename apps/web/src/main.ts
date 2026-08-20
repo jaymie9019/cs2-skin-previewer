@@ -38,6 +38,7 @@ import {
 } from "./kits/catalog";
 import { attachPatternMap, type PatternHook } from "./patternMaterial";
 import { clampSeed, seedToPatternUv, type Affine2D } from "./seed/seedToPatternUv";
+import { fadePercent } from "./kits/fadePercent";
 import {
   EXTRACTED_STICKERS,
   extractedSticker,
@@ -176,6 +177,7 @@ function formatFloat(value: number): string {
 
 function releaseDocumentHold(): void {
   const paths = [
+    "/m12-release",
     "/m11-release",
     "/m10-release",
     "/m9-release",
@@ -198,6 +200,7 @@ function releaseDocumentHold(): void {
 }
 
 function markReady(): void {
+  window.__M12_READY__ = true;
   window.__M11_READY__ = true;
   window.__M10_READY__ = true;
   window.__M9_READY__ = true;
@@ -214,6 +217,7 @@ function markReady(): void {
 }
 
 function markError(message: string): void {
+  window.__M12_ERROR__ = message;
   window.__M11_ERROR__ = message;
   window.__M10_ERROR__ = message;
   window.__M9_ERROR__ = message;
@@ -307,6 +311,8 @@ requestAnimationFrame(frame);
 const patternHooks: PatternHook[] = [];
 const stickerHooks: StickerHook[] = [];
 const patternByIndex = new Map<number, Texture>();
+const roughnessByIndex = new Map<number, Texture>();
+const normalByIndex = new Map<number, Texture>();
 
 type WeaponRuntime = {
   id: ViewerWeapon;
@@ -463,13 +469,16 @@ function applySeed(seed: number): void {
     currentSeed = uv.seed;
     const pattern =
       currentKit.uvAligned || currentKit.grainWindow != null ? IDENTITY : uv.pattern.matrix;
+    const fadePct = currentKit.style === 6 ? fadePercent(uv.seed) : 80;
     for (const hook of patternHooks) {
       hook.setLayers({
         pattern,
         wear: uv.wear.matrix,
         grunge: uv.grunge.matrix,
       });
+      hook.setFadePercent(fadePct);
     }
+    window.__M12_FADE_PCT__ = fadePct;
     window.__M2_UV__ = {
       translateX: uv.pattern.translateX,
       translateY: uv.pattern.translateY,
@@ -557,6 +566,13 @@ function applyOfficial(official: OfficialKit): void {
     if (viewer) {
       const pattern = patternByIndex.get(viewer.paintIndex);
       if (pattern) hook.setKit(viewer, pattern);
+      hook.setExtraMaps({
+        roughness: roughnessByIndex.get(viewer.paintIndex) ?? null,
+        normal: normalByIndex.get(viewer.paintIndex) ?? null,
+      });
+      if (viewer.style === 6) hook.setFadePercent(fadePercent(currentSeed));
+    } else {
+      hook.setExtraMaps({});
     }
   }
   currentFloat = clampFloatToKit(currentFloat, official, currentUnlockWear);
@@ -1105,6 +1121,12 @@ function loadExtracted(id: number, colorPath: string, wearPath: string, holoPath
 
 Promise.all([
   ...LIVE_KITS.map((kit) => textureLoader.loadAsync(kit.patternPath).then((tex) => ({ kit, tex }))),
+  ...LIVE_KITS.filter((kit) => kit.roughnessPath).map((kit) =>
+    textureLoader.loadAsync(kit.roughnessPath!).then((tex) => ({ kind: "rough" as const, kit, tex })),
+  ),
+  ...LIVE_KITS.filter((kit) => kit.normalPath).map((kit) =>
+    textureLoader.loadAsync(kit.normalPath!).then((tex) => ({ kind: "norm" as const, kit, tex })),
+  ),
   textureLoader.loadAsync(KIT_CASE_HARDENED.wearPath),
   textureLoader.loadAsync(KIT_CASE_HARDENED.grungePath),
   textureLoader.loadAsync(MASKS_URL.ak47),
@@ -1124,21 +1146,36 @@ Promise.all([
 ])
   .then((loaded) => {
     const nLive = LIVE_KITS.length;
+    const nRough = LIVE_KITS.filter((k) => k.roughnessPath).length;
+    const nNorm = LIVE_KITS.filter((k) => k.normalPath).length;
     const kitTexes = loaded.slice(0, nLive) as Array<{ kit: ViewerKit; tex: Texture }>;
-    const wearTex = loaded[nLive] as Texture;
-    const grungeTex = loaded[nLive + 1] as Texture;
-    const akMasks = loaded[nLive + 2] as Texture;
-    const akCavity = loaded[nLive + 3] as Texture;
-    const glockMasks = loaded[nLive + 4] as Texture;
-    const glockCavity = loaded[nLive + 5] as Texture;
-    const scratchesTex = loaded[nLive + 6] as Texture;
-    const backingTex = loaded[nLive + 7] as Texture;
-    const akGltf = loaded[nLive + 8] as Awaited<ReturnType<GLTFLoader["loadAsync"]>>;
-    const glockGltf = loaded[nLive + 9] as Awaited<ReturnType<GLTFLoader["loadAsync"]>>;
-    const packs = loaded.slice(nLive + 10).filter((p): p is ExtractedPack => p != null);
+    const roughTexes = loaded.slice(nLive, nLive + nRough) as Array<{ kind: "rough"; kit: ViewerKit; tex: Texture }>;
+    const normTexes = loaded.slice(nLive + nRough, nLive + nRough + nNorm) as Array<{
+      kind: "norm";
+      kit: ViewerKit;
+      tex: Texture;
+    }>;
+    const rest0 = nLive + nRough + nNorm;
+    const wearTex = loaded[rest0] as Texture;
+    const grungeTex = loaded[rest0 + 1] as Texture;
+    const akMasks = loaded[rest0 + 2] as Texture;
+    const akCavity = loaded[rest0 + 3] as Texture;
+    const glockMasks = loaded[rest0 + 4] as Texture;
+    const glockCavity = loaded[rest0 + 5] as Texture;
+    const scratchesTex = loaded[rest0 + 6] as Texture;
+    const backingTex = loaded[rest0 + 7] as Texture;
+    const akGltf = loaded[rest0 + 8] as Awaited<ReturnType<GLTFLoader["loadAsync"]>>;
+    const glockGltf = loaded[rest0 + 9] as Awaited<ReturnType<GLTFLoader["loadAsync"]>>;
+    const packs = loaded.slice(rest0 + 10).filter((p): p is ExtractedPack => p != null);
 
     for (const { kit, tex } of kitTexes) {
       patternByIndex.set(kit.paintIndex, tex);
+    }
+    for (const { kit, tex } of roughTexes) {
+      roughnessByIndex.set(kit.paintIndex, tex);
+    }
+    for (const { kit, tex } of normTexes) {
+      normalByIndex.set(kit.paintIndex, tex);
     }
 
     const startPattern =
@@ -1210,7 +1247,7 @@ Promise.all([
 
     const active = weaponRuntimes.get(currentWeapon);
     const size = active ? new Box3().setFromObject(active.root).getSize(new Vector3()) : new Vector3();
-    console.info("[m11] inspect", {
+    console.info("[m12] inspect", {
       weapon: currentWeapon,
       size,
       center: active?.center,

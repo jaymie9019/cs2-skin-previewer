@@ -72,4 +72,8 @@ interface Window {
   __M11_WEAPON__?: string;
   __M11_KIT__?: number;
   __M11_STICKERS__?: boolean;
+  __M12_READY__?: boolean;
+  __M12_ERROR__?: string;
+  __M12_FADE_PCT__?: number;
 }
+

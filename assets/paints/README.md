@@ -130,7 +130,7 @@ Copy into `assets/paints/cu_ak47_cobra/`:
 | `elegantredv1_1.png` | `.../paints/custom/workshop/elegantredv1_1_tga_515b3d45.vtex` | UV-aligned custom albedo |
 
 vmat: `F_PAINT_STYLE` 6 (= items_game style 7), `g_bIgnoreWeaponSizeScale` 1,
-`g_flPaintMetalness` 1. Optional `elegantredv1_1_rough.png` is not loaded (M8 uses constant 0.4).
+`g_flPaintMetalness` 1. M12 loads `elegantredv1_1_rough.png` (`F_ROUGHNESS_TEXTURE` 1 / `g_tPaintRoughness`).
 
 ## Hydroponic — `am_bamboo_jungle` / kit 456 / style 5 Anodized Multicolored
 
@@ -165,7 +165,7 @@ Copy into `assets/paints/gs_ak47_supercharged/`:
 | `ak47_supercharged.png` | `.../paints/gunsmith/workshop/ak47_supercharged_tga_ef27ba3e.vtex` | UV-aligned gunsmith albedo |
 
 vmat: `F_PAINT_STYLE` 8 (= items_game style 9), `g_bIgnoreWeaponSizeScale` 1,
-`g_flPaintRoughness` 0.4, `g_flPaintMetalness` 0. Extra masks/normal not loaded.
+`g_flPaintRoughness` 0.4, `g_flPaintMetalness` 0. M12 loads `ak47_supercharged_normal.png` (`F_OVERRIDE_NORMAL` 1). Kit masks are a decal layout, unused.
 
 ## Bloodsport — `gs_ak47_bloodsport` / kit 639 / style 9 Gunsmith
 
@@ -213,3 +213,10 @@ $CLI -i $VPK -d --game $GI \
 
 No `g_tPattern`. Viewer uses Color1 `[0.741176 0.168627 0.168627]` on the metal
 mask. `assets/paints/so_red/solid.png` is a 1×1 dummy (gitignored).
+
+## M12 extra maps (gitignored)
+
+| File | Kit | Role |
+| --- | --- | --- |
+| `cu_ak47_cobra/elegantredv1_1_rough.png` | 282 | `g_tPaintRoughness` |
+| `gs_ak47_supercharged/ak47_supercharged_normal.png` | 524 | `g_tNormal` |

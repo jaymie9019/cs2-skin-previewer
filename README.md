@@ -21,8 +21,8 @@ Changing Kit / Seed / Float / stickers / view / background updates the query str
 
 Static catalog tables: http://127.0.0.1:5173/catalog/ak47.html and http://127.0.0.1:5173/catalog/glock.html
 
-## Shareable URL (M6–M11)
-Opening a URL restores the same inspect. Grammar: weapon=ak47|glock (aliases: ak-47, weapon_ak47, ak / glock-18, glock18, weapon_glock), kit=<official paint index or slug for that weapon>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool|sun, st=1 or st=<kills>, name=<text>. Unknown weapon (awp) rejected. Kit must be official for the selected weapon: kit=38 Fade is accepted on Glock and rejected on AK; kit=44 Case Hardened is accepted on AK and rejected on Glock (falls back to Fade). Official listed kits without a shader show vanilla glTF + “尚未做涂装”. Live AK: 14 / 44 / 72 / 122 / 226 / 282 / 456 / 524 / 639. Live Glock: 38 Fade / 3 Candy Apple. Full grammar: docs/MILESTONE_11.md.
+## Shareable URL (M6–M12)
+Opening a URL restores the same inspect. Grammar: weapon=ak47|glock (aliases: ak-47, weapon_ak47, ak / glock-18, glock18, weapon_glock), kit=<official paint index or slug for that weapon>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool|sun, st=1 or st=<kills>, name=<text>. Unknown weapon (awp) rejected. Kit must be official for the selected weapon: kit=38 Fade is accepted on Glock and rejected on AK; kit=44 Case Hardened is accepted on AK and rejected on Glock (falls back to Fade). Official listed kits without a shader show vanilla glTF + “尚未做涂装”. Live AK: 14 / 44 / 72 / 122 / 226 / 282 / 456 / 524 / 639. Live Glock: 38 Fade / 3 Candy Apple. Full grammar: docs/MILESTONE_11.md. M12 deepens Fade / Hydroponic / extra maps: docs/MILESTONE_12.md.
 Example: ?weapon=ak47&kit=44&seed=923&float=0.056&s0=259,0.02,-0.01,15,0.4
 Example: ?weapon=glock&kit=38
 Example: ?weapon=ak47&kit=44&st=1&name=jaymie
@@ -67,9 +67,9 @@ StatTrak toggle (`st=1` / `st=<kills>`) draws an authored LCD plate on the recei
 
 `bg=` selects an environment (PMREM IBL) plus a matching plate. Default `studio` is the M6 RoomEnvironment bake (same lights) so Case Hardened / Red Laminate stay in class. `warm` / `cool` / `sun` are authored Three scenes — dusty courtyard, overcast, high-sun key — not ripped map cubemaps or Skincraft videos. Metal reads reflections; still approximate. Notes: docs/MILESTONE_6.md, docs/MILESTONE_9.md.
 
-## Glock-18 (M11)
+## Glock-18 (M11) + shader fidelity (M12)
 
-Second weapon from the same pipeline. `weapon=glock` loads `assets/glock.glb` + the official Glock catalog. Live kits: Fade / 渐变之色 (38, anodized airbrush from `aa_fade.vmat`) and Candy Apple / 红苹果 (3, solid Color1). Listed Glock kits stay vanilla + “尚未做涂装”. AK path unchanged. Notes: `docs/MILESTONE_11.md`.
+Second weapon from the same pipeline. `weapon=glock` loads `assets/glock.glb` + the official Glock catalog. Live kits: Fade / 渐变之色 (38, community fade-percent 80–100 + official 1D LUT) and Candy Apple / 红苹果 (3, solid Color1 — `so_red.vmat` has no pearl). Hydroponic gets a chrome undercoat; Redline wires its roughness map; Fuel Injector wires its normal. Still WebGL2, not WebGPU. Notes: `docs/MILESTONE_11.md`, `docs/MILESTONE_12.md`.
 
 ## Catalog HUD (M7)
 

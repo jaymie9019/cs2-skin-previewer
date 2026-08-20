@@ -26,6 +26,7 @@ M0–M6 stay as shipped (AK-47, 3 kits, stickers, share URL). New work is M7+.
 | milestone-9 | Authored IBL looks (`bg=` → PMREM); metal reads reflections |
 | milestone-10 | Sticker catalog picker + StatTrak / nametag (charm stubbed) |
 | milestone-11 | Glock-18 inspect + official Fade (38) / Candy Apple live |
+| milestone-12 | Original WebGL paint fidelity (fade %, chrome, extra maps) |
 
 ## Gap vs a Skincraft-class site
 
@@ -73,12 +74,9 @@ Site chrome around the existing viewer.
 **Done** (`milestone-11`): Glock-18 from the same pipeline. Official catalog from `[kit]weapon_glock`. Live Fade (38) + Candy Apple (3). AK path unchanged (61 kits, no Fade).
 
 ### M12 — Shader fidelity (original)
-The hard look gap. **Write our own** materials from vmat / workshop / VRF, not from another site.
-
-- Either deepen WebGL `OnBeforeCompile` toward `csgo_weapon` / `csgo_customweapon` parameters we decompile locally
-- Or a new WebGPU path we author (WGSL we write)
-- Pearlescence / anodized / composite order if the vmat asks for it
-- Acceptance: same seed+float on Case Hardened and Red Laminate is *the same class* as in-game (HUMAN_REVIEW), still not 1:1
+**Done** (`milestone-12`): deepened WebGL `OnBeforeCompile` from local vmats
+(Fade %, Hydroponic chrome, Redline roughness, Fuel Injector normal).
+No WebGPU this tag. CH / RedLam stay same class. Still not 1:1.
 
 ### M13 — Inspect links + ship notes
 - Parse a Steam inspect URL / `S/A/D/M` params into kit, seed, float, stickers

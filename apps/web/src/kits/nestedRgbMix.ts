@@ -103,3 +103,27 @@ export function mixNestedAlbedo(input: NestedMixInput): RgbMut {
   const painted = mul3(color, cGrunge);
   return [clamp01(painted[0]), clamp01(painted[1]), clamp01(painted[2])];
 }
+
+/** Chrome candy undercoat for style 5 (Hydroponic). */
+export const ANODIZED_CHROME: Rgb = [0.82, 0.84, 0.87];
+
+/**
+ * Style 5 Anodized Multicolored: candy coat over chrome.
+ * am_bamboo_jungle.vmat has g_flPearlescentScale 0 — no pearlescence.
+ * Workshop anodized: "colored candy coat over a chrome base".
+ * Style 5 wears to the substrate (caller fades the paint mask); this
+ * only peeks chrome as wear*float rises. Does not change style 2.
+ *
+ *   https://www.counter-strike.net/workshop/workshopfinishes/
+ *   local am_bamboo_jungle.vmat
+ */
+export function anodizedChromeAmt(wearTex: number, floatAmt: number): number {
+  const x = clamp01(wearTex) * clampFloat(floatAmt);
+  const t = clamp01((x - 0.08) / 0.42);
+  return t * t * (3 - 2 * t) * 0.45;
+}
+
+export function mixAnodizedCandy(color: Rgb, wearTex: number, floatAmt: number): RgbMut {
+  return lerp3(color, ANODIZED_CHROME, anodizedChromeAmt(wearTex, floatAmt));
+}
+

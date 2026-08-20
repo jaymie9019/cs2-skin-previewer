@@ -8,29 +8,34 @@
  * Style 8 Patina (Case Hardened): existing M3 mix, metal-only mask.
  * Style 3 Spray (Jungle / Safari Mesh): nested RGB, wear * pattern, spray mask.
  * Style 2 Hydrographic (Red / Blue Laminate): nested RGB + mask G/B,
- *   furniture mask + grainWindow.
+ *   furniture mask + grainWindow. Mixer unchanged in M12.
  * Style 5 Anodized Multicolored (Hydroponic): nested RGB + mask G/B,
- *   metal mask (candy coat). Same mix as style 2 (pattern.wiki).
- * Style 7 Custom (Redline): UV-aligned albedo sample, metal mask.
+ *   metal mask (candy coat) + chrome undercoat on wear. PearlescentScale 0.
+ * Style 7 Custom (Redline): UV-aligned albedo + optional roughness map.
  * Style 9 Gunsmith (Fuel Injector / Bloodsport): custom-like albedo,
- *   spray mask. Patina-on-metal split is not implemented.
- * Style 6 Anodized Airbrushed (Fade): 1D LUT along UV.x + seed, nested RGB
- *   of g_vColor0..3 (silver / gold / pink / purple). Metal mask.
- * Style 1 Solid Color (Candy Apple): Color1 on metal, no pattern.
+ *   spray mask + optional normal map (Fuel Injector only).
+ * Style 6 Anodized Airbrushed (Fade): community fade % (80–100) windows
+ *   the official 1D LUT, then nested RGB of g_vColor0..3. Metal mask.
+ * Style 1 Solid Color (Candy Apple): Color1 on metal, no pattern
+ *   (so_red.vmat is truly solid — no pearl / anodized).
  *
  * Style 3 officially uses triplanar; this viewer uses 2D UV with the
  * documented style-3 scale (weapon_length/36 * patternScale).
  *
  *   https://www.counter-strike.net/workshop/workshopfinishes/
  *   https://pattern.wiki/wiki/pattern_colors
+ *   https://skinport.com/blog/csgo-fade-percentage-update
  */
 
 import {
   ClampToEdgeWrapping,
+  DataTexture,
   Matrix3,
   NoColorSpace,
   RepeatWrapping,
+  RGBAFormat,
   SRGBColorSpace,
+  UnsignedByteType,
   type MeshStandardMaterial,
   type Texture,
 } from "three";
@@ -57,6 +62,8 @@ export type PatternMaps = {
   grunge: Texture;
   masks: Texture;
   cavity: Texture;
+  paintRough?: Texture | null;
+  paintNormal?: Texture | null;
 };
 
 export type PatternHook = {
@@ -64,7 +71,16 @@ export type PatternHook = {
   setFloat: (floatAmt: number) => void;
   setKit: (kit: ViewerKit, pattern: Texture) => void;
   setPaintEnabled: (enabled: boolean) => void;
+  setFadePercent: (pct: number) => void;
+  setExtraMaps: (maps: { roughness?: Texture | null; normal?: Texture | null }) => void;
 };
+
+function dummyRgba(r: number, g: number, b: number, a = 255): Texture {
+  const tex = new DataTexture(new Uint8Array([r, g, b, a]), 1, 1, RGBAFormat, UnsignedByteType);
+  tex.colorSpace = NoColorSpace;
+  tex.needsUpdate = true;
+  return tex;
+}
 
 function clampPattern(kit: ViewerKit): boolean {
   return kit.uvAligned || kit.grainWindow != null;
@@ -144,6 +160,13 @@ export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMa
   const grainSize = { value: [1, 1] };
   const grainTileUniform = { value: 1 };
   const paintEnabledUniform = { value: 1 };
+  const fadePercentUniform = { value: 80 };
+  const dummyRough = dummyRgba(128, 128, 128);
+  const dummyNormal = dummyRgba(128, 128, 255);
+  const paintRoughUniform = { value: maps.paintRough ?? dummyRough };
+  const paintNormalUniform = { value: maps.paintNormal ?? dummyNormal };
+  const hasPaintRoughUniform = { value: maps.paintRough ? 1 : 0 };
+  const hasPaintNormalUniform = { value: maps.paintNormal ? 1 : 0 };
 
   const hook: PatternHook = {
     setLayers(layers) {
@@ -183,6 +206,19 @@ export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMa
     setPaintEnabled(enabled: boolean) {
       paintEnabledUniform.value = enabled ? 1 : 0;
     },
+    setFadePercent(pct: number) {
+      fadePercentUniform.value = Math.min(100, Math.max(80, pct));
+    },
+    setExtraMaps(extra) {
+      const rough = extra.roughness;
+      const norm = extra.normal;
+      if (rough) prepDataClamp(rough);
+      if (norm) prepDataClamp(norm);
+      paintRoughUniform.value = rough ?? dummyRough;
+      paintNormalUniform.value = norm ?? dummyNormal;
+      hasPaintRoughUniform.value = rough ? 1 : 0;
+      hasPaintNormalUniform.value = norm ? 1 : 0;
+    },
   };
 
   const prev = material.onBeforeCompile;
@@ -213,6 +249,11 @@ export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMa
     shader.uniforms.uGrainSize = grainSize;
     shader.uniforms.uGrainTile = grainTileUniform;
     shader.uniforms.uPaintEnabled = paintEnabledUniform;
+    shader.uniforms.uFadePercent = fadePercentUniform;
+    shader.uniforms.uPaintRoughMap = paintRoughUniform;
+    shader.uniforms.uPaintNormalMap = paintNormalUniform;
+    shader.uniforms.uHasPaintRough = hasPaintRoughUniform;
+    shader.uniforms.uHasPaintNormal = hasPaintNormalUniform;
 
     shader.fragmentShader = shader.fragmentShader
       .replace(
@@ -243,6 +284,11 @@ uniform vec2 uGrainOrigin;
 uniform vec2 uGrainSize;
 uniform float uGrainTile;
 uniform float uPaintEnabled;
+uniform float uFadePercent;
+uniform sampler2D uPaintRoughMap;
+uniform sampler2D uPaintNormalMap;
+uniform float uHasPaintRough;
+uniform float uHasPaintNormal;
 float cs2PaintMask = 0.0;
 `,
       )
@@ -294,16 +340,24 @@ float cs2PaintMask = 0.0;
 		float wearOff = smoothstep( 0.2, 0.9, wearTex * uFloat );
 		cs2PaintMask *= ( 1.0 - wearOff );
 	} else if ( abs( uStyle - 6.0 ) < 0.5 ) {
-		// Style 6 Anodized Airbrushed / Fade: 1D lookup along the weapon.
-		// Workshop: gradient along length. Seed translateX shifts fade %.
+		// Style 6 Anodized Airbrushed / Fade.
+		// Community fade % (80–100) windows the official fade.png LUT.
 		// https://www.counter-strike.net/workshop/workshopfinishes/
-		float fadeT = fract( vMapUv.x * 0.85 + 0.08 + uPatternMatrix[2].x * 0.45 );
-		vec3 p = texture2D( uPatternMap, vec2( fadeT, 0.5 ) ).rgb * uPatternGain;
+		// https://skinport.com/blog/csgo-fade-percentage-update
+		float fadeAmt = saturate( ( uFadePercent - 80.0 ) / 20.0 );
+		float fadeOrigin = mix( 0.04, 0.20, fadeAmt );
+		float fadeSpan = mix( 0.52, 0.74, fadeAmt );
+		float fadeT = saturate( fadeOrigin + saturate( vMapUv.x ) * fadeSpan );
+		vec2 fadeUv = vec2( fadeT, saturate( 0.5 + ( vMapUv.y - 0.5 ) * 0.35 ) );
+		vec3 p = texture2D( uPatternMap, fadeUv ).rgb * uPatternGain;
 		vec3 color = mix( uPatinaC0, uPatinaC1, saturate( p.r ) );
 		color = mix( color, uPatinaC2, saturate( p.g ) );
 		color = mix( color, uPatinaC3, saturate( p.b ) );
+		vec3 chrome = vec3( 0.85, 0.86, 0.88 );
+		float chromeAmt = smoothstep( 0.12, 0.55, wearTex * uFloat );
+		color = mix( color, chrome, chromeAmt * 0.55 );
 		painted = saturate( color * cGrunge );
-		float wearOff = smoothstep( 0.25, 0.95, wearTex * uFloat );
+		float wearOff = smoothstep( 0.40, 0.95, wearTex * uFloat );
 		cs2PaintMask *= ( 1.0 - wearOff );
 	} else if ( abs( uStyle - 1.0 ) < 0.5 ) {
 		// Style 1 Solid Color (Candy Apple): vmat Color1, no pattern.
@@ -331,6 +385,12 @@ float cs2PaintMask = 0.0;
 			float wearOff = smoothstep( 0.2, 0.9, wearTex * uFloat );
 			cs2PaintMask *= ( 1.0 - wearOff );
 		}
+		if ( abs( uStyle - 5.0 ) < 0.5 ) {
+			// Hydroponic: candy over chrome. am_bamboo_jungle pearlescentScale 0.
+			vec3 chrome = vec3( 0.82, 0.84, 0.87 );
+			float chromeAmt = smoothstep( 0.08, 0.50, wearTex * uFloat );
+			color = mix( color, chrome, chromeAmt * 0.45 );
+		}
 		painted = saturate( color * cGrunge );
 	}
 
@@ -342,14 +402,26 @@ float cs2PaintMask = 0.0;
       .replace(
         "#include <roughnessmap_fragment>",
         `#include <roughnessmap_fragment>
-	roughnessFactor = mix( roughnessFactor, uPaintRoughness, cs2PaintMask );`,
+	roughnessFactor = mix( roughnessFactor, uPaintRoughness, cs2PaintMask );
+	if ( uHasPaintRough > 0.5 ) {
+		float pr = texture2D( uPaintRoughMap, vMapUv ).g;
+		roughnessFactor = mix( roughnessFactor, pr, cs2PaintMask );
+	}`,
       )
       .replace(
         "#include <metalnessmap_fragment>",
         `#include <metalnessmap_fragment>
 	metalnessFactor = mix( metalnessFactor, uPaintMetalness, cs2PaintMask );`,
+      )
+      .replace(
+        "#include <normal_fragment_maps>",
+        `#include <normal_fragment_maps>
+	if ( uHasPaintNormal > 0.5 && cs2PaintMask > 0.01 ) {
+		vec3 pn = texture2D( uPaintNormalMap, vMapUv ).xyz * 2.0 - 1.0;
+		normal = normalize( normal + vec3( pn.xy, 0.0 ) * 0.35 * cs2PaintMask );
+	}`,
       );
   };
-  material.customProgramCacheKey = () => "m11-paint-styles";
+  material.customProgramCacheKey = () => "m12-paint-styles";
   return hook;
 }

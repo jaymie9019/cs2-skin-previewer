@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import { luma } from "../patina/patinaWearMix";
 import { KIT_RED_LAMINATE } from "./catalog";
 import {
+  ANODIZED_CHROME,
+  anodizedChromeAmt,
   hydroMaskOverride,
+  mixAnodizedCandy,
   mixNestedAlbedo,
   nestedRgbColorize,
   remapWear,
@@ -173,5 +176,29 @@ describe("style 5 anodized uses hydrographic mix + mask override", () => {
     expect(worn[0]).toBeCloseTo(C1[0], 5);
     expect(worn[1]).toBeCloseTo(C1[1], 5);
     expect(worn[2]).toBeCloseTo(C1[2], 5);
+  });
+});
+
+describe("style 5 anodized chrome undercoat (Hydroponic)", () => {
+  it("float 0 keeps the candy color", () => {
+    const c = mixAnodizedCandy(C1, 1, 0);
+    expect(c[0]).toBeCloseTo(C1[0], 8);
+    expect(anodizedChromeAmt(1, 0)).toBeCloseTo(0, 8);
+  });
+  it("high wear * float mixes toward chrome, not Color1 flatten", () => {
+    const worn = mixAnodizedCandy(C3, 1, 1);
+    expect(anodizedChromeAmt(1, 1)).toBeGreaterThan(0.3);
+    expect(Math.abs(worn[0] - ANODIZED_CHROME[0])).toBeLessThan(Math.abs(C3[0] - ANODIZED_CHROME[0]));
+  });
+  it("style 2 mixNestedAlbedo is unchanged by the chrome helper", () => {
+    const out = mixNestedAlbedo({
+      style: 2,
+      pattern: [1, 0, 0],
+      wearTex: 1,
+      grunge: WHITE,
+      floatAmt: 1,
+      colors: COLORS,
+    });
+    expect(out[0]).toBeCloseTo(C1[0], 5);
   });
 });

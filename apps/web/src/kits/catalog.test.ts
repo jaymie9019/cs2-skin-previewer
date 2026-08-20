@@ -219,3 +219,17 @@ describe("kit 226 Blue Laminate extras (vmat + grain window)", () => {
     expect(KIT_HYDROPONIC.uvAligned).toBe(false);
   });
 });
+
+describe("M12 extra maps from local vmats", () => {
+  it("Redline wires the official roughness map", () => {
+    expect(KIT_REDLINE.roughnessPath).toContain("elegantredv1_1_rough.png");
+    expect(KIT_CASE_HARDENED.roughnessPath).toBeNull();
+    expect(KIT_RED_LAMINATE.roughnessPath).toBeNull();
+  });
+
+  it("Fuel Injector wires the official normal map; Bloodsport does not fake one", () => {
+    expect(KIT_FUEL_INJECTOR.normalPath).toContain("ak47_supercharged_normal.png");
+    expect(KIT_BLOODSPORT.normalPath).toBeNull();
+    expect(KIT_CASE_HARDENED.normalPath).toBeNull();
+  });
+});

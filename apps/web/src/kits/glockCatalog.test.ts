@@ -64,3 +64,12 @@ describe("Glock live kits (Fade + Candy Apple)", () => {
     expect(KIT_FADE.wearRemapMax).toBeCloseTo(0.08, 8);
   });
 });
+
+describe("Candy Apple is solid (no pearl / anodized)", () => {
+  it("has no extra maps and style 1 Color1", () => {
+    expect(KIT_CANDY_APPLE.style).toBe(1);
+    expect(KIT_CANDY_APPLE.roughnessPath).toBeNull();
+    expect(KIT_CANDY_APPLE.normalPath).toBeNull();
+    expect(KIT_CANDY_APPLE.colors[1][0]).toBeCloseTo(0.741176, 5);
+  });
+});
