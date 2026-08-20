@@ -17,7 +17,8 @@ canvas {
 #status {
   position: fixed;
   top: 12px;
-  left: 12px;
+  left: 324px;
+  right: 320px;
   z-index: 2;
   color: #e8e4dc;
   font-size: 13px;
@@ -25,6 +26,151 @@ canvas {
   text-shadow: 0 1px 2px #000;
   pointer-events: none;
 }
+
+#preview-badge {
+  position: fixed;
+  top: 34px;
+  left: 324px;
+  z-index: 2;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #5a3a14;
+  color: #f6d59a;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+}
+
+#preview-badge[hidden] {
+  display: none;
+}
+
+#catalog-panel {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  bottom: 12px;
+  width: 300px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background: rgba(12, 14, 18, 0.78);
+  color: #e8e4dc;
+  font-size: 12px;
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+  border: 1px solid #2c3340;
+}
+
+.catalog-head {
+  padding: 10px 10px 8px;
+  border-bottom: 1px solid #2c3340;
+}
+
+.catalog-head h1 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+  color: #f2eee6;
+}
+
+.catalog-count {
+  margin: 2px 0 8px;
+  color: #9aa6b8;
+  font-size: 11px;
+}
+
+#catalog-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px 8px;
+  border: 1px solid #4a5160;
+  border-radius: 4px;
+  background: #1b1f27;
+  color: #f2eee6;
+  font: inherit;
+}
+
+#catalog-list {
+  flex: 1;
+  overflow: auto;
+}
+
+.catalog-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  width: 100%;
+  margin: 0;
+  padding: 7px 10px;
+  border: 0;
+  border-bottom: 1px solid #222833;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.catalog-row:hover {
+  background: #222833;
+}
+
+.catalog-row.active {
+  background: #2a2418;
+  box-shadow: inset 2px 0 0 #c9a36a;
+}
+
+.catalog-names {
+  font-weight: 600;
+  color: #f2eee6;
+}
+
+.catalog-meta {
+  color: #9aa6b8;
+  font-size: 11px;
+}
+
+.catalog-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge.live {
+  background: #1f4d32;
+  color: #9ee6b8;
+}
+
+.badge.listed {
+  background: #2a3140;
+  color: #b7c2d4;
+}
+
+.rar-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.rar-dot.mythical { background: #d47fff; }
+.rar-dot.legendary { background: #eb4b4b; }
+.rar-dot.ancient { background: #eb4b4b; }
+.rar-dot.rare { background: #4b69ff; }
+.rar-dot.uncommon { background: #5e98d9; }
+.rar-dot.common { background: #b0c3d9; }
 
 #seed-panel {
   position: fixed;
@@ -40,6 +186,8 @@ canvas {
   color: #e8e4dc;
   font-size: 13px;
   backdrop-filter: blur(6px);
+  max-height: calc(100vh - 24px);
+  overflow: auto;
 }
 
 #seed-panel label {
@@ -80,9 +228,59 @@ canvas {
   color: #c7d2e0;
 }
 
-#seed-panel {
-  max-height: calc(100vh - 24px);
-  overflow: auto;
+.hint,
+#wear-range {
+  font-size: 11px;
+  color: #c9a36a;
+  font-variant-numeric: tabular-nums;
+  padding-left: 2px;
+}
+
+.unlock-row {
+  font-size: 12px;
+  color: #c7d2e0;
+}
+
+.unlock-row input {
+  accent-color: #c9a36a;
+}
+
+.btn-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.btn-row > span {
+  min-width: 72px;
+  color: #9aa6b8;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.btn-row button {
+  padding: 3px 8px;
+  border: 1px solid #4a5160;
+  border-radius: 999px;
+  background: #1b1f27;
+  color: #e8e4dc;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-row button.active {
+  border-color: #c9a36a;
+  background: #2a2418;
+  color: #f6d59a;
+}
+
+#catalog-link {
+  color: #c9a36a;
+  font-size: 12px;
+  margin: 2px 0 4px;
 }
 
 #sticker-panel {
@@ -133,6 +331,8 @@ canvas {
 
 body.capture #status,
 body.capture #seed-panel,
+body.capture #catalog-panel,
+body.capture #preview-badge,
 #m1-hold {
   display: none;
 }

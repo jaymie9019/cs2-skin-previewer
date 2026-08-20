@@ -14,14 +14,17 @@ Extract commands: docs/paths.md, assets/paints/README.md, assets/stickers/README
 
 Install dependencies at the repo root, then start the Vite dev server (workspace script `dev`, or the same script inside `apps/web`).
 
-The page is http://127.0.0.1:5173/ — drag to orbit the rifle.
+The page is http://127.0.0.1:5173/ — left catalog of 61 official AK-47 kits, drag to orbit the rifle.
 
 The viewer loads `assets/ak47.glb` via a `apps/web/public/assets` symlink so GLTFLoader can resolve the sibling official PNGs. Those PNGs are gitignored.
-Changing Kit / Seed / Float / stickers updates the query string with history.replaceState.
+Changing Kit / Seed / Float / stickers / view / background updates the query string with history.replaceState.
 
-## Shareable URL (M6)
-Opening a URL restores the same inspect. Grammar: weapon=ak47 (only AK for now), kit=44|122|14 (or slug), seed=0-999, float=0-1, sN=id,x,y,rot,wear (N=0..3). Unknown kit and s4 are rejected. Full grammar: docs/MILESTONE_6.md.
+Static catalog table (search + inspect links): http://127.0.0.1:5173/catalog/ak47.html
+
+## Shareable URL (M6 + M7)
+Opening a URL restores the same inspect. Grammar: weapon=ak47 (only AK for now), kit=<official paint index or slug>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool. Unknown kit (fade / 38 / 999) and s4 are rejected. Official listed kits without a shader (e.g. kit=72 Safari Mesh) are accepted and show the vanilla AK. Full grammar: docs/MILESTONE_7.md.
 Example: ?weapon=ak47&kit=44&seed=923&float=0.056&s0=259,0.02,-0.01,15,0.4
+Example: ?weapon=ak47&kit=226&view=front&bg=warm
 
 ## Compliance
 
@@ -54,3 +57,7 @@ Up to **4** layers on the AK via mesh `TEXCOORD_1` + `StickerMarkup` offsets (no
 Dark studio background kept. RoomEnvironment PMREM gives approximate IBL so metal reflects something, plus a slightly stronger key light. Not Dust II / not Skincraft-accurate.
 
 Tests: from apps/web, npx vitest run (or apps/web/run-tests.sh). Notes: docs/MILESTONE_6.md.
+
+## Catalog HUD (M7)
+
+All 61 official AK-47 kits from `data/ak47_paint_kits.json` are listed (en + 中文). Search filters the left panel. Click a row to inspect. Wear slider is clamped to that kit’s remap (Blue Laminate 0.02–0.4, Redline 0.1–0.7, …); check Unlock 0–1 to ignore it. View: Inspect / Front / Back. Background plates: Studio / Warm / Cool (solid colors we authored — not map videos). Kits 14 / 44 / 122 have a live paint shader; the other 58 fall back to the unpainted AK plus a “preview not implemented / 尚未做涂装” badge. Static table: `/catalog/ak47.html`. Notes: `docs/MILESTONE_7.md`.

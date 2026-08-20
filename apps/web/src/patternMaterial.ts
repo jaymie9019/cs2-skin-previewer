@@ -55,6 +55,7 @@ export type PatternHook = {
   setLayers: (layers: { pattern: Affine2D; wear: Affine2D; grunge: Affine2D }) => void;
   setFloat: (floatAmt: number) => void;
   setKit: (kit: ViewerKit, pattern: Texture) => void;
+  setPaintEnabled: (enabled: boolean) => void;
 };
 
 function prepColorMap(tex: Texture, clamp: boolean): Texture {
@@ -122,6 +123,7 @@ export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMa
   const grainOrigin = { value: [0, 0] };
   const grainSize = { value: [1, 1] };
   const grainTileUniform = { value: 1 };
+  const paintEnabledUniform = { value: 1 };
 
   const hook: PatternHook = {
     setLayers(layers) {
@@ -158,6 +160,9 @@ export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMa
         grainTileUniform.value = 1;
       }
     },
+    setPaintEnabled(enabled: boolean) {
+      paintEnabledUniform.value = enabled ? 1 : 0;
+    },
   };
 
   const prev = material.onBeforeCompile;
@@ -187,6 +192,7 @@ export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMa
     shader.uniforms.uGrainOrigin = grainOrigin;
     shader.uniforms.uGrainSize = grainSize;
     shader.uniforms.uGrainTile = grainTileUniform;
+    shader.uniforms.uPaintEnabled = paintEnabledUniform;
 
     shader.fragmentShader = shader.fragmentShader
       .replace(
@@ -216,6 +222,7 @@ uniform float uClampPattern;
 uniform vec2 uGrainOrigin;
 uniform vec2 uGrainSize;
 uniform float uGrainTile;
+uniform float uPaintEnabled;
 float cs2PaintMask = 0.0;
 `,
       )
@@ -242,6 +249,7 @@ float cs2PaintMask = 0.0;
 	if ( uMaskMode < 0.5 ) cs2PaintMask = metalMask;
 	else if ( uMaskMode < 1.5 ) cs2PaintMask = sprayMask;
 	else cs2PaintMask = furnitureMask;
+	cs2PaintMask *= uPaintEnabled;
 
 	float flGrunge = grungeRgb.r * grungeRgb.g * grungeRgb.b;
 	float gAmt = pow( 1.0 - flCavity, 4.0 ) * 0.25 + 0.75 * uFloat;
@@ -300,6 +308,6 @@ float cs2PaintMask = 0.0;
 	metalnessFactor = mix( metalnessFactor, uPaintMetalness, cs2PaintMask );`,
       );
   };
-  material.customProgramCacheKey = () => "m4-kit14-laminate-grain";
+  material.customProgramCacheKey = () => "m7-paint-enabled";
   return hook;
 }

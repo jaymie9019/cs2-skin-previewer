@@ -3,10 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CS2 Skin Previewer — M6</title>
+    <title>CS2 Skin Previewer — M7</title>
   </head>
   <body>
-    <div id="status">Loading AK-47 + paint kit + stickers…</div>
+    <aside id="catalog-panel">
+      <div class="catalog-head">
+        <h1>AK-47 kits</h1>
+        <p class="catalog-count" id="catalog-count">61 official</p>
+        <input id="catalog-search" type="search" placeholder="Search en / 中文 / index…" autocomplete="off" />
+      </div>
+      <div id="catalog-list"></div>
+    </aside>
+    <div id="status">Loading AK-47 + catalog…</div>
+    <div id="preview-badge" hidden>preview not implemented / 尚未做涂装</div>
     <div id="seed-panel">
       <label>
         <span>Kit</span>
@@ -22,9 +31,27 @@
         <input id="float-input" type="range" min="0" max="1" step="0.01" value="0" />
         <span id="float-value">0.00</span>
       </label>
+      <div id="wear-range" class="hint">wear 0–1</div>
+      <label class="unlock-row">
+        <input id="unlock-wear" type="checkbox" />
+        <span>Unlock 0–1</span>
+      </label>
+      <div class="btn-row" id="view-row">
+        <span>View</span>
+        <button type="button" data-view="inspect">Inspect</button>
+        <button type="button" data-view="front">Front</button>
+        <button type="button" data-view="back">Back</button>
+      </div>
+      <div class="btn-row" id="bg-row">
+        <span>Background</span>
+        <button type="button" data-bg="studio">Studio</button>
+        <button type="button" data-bg="warm">Warm</button>
+        <button type="button" data-bg="cool">Cool</button>
+      </div>
+      <a id="catalog-link" href="/catalog/ak47.html">All AK-47 kits</a>
       <div id="sticker-panel"></div>
     </div>
-    <img id="m1-hold" src="/m6-hold.png" alt="" width="1" height="1" />
+    <img id="m1-hold" src="/m7-hold.png" alt="" width="1" height="1" />
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

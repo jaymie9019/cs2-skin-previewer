@@ -47,4 +47,13 @@ interface Window {
   }>;
   __M6_REJECTED__?: string[];
   __M6_URL__?: string;
+  __M7_READY__?: boolean;
+  __M7_ERROR__?: string;
+  __M7_VIEW__?: string;
+  __M7_BG__?: string;
+  __M7_KIT__?: number;
+  __M7_PAINT__?: boolean;
+  __M7_WEAR_MIN__?: number;
+  __M7_WEAR_MAX__?: number;
+  __M7_UNLOCK__?: boolean;
 }

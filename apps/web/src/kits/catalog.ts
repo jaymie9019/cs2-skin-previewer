@@ -29,6 +29,7 @@ export type OfficialAk47Kit = {
   name: string;
   name_en: string;
   name_zh: string;
+  name_zht?: string;
   style: number;
   style_name: string;
   wear_remap_min_effective: number;
@@ -245,4 +246,72 @@ export function resolveKit(query: string | null | undefined): ViewerKit {
         k.aliases.some((a) => a.toLowerCase() === q),
     ) ?? KIT_CASE_HARDENED
   );
+}
+
+const PAINT_PREVIEW_INDEXES = new Set<number>([14, 44, 122]);
+
+export function hasPaintPreview(paintIndex: number): boolean {
+  return PAINT_PREVIEW_INDEXES.has(paintIndex);
+}
+
+export function viewerKitFor(official: OfficialAk47Kit): ViewerKit | null {
+  return KITS.find((k) => k.paintIndex === official.paint_index) ?? null;
+}
+
+export function officialKitLabel(kit: OfficialAk47Kit): string {
+  return `${kit.name_en} / ${kit.name_zh}`;
+}
+
+function officialSearchHaystack(kit: OfficialAk47Kit): string {
+  return [String(kit.paint_index), kit.name, kit.name_en, kit.name_zh, kit.name_zht ?? ""]
+    .join("\n")
+    .toLowerCase();
+}
+
+function officialExactTokens(kit: OfficialAk47Kit): string[] {
+  return [String(kit.paint_index), kit.name, kit.name_en, kit.name_zh, kit.name_zht ?? ""]
+    .filter((t) => t.length > 0)
+    .map((t) => t.toLowerCase());
+}
+
+/** True when the token names an official AK-47 kit (index / internal / en / zh / zht). */
+export function isOfficialAk47KitQuery(query: string | null | undefined): boolean {
+  if (query == null || query.trim() === "") return false;
+  const q = query.trim().toLowerCase();
+  return OFFICIAL_AK47_KITS.some((k) => officialExactTokens(k).includes(q));
+}
+
+export function resolveOfficialAk47Kit(query: string | null | undefined): OfficialAk47Kit | undefined {
+  if (!isOfficialAk47KitQuery(query)) return undefined;
+  const q = (query ?? "").trim().toLowerCase();
+  return OFFICIAL_AK47_KITS.find((k) => officialExactTokens(k).includes(q));
+}
+
+/** Case-insensitive substring match on paint index / internal name / en / zh / zht. */
+export function filterOfficialKits(kits: readonly OfficialAk47Kit[], query: string): OfficialAk47Kit[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [...kits];
+  return kits.filter((k) => officialSearchHaystack(k).includes(q));
+}
+
+/**
+ * Clamp inspect float to the kit wear remap, unless unlock (then 0–1).
+ * Wear remap is the visual band from items_game (not a new paint formula).
+ *   https://www.counter-strike.net/workshop/workshopfinishes/
+ */
+export function clampFloatToKit(value: number, official: OfficialAk47Kit, unlock: boolean): number {
+  const n = Number.isFinite(value) ? value : 0;
+  const lo = unlock ? 0 : official.wear_remap_min_effective;
+  const hi = unlock ? 1 : official.wear_remap_max_effective;
+  return Math.min(hi, Math.max(lo, n));
+}
+
+export function formatWearRange(kit: OfficialAk47Kit): string {
+  const fmt = (n: number): string => {
+    if (n === 0) return "0";
+    if (n === 1) return "1";
+    const rounded = Math.round(n * 1e4) / 1e4;
+    return String(rounded);
+  };
+  return `${fmt(kit.wear_remap_min_effective)}–${fmt(kit.wear_remap_max_effective)}`;
 }

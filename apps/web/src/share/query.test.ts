@@ -119,3 +119,82 @@ describe("invalid kit / s4 rejected", () => {
     expect(q.rejected.sort()).toEqual(["kit", "s4", "weapon"]);
   });
 });
+
+describe("M7 official catalog kits + wear clamp + view/bg", () => {
+  it("accepts official listed kits (72 Safari Mesh, 226 Blue Laminate) and serializes their index", () => {
+    const safari = parseShareQuery(params("kit=72"));
+    expect(safari.rejected).not.toContain("kit");
+    expect(safari.official.paint_index).toBe(72);
+    expect(safari.official.name_en).toBe("Safari Mesh");
+    expect(safari.kit).toBeNull();
+    expect(serializeShareQuery(safari).get("kit")).toBe("72");
+
+    const blue = parseShareQuery(params("kit=226"));
+    expect(blue.rejected).not.toContain("kit");
+    expect(blue.official.paint_index).toBe(226);
+    expect(blue.official.name_en).toBe("Blue Laminate");
+    expect(blue.kit).toBeNull();
+    expect(serializeShareQuery(blue).get("kit")).toBe("226");
+  });
+
+  it("clamps float to Blue Laminate 0.02–0.4 when wear is locked", () => {
+    const high = parseShareQuery(params("kit=226&float=0.9"));
+    expect(high.float).toBeCloseTo(0.4, 8);
+    expect(high.rejected).not.toContain("float");
+    expect(high.unlockWear).toBe(false);
+
+    const low = parseShareQuery(params("kit=226&float=0.01"));
+    expect(low.float).toBeCloseTo(0.02, 8);
+  });
+
+  it("keeps float 0.9 when unlock=1 (or wear=full)", () => {
+    const unlocked = parseShareQuery(params("kit=226&unlock=1&float=0.9"));
+    expect(unlocked.float).toBeCloseTo(0.9, 8);
+    expect(unlocked.unlockWear).toBe(true);
+    expect(serializeShareQuery(unlocked).get("unlock")).toBe("1");
+    expect(serializeShareQuery(unlocked).get("float")).toBe("0.9");
+
+    const viaWear = parseShareQuery(params("kit=226&wear=full&float=0.9"));
+    expect(viaWear.unlockWear).toBe(true);
+    expect(viaWear.float).toBeCloseTo(0.9, 8);
+  });
+
+  it("round-trips view=front and bg=warm", () => {
+    const q = parseShareQuery(params("kit=44&seed=923&float=0.056&view=front&bg=warm"));
+    expect(q.view).toBe("front");
+    expect(q.bg).toBe("warm");
+    expect(q.rejected).toEqual([]);
+    const encoded = serializeShareQuery(q);
+    expect(encoded.get("view")).toBe("front");
+    expect(encoded.get("bg")).toBe("warm");
+    const again = parseShareQuery(encoded);
+    expect(sameInspect(shareStateFromParsed(again), shareStateFromParsed(q))).toBe(true);
+  });
+
+  it("omits default view/bg/unlock from the query string", () => {
+    const q = parseShareQuery(params("kit=44&seed=1"));
+    const encoded = serializeShareQuery(q);
+    expect(encoded.has("view")).toBe(false);
+    expect(encoded.has("bg")).toBe(false);
+    expect(encoded.has("unlock")).toBe(false);
+  });
+
+  it("unknown view/bg fall back (and are rejected)", () => {
+    const q = parseShareQuery(params("view=top&bg=inferno"));
+    expect(q.view).toBe("inspect");
+    expect(q.bg).toBe("studio");
+    expect(q.rejected).toEqual(expect.arrayContaining(["view", "bg"]));
+  });
+
+  it("still rejects fade / 38 / 999 / s4", () => {
+    for (const raw of ["kit=fade", "kit=38", "kit=999"]) {
+      const q = parseShareQuery(params(raw));
+      expect(q.rejected).toContain("kit");
+      expect(q.kit).toBe(KIT_CASE_HARDENED);
+      expect(q.official.paint_index).toBe(44);
+    }
+    const s4 = parseShareQuery(params("kit=72&s4=259"));
+    expect(s4.official.paint_index).toBe(72);
+    expect(s4.rejected).toContain("s4");
+  });
+});
