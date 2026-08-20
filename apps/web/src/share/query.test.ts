@@ -245,3 +245,94 @@ describe("M9 bg= environment IBL looks", () => {
     expect(serializeShareQuery(q).has("bg")).toBe(false);
   });
 });
+
+describe("M10 StatTrak / nametag / charm", () => {
+  it("parses st=1 and omits default false on serialize", () => {
+    const on = parseShareQuery(params("kit=44&st=1"));
+    expect(on.stattrak).toBe(true);
+    expect(on.kills).toBe(0);
+    expect(on.rejected).not.toContain("st");
+    expect(serializeShareQuery(on).get("st")).toBe("1");
+
+    const off = parseShareQuery(params("kit=44"));
+    expect(off.stattrak).toBe(false);
+    expect(off.kills).toBe(0);
+    expect(serializeShareQuery(off).has("st")).toBe(false);
+
+    const zero = parseShareQuery(params("st=0"));
+    expect(zero.stattrak).toBe(false);
+    expect(serializeShareQuery(zero).has("st")).toBe(false);
+  });
+
+  it("accepts st=<kills> and kills= alias", () => {
+    const viaSt = parseShareQuery(params("st=1234"));
+    expect(viaSt.stattrak).toBe(true);
+    expect(viaSt.kills).toBe(1234);
+    expect(serializeShareQuery(viaSt).get("st")).toBe("1234");
+
+    const viaKills = parseShareQuery(params("kills=42"));
+    expect(viaKills.stattrak).toBe(true);
+    expect(viaKills.kills).toBe(42);
+    expect(serializeShareQuery(viaKills).get("st")).toBe("42");
+
+    const both = parseShareQuery(params("st=1&kills=99"));
+    expect(both.stattrak).toBe(true);
+    expect(both.kills).toBe(99);
+    expect(serializeShareQuery(both).get("st")).toBe("99");
+  });
+
+  it("ignores invalid st= (rejected, stays off)", () => {
+    const q = parseShareQuery(params("st=nope"));
+    expect(q.stattrak).toBe(false);
+    expect(q.kills).toBe(0);
+    expect(q.rejected).toContain("st");
+    expect(serializeShareQuery(q).has("st")).toBe(false);
+  });
+
+  it("round-trips unicode nametag and clamps length", () => {
+    const zh = parseShareQuery(params("name=" + encodeURIComponent("淬火AK")));
+    expect(zh.nametag).toBe("淬火AK");
+    expect(zh.rejected).not.toContain("name");
+    expect(serializeShareQuery(zh).get("name")).toBe("淬火AK");
+    const again = parseShareQuery(serializeShareQuery(shareStateFromParsed(zh)));
+    expect(sameInspect(shareStateFromParsed(again), shareStateFromParsed(zh))).toBe(true);
+
+    const long = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const clamped = parseShareQuery(params("name=" + encodeURIComponent(long)));
+    expect(clamped.nametag).toHaveLength(20);
+    expect(clamped.nametag).toBe("ABCDEFGHIJKLMNOPQRST");
+  });
+
+  it("omits empty nametag and rejects name=", () => {
+    const empty = parseShareQuery(params("kit=44"));
+    expect(empty.nametag).toBe("");
+    expect(serializeShareQuery(empty).has("name")).toBe(false);
+
+    const blank = parseShareQuery(params("name="));
+    expect(blank.nametag).toBe("");
+    expect(blank.rejected).toContain("name");
+    expect(serializeShareQuery(blank).has("name")).toBe(false);
+  });
+
+  it("rejects charm= (stub, not applied)", () => {
+    const q = parseShareQuery(params("kit=44&charm=1"));
+    expect(q.rejected).toContain("charm");
+    expect(serializeShareQuery(q).has("charm")).toBe(false);
+  });
+
+  it("sameInspect includes st / name and still matches M6 sticker URLs", () => {
+    const a = parseShareQuery(params("kit=122&s0=259&st=1&name=jaymie"));
+    const b = parseShareQuery(serializeShareQuery(shareStateFromParsed(a)));
+    expect(sameInspect(shareStateFromParsed(a), shareStateFromParsed(b))).toBe(true);
+    expect(b.stattrak).toBe(true);
+    expect(b.nametag).toBe("jaymie");
+    expect(b.slots[0].id).toBe(259);
+
+    const noExtra = parseShareQuery(params("weapon=ak47&kit=44&seed=923&float=0.056&s0=259,0.02,-0.01,15,0.4"));
+    expect(noExtra.stattrak).toBe(false);
+    expect(noExtra.nametag).toBe("");
+    expect(serializeShareQuery(noExtra).has("st")).toBe(false);
+    expect(serializeShareQuery(noExtra).has("name")).toBe(false);
+    expect(serializeShareQuery(noExtra).get("s0")).toBe("259,0.02,-0.01,15,0.4");
+  });
+});

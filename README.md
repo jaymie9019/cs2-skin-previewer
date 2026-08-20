@@ -21,10 +21,11 @@ Changing Kit / Seed / Float / stickers / view / background updates the query str
 
 Static catalog table (search + inspect links): http://127.0.0.1:5173/catalog/ak47.html
 
-## Shareable URL (M6 + M7)
-Opening a URL restores the same inspect. Grammar: weapon=ak47 (only AK for now), kit=<official paint index or slug>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool|sun (IBL look, not just a plate). Unknown kit (fade / 38 / 999) and s4 are rejected. Official listed kits without a shader (e.g. kit=180 Fire Serpent) are accepted and show the vanilla AK. Live kits include 14 / 44 / 72 / 122 / 226 / 282 / 456 / 524 / 639. Full grammar: docs/MILESTONE_7.md + docs/MILESTONE_8.md + docs/MILESTONE_9.md.
+## Shareable URL (M6–M10)
+Opening a URL restores the same inspect. Grammar: weapon=ak47 (only AK for now), kit=<official paint index or slug>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool|sun (IBL look, not just a plate), st=1 or st=<kills> (StatTrak), name=<text> (nametag, max 20). Unknown kit (fade / 38 / 999), s4, and charm= are rejected. Official listed kits without a shader (e.g. kit=180 Fire Serpent) are accepted and show the vanilla AK. Live kits include 14 / 44 / 72 / 122 / 226 / 282 / 456 / 524 / 639. Full grammar: docs/MILESTONE_7.md + docs/MILESTONE_8.md + docs/MILESTONE_9.md + docs/MILESTONE_10.md.
 Example: ?weapon=ak47&kit=44&seed=923&float=0.056&s0=259,0.02,-0.01,15,0.4
 Example: ?weapon=ak47&kit=226&view=front&bg=warm
+Example: ?weapon=ak47&kit=44&st=1&name=jaymie
 
 ## Compliance
 
@@ -54,9 +55,13 @@ Official PNGs are gitignored; see `assets/paints/README.md`.
 
 Tests: from `apps/web`, `npx vitest run` (or `apps/web/run-tests.sh`). Notes: `docs/MILESTONE_4.md`.
 
-## Stickers (M5)
+## Stickers (M5 + M10)
 
-Up to **4** layers on the AK via mesh `TEXCOORD_1` + `StickerMarkup` offsets (not world-space quads). Query `s0=id,x,y,rot,wear` (s1–s3). `s4` is rejected. Empty slot / id `0` is a no-op. UI: four slots, extracted subset (Dinked 259, Aces High, Aces High Holo, Lucky 13, Firestarter Holo) plus id lookup against `data/stickers.json`. Wear is an approximation of engine-applied scrape + UnWear (https://www.counter-strike.net/workshop/workshopstickers/). Official sticker PNGs are gitignored; see `assets/stickers/README.md`. Notes: `docs/MILESTONE_5.md`.
+Up to **4** layers on the AK via mesh `TEXCOORD_1` + `StickerMarkup` offsets (not world-space quads). Query `s0=id,x,y,rot,wear` (s1–s3). `s4` is rejected. Empty slot / id `0` is a no-op. UI: searchable picker over `data/stickers.json` (en / 中文 / id). Extracted subset (Dinked 259, Aces High, Aces High Holo, Lucky 13, Firestarter Holo) applies real textures; catalog-only ids store the slot and show “not extracted / 未导出” without borrowing another sticker’s art. Wear is an approximation of engine-applied scrape + UnWear (https://www.counter-strike.net/workshop/workshopstickers/). Official sticker PNGs are gitignored; see `assets/stickers/README.md`. Notes: `docs/MILESTONE_5.md`, `docs/MILESTONE_10.md`.
+
+## Inspect extras (M10)
+
+StatTrak toggle (`st=1` / `st=<kills>`) draws an authored LCD plate on the receiver (not a CS2 mesh). Nametag (`name=`, 20 chars, 中文 ok) draws a small plate. Charm / keychain is stubbed — no clean local extract; HUD says “coming later / 未接入” and `charm=` is rejected. Notes: `docs/MILESTONE_10.md`.
 
 ## Lighting (M6 + M9)
 

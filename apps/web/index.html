@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CS2 Skin Previewer — M9</title>
+    <title>CS2 Skin Previewer — M10</title>
   </head>
   <body>
     <aside id="catalog-panel">
@@ -50,9 +50,35 @@
         <button type="button" data-bg="sun">Sun</button>
       </div>
       <a id="catalog-link" href="/catalog/ak47.html">All AK-47 kits</a>
+      <div id="extras-panel">
+        <div class="sticker-heading">Inspect extras</div>
+        <label class="unlock-row">
+          <input id="stattrak-toggle" type="checkbox" />
+          <span>StatTrak™</span>
+        </label>
+        <label>
+          <span>Kills</span>
+          <input id="stattrak-kills" type="number" min="0" max="999999" step="1" value="0" />
+        </label>
+        <label>
+          <span>Nametag</span>
+          <input id="nametag-input" type="text" maxlength="20" placeholder="name / 中文…" autocomplete="off" />
+        </label>
+        <label class="charm-stub">
+          <span>Charm</span>
+          <input disabled placeholder="coming later / 未接入" />
+        </label>
+      </div>
       <div id="sticker-panel"></div>
     </div>
-    <img id="m1-hold" src="/m9-hold.png" alt="" width="1" height="1" />
+    <div id="inspect-plates" hidden>
+      <div id="stattrak-plate" hidden>
+        <span class="st-label">StatTrak™</span>
+        <span id="stattrak-kills-readout">0</span>
+      </div>
+      <div id="nametag-plate" hidden></div>
+    </div>
+    <img id="m1-hold" src="/m10-hold.png" alt="" width="1" height="1" />
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

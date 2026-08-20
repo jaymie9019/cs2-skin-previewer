@@ -24,6 +24,7 @@ M0–M6 stay as shipped (AK-47, 3 kits, stickers, share URL). New work is M7+.
 | milestone-7 | Catalog HUD + wear clamp + views |
 | milestone-8 | Representative live paint styles (9 kits / 6 styles) |
 | milestone-9 | Authored IBL looks (`bg=` → PMREM); metal reads reflections |
+| milestone-10 | Sticker catalog picker + StatTrak / nametag (charm stubbed) |
 
 ## Gap vs a Skincraft-class site
 
@@ -31,7 +32,7 @@ M0–M6 stay as shipped (AK-47, 3 kits, stickers, share URL). New work is M7+.
 - Only 3 of 61 AK kits have a paint shader
 - Lighting is authored IBL looks (studio / warm / cool / sun), not game-accurate map probes
 - One weapon; no knives/gloves
-- Stickers are a small subset; no charms / nametag / StatTrak
+- Stickers are a searchable catalog (extracted subset still small); charm / keychain stubbed
 - Renderer is MeshStandard approximations, not a Source 2 material graph
 
 ## New milestones (strict order)
@@ -65,11 +66,7 @@ Site chrome around the existing viewer.
 - Still approximate; no claim of CS2 pixel match
 
 ### M10 — Sticker catalog + inspect extras
-- Picker backed by `data/stickers.json` (search en/zh); extract-on-select or a larger local subset
-- Keep 4 slots, offset / rot / wear
-- StatTrak counter mesh or overlay (visual)
-- Nametag plate (text)
-- Charm / keychain only if we find a clean local extract path; otherwise stub the slot and document
+**Done** (`milestone-10`): searchable `stickers.json` picker (en/zh/id), 4 slots unchanged, visual StatTrak + nametag. Charm stubbed (no clean keychain extract).
 
 ### M11 — More weapons
 - Second weapon from the same pipeline (suggest AWP or Glock — Glock has Fade, which AK does not)

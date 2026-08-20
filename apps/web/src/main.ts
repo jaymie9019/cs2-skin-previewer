@@ -39,6 +39,8 @@ import { clampSeed, seedToPatternUv, type Affine2D } from "./seed/seedToPatternU
 import {
   EXTRACTED_STICKERS,
   extractedSticker,
+  filterStickers,
+  isExtractedStickerId,
   lookupStickerRow,
   stickerLabel,
   type StickerLookupRow,
@@ -61,11 +63,15 @@ import {
 } from "./stickers/slots";
 import {
   applyShareUrl,
+  clampKills,
+  clampNametag,
+  NAMETAG_MAX_CHARS,
   parseShareQuery,
   type BackgroundPlate,
   type InspectView,
   type ViewerWeapon,
 } from "./share/query";
+import { createNametagPlate, createStatTrakPlate, placeInspectPlates } from "./inspect/plates";
 import {
   ENV_LOOKS,
   envLookPlateHex,
@@ -124,6 +130,13 @@ const unlockWearInput = document.querySelector("#unlock-wear");
 const previewBadge = document.querySelector("#preview-badge");
 const viewRow = document.querySelector("#view-row");
 const bgRow = document.querySelector("#bg-row");
+const stattrakToggle = document.querySelector("#stattrak-toggle");
+const stattrakKillsInput = document.querySelector("#stattrak-kills");
+const nametagInput = document.querySelector("#nametag-input");
+const inspectPlates = document.querySelector("#inspect-plates");
+const stattrakPlate = document.querySelector("#stattrak-plate");
+const stattrakReadout = document.querySelector("#stattrak-kills-readout");
+const nametagPlate = document.querySelector("#nametag-plate");
 
 function setStatus(text: string): void {
   if (statusEl instanceof HTMLElement) {
@@ -137,6 +150,7 @@ function formatFloat(value: number): string {
 
 function releaseDocumentHold(): void {
   const paths = [
+    "/m10-release",
     "/m9-release",
     "/m8-release",
     "/m7-release",
@@ -157,6 +171,7 @@ function releaseDocumentHold(): void {
 }
 
 function markReady(): void {
+  window.__M10_READY__ = true;
   window.__M9_READY__ = true;
   window.__M8_READY__ = true;
   window.__M7_READY__ = true;
@@ -171,6 +186,7 @@ function markReady(): void {
 }
 
 function markError(message: string): void {
+  window.__M10_ERROR__ = message;
   window.__M9_ERROR__ = message;
   window.__M8_ERROR__ = message;
   window.__M7_ERROR__ = message;
@@ -271,8 +287,15 @@ let currentView: InspectView = share.view ?? "inspect";
 let currentBg: BackgroundPlate = share.bg ?? "studio";
 let currentUnlockWear = share.unlockWear ?? false;
 let currentSlots: StickerSlot[] = stickerQuery.slots.map((s) => ({ ...s }));
+let currentStatTrak = share.stattrak ?? false;
+let currentKills = share.kills ?? 0;
+let currentNametag = share.nametag ?? "";
 let lookupCatalog: StickerLookupRow[] = [];
 let catalogFilter = "";
+let pickerQuery = params.get("pickq") ?? "";
+let pickerSlot = 0;
+const stattrakMesh = createStatTrakPlate();
+const nametagMesh = createNametagPlate();
 
 function wearBounds(): { min: number; max: number } {
   if (currentUnlockWear) return { min: 0, max: 1 };
@@ -293,6 +316,9 @@ function syncShareUrl(): void {
     view: currentView,
     bg: currentBg,
     unlockWear: currentUnlockWear,
+    stattrak: currentStatTrak,
+    kills: currentKills,
+    nametag: currentNametag,
     capture: share.capture,
     fixed: share.fixed,
   });
@@ -312,6 +338,10 @@ function syncShareUrl(): void {
   window.__M7_WEAR_MAX__ = bounds.max;
   window.__M7_UNLOCK__ = currentUnlockWear;
   window.__M9_BG__ = currentBg;
+  window.__M10_STATTRAK__ = currentStatTrak;
+  window.__M10_KILLS__ = currentKills;
+  window.__M10_NAMETAG__ = currentNametag;
+  window.__M10_PICKQ__ = pickerQuery;
 }
 
 function setButtonActive(row: Element | null, attr: string, value: string): void {
@@ -436,8 +466,12 @@ function updateStatus(): void {
   const label = officialKitLabel(currentOfficial);
   const vanilla = currentKit == null;
   const note = vanilla ? "  — preview not implemented / 尚未做涂装" : "";
+  const extraBits: string[] = [];
+  if (currentStatTrak) extraBits.push(`ST ${currentKills}`);
+  if (currentNametag) extraBits.push(`name ${currentNametag}`);
+  const extra = extraBits.length ? `  ${extraBits.join("  ")}` : "";
   setStatus(
-    `AK-47 ${label} — seed ${currentSeed}  float ${formatFloat(currentFloat)}  ${stickerStatus()}${note}`,
+    `AK-47 ${label} — seed ${currentSeed}  float ${formatFloat(currentFloat)}  ${stickerStatus()}${extra}${note}`,
   );
   if (previewBadge instanceof HTMLElement) {
     previewBadge.hidden = !vanilla;
@@ -605,16 +639,101 @@ if (bgRow instanceof HTMLElement) {
   });
 }
 
+if (stattrakToggle instanceof HTMLInputElement) {
+  stattrakToggle.checked = currentStatTrak;
+  stattrakToggle.addEventListener("change", () => {
+    applyStatTrak(stattrakToggle.checked, currentKills);
+  });
+}
+if (stattrakKillsInput instanceof HTMLInputElement) {
+  stattrakKillsInput.value = String(currentKills);
+  stattrakKillsInput.disabled = !currentStatTrak;
+  stattrakKillsInput.addEventListener("input", () => {
+    applyStatTrak(currentStatTrak, Number(stattrakKillsInput.value));
+  });
+}
+if (nametagInput instanceof HTMLInputElement) {
+  nametagInput.value = currentNametag;
+  nametagInput.maxLength = NAMETAG_MAX_CHARS;
+  nametagInput.addEventListener("input", () => {
+    applyNametag(nametagInput.value);
+  });
+}
+
 function lookupName(id: number): string {
   if (id <= 0) return "empty";
   const extracted = extractedSticker(id);
   if (extracted) return stickerLabel(extracted);
   const row = lookupStickerRow(lookupCatalog, id);
-  if (row) {
-    const label = stickerLabel(row);
-    return extractedSticker(id) ? label : `${label} (not extracted)`;
+  if (row) return `${stickerLabel(row)} (not extracted / 未导出)`;
+  return `id ${id} (not extracted / 未导出)`;
+}
+
+function syncInspectPlates(): void {
+  stattrakMesh.setKills(currentKills);
+  stattrakMesh.setVisible(currentStatTrak);
+  nametagMesh.setText(currentNametag);
+  nametagMesh.setVisible(currentNametag.length > 0);
+
+  if (stattrakToggle instanceof HTMLInputElement) {
+    stattrakToggle.checked = currentStatTrak;
   }
-  return `id ${id}`;
+  if (stattrakKillsInput instanceof HTMLInputElement) {
+    stattrakKillsInput.value = String(currentKills);
+    stattrakKillsInput.disabled = !currentStatTrak;
+  }
+  if (nametagInput instanceof HTMLInputElement) {
+    if (document.activeElement !== nametagInput) nametagInput.value = currentNametag;
+  }
+  if (stattrakReadout instanceof HTMLElement) {
+    stattrakReadout.textContent = String(currentKills);
+  }
+  if (nametagPlate instanceof HTMLElement) {
+    nametagPlate.textContent = currentNametag;
+    nametagPlate.hidden = currentNametag.length === 0;
+  }
+  if (stattrakPlate instanceof HTMLElement) {
+    stattrakPlate.hidden = !currentStatTrak;
+  }
+  if (inspectPlates instanceof HTMLElement) {
+    inspectPlates.hidden = !currentStatTrak && currentNametag.length === 0;
+  }
+}
+
+function applyStatTrak(on: boolean, kills: number): void {
+  currentStatTrak = on;
+  currentKills = on ? clampKills(kills) : 0;
+  syncInspectPlates();
+  syncShareUrl();
+  updateStatus();
+}
+
+function applyNametag(raw: string): void {
+  currentNametag = clampNametag(raw);
+  syncInspectPlates();
+  syncShareUrl();
+  updateStatus();
+}
+
+const PICKER_LIMIT = 40;
+
+function pickerSource(): StickerLookupRow[] {
+  if (lookupCatalog.length > 0) return lookupCatalog;
+  return EXTRACTED_STICKERS.map((s) => ({
+    id: s.id,
+    name: s.name,
+    name_en: s.nameEn,
+    name_zh: s.nameZh,
+    sticker_material: s.stickerMaterial,
+  }));
+}
+
+function assignStickerId(slotIndex: number, id: number): void {
+  const next = currentSlots.map((s) => ({ ...s }));
+  const cur = next[slotIndex] ?? { id: 0, offsetX: 0, offsetY: 0, rotationDeg: 0, wear: 0 };
+  next[slotIndex] = { ...cur, id: Math.max(0, Math.floor(id)) };
+  applySlots(next);
+  buildStickerUi();
 }
 
 function buildStickerUi(): void {
@@ -625,6 +744,99 @@ function buildStickerUi(): void {
   heading.textContent = "Stickers (4 slots)";
   stickerPanel.append(heading);
 
+  const search = document.createElement("input");
+  search.type = "search";
+  search.className = "sticker-search";
+  search.placeholder = "Search stickers en / 中文 / id…";
+  search.value = pickerQuery;
+  search.autocomplete = "off";
+  stickerPanel.append(search);
+
+  const assign = document.createElement("div");
+  assign.className = "sticker-assign";
+  const assignLabel = document.createElement("span");
+  assignLabel.textContent = "Assign";
+  assign.append(assignLabel);
+  for (let i = 0; i < MAX_STICKER_LAYERS; i++) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = `s${i}`;
+    btn.classList.toggle("active", pickerSlot === i);
+    btn.addEventListener("click", () => {
+      pickerSlot = i;
+      buildStickerUi();
+    });
+    assign.append(btn);
+  }
+  stickerPanel.append(assign);
+
+  const count = document.createElement("div");
+  count.className = "sticker-note";
+  const results = document.createElement("div");
+  results.className = "sticker-results";
+
+  const q = pickerQuery.trim();
+  const source = pickerSource();
+  const matched = q
+    ? filterStickers(source, q).slice().sort((a, b) => {
+        const ae = isExtractedStickerId(a.id) ? 0 : 1;
+        const be = isExtractedStickerId(b.id) ? 0 : 1;
+        if (ae !== be) return ae - be;
+        return a.id - b.id;
+      })
+    : EXTRACTED_STICKERS.map((s) => ({
+        id: s.id,
+        name: s.name,
+        name_en: s.nameEn,
+        name_zh: s.nameZh,
+        sticker_material: s.stickerMaterial,
+      }));
+  const shown = matched.slice(0, PICKER_LIMIT);
+  if (!q) {
+    count.textContent = `extracted subset · type to search ${source.filter((r) => r.id > 0).length} stickers`;
+  } else {
+    count.textContent = `${matched.length} match${matched.length === 1 ? "" : "es"} · showing ${shown.length}`;
+  }
+  stickerPanel.append(count, results);
+
+  for (const row of shown) {
+    const live = isExtractedStickerId(row.id);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "sticker-hit";
+    if (currentSlots[pickerSlot]?.id === row.id) btn.classList.add("active");
+    const left = document.createElement("div");
+    const names = document.createElement("div");
+    names.className = "sticker-hit-names";
+    names.textContent = stickerLabel(row);
+    const meta = document.createElement("div");
+    meta.className = "sticker-hit-meta";
+    meta.textContent = live
+      ? `#${row.id} · extracted`
+      : `#${row.id} · not extracted / 未导出`;
+    left.append(names, meta);
+    const badge = document.createElement("span");
+    badge.className = `badge ${live ? "live" : "listed"}`;
+    badge.textContent = live ? "Live" : "Listed";
+    btn.append(left, badge);
+    btn.addEventListener("click", () => {
+      assignStickerId(pickerSlot, row.id);
+    });
+    results.append(btn);
+  }
+
+  search.addEventListener("input", () => {
+    pickerQuery = search.value;
+    window.__M10_PICKQ__ = pickerQuery;
+    buildStickerUi();
+    const again = stickerPanel.querySelector(".sticker-search");
+    if (again instanceof HTMLInputElement) {
+      again.focus();
+      const len = again.value.length;
+      again.setSelectionRange(len, len);
+    }
+  });
+
   for (let i = 0; i < MAX_STICKER_LAYERS; i++) {
     const slot = currentSlots[i];
     const row = document.createElement("fieldset");
@@ -634,27 +846,16 @@ function buildStickerUi(): void {
     legend.textContent = `s${i}`;
     row.append(legend);
 
-    const pick = document.createElement("label");
-    const pickSpan = document.createElement("span");
-    pickSpan.textContent = "Kit";
-    const select = document.createElement("select");
-    const none = document.createElement("option");
-    none.value = "0";
-    none.textContent = "(empty)";
-    select.append(none);
-    for (const s of EXTRACTED_STICKERS) {
-      const opt = document.createElement("option");
-      opt.value = String(s.id);
-      opt.textContent = stickerLabel(s);
-      select.append(opt);
-    }
-    const other = document.createElement("option");
-    other.value = "custom";
-    other.textContent = "id lookup…";
-    select.append(other);
-    const extracted = extractedSticker(slot.id);
-    select.value = slot.id === 0 ? "0" : extracted ? String(slot.id) : "custom";
-    pick.append(pickSpan, select);
+    const head = document.createElement("div");
+    head.className = "sticker-slot-head";
+    const idName = document.createElement("span");
+    idName.className = "sticker-name";
+    idName.textContent = lookupName(slot.id);
+    const clear = document.createElement("button");
+    clear.type = "button";
+    clear.textContent = "clear";
+    clear.addEventListener("click", () => assignStickerId(i, 0));
+    head.append(idName, clear);
 
     const idLabel = document.createElement("label");
     const idSpan = document.createElement("span");
@@ -664,10 +865,7 @@ function buildStickerUi(): void {
     idInput.min = "0";
     idInput.step = "1";
     idInput.value = String(slot.id);
-    const idName = document.createElement("span");
-    idName.className = "sticker-name";
-    idName.textContent = lookupName(slot.id);
-    idLabel.append(idSpan, idInput, idName);
+    idLabel.append(idSpan, idInput);
 
     const xLabel = document.createElement("label");
     xLabel.innerHTML = `<span>x</span>`;
@@ -726,25 +924,13 @@ function buildStickerUi(): void {
       applySlots(next);
     };
 
-    select.addEventListener("change", () => {
-      if (select.value === "custom") {
-        idInput.focus();
-        return;
-      }
-      idInput.value = select.value;
-      commit();
-    });
-    idInput.addEventListener("change", () => {
-      const id = Math.max(0, Math.floor(Number(idInput.value) || 0));
-      select.value = extractedSticker(id) ? String(id) : id === 0 ? "0" : "custom";
-      commit();
-    });
+    idInput.addEventListener("change", commit);
     xInput.addEventListener("input", commit);
     yInput.addEventListener("input", commit);
     rotInput.addEventListener("input", commit);
     wearInput.addEventListener("input", commit);
 
-    row.append(pick, idLabel, xLabel, yLabel, rotLabel, wearLabel);
+    row.append(head, idLabel, xLabel, yLabel, rotLabel, wearLabel);
     stickerPanel.append(row);
   }
 }
@@ -770,6 +956,7 @@ renderCatalog();
 updateWearSliderBounds();
 applyView(currentView);
 applyBackground(currentBg);
+syncInspectPlates();
 updateStatus();
 
 const textureLoader = new TextureLoader();
@@ -880,12 +1067,16 @@ Promise.all([
 
     applyOfficial(officialFromQuery);
     applySlots(currentSlots);
-    scene.add(root);
-
     const box = new Box3().setFromObject(root);
     const size = box.getSize(new Vector3());
     const center = box.getCenter(new Vector3());
-    console.info("[m9] AK-47 env lighting", {
+    placeInspectPlates(stattrakMesh.mesh, nametagMesh.mesh, center);
+    root.add(stattrakMesh.mesh);
+    root.add(nametagMesh.mesh);
+    syncInspectPlates();
+    scene.add(root);
+
+    console.info("[m10] AK-47 inspect extras", {
       size,
       center,
       seed: currentSeed,
@@ -895,6 +1086,9 @@ Promise.all([
       view: currentView,
       bg: currentBg,
       slots: currentSlots,
+      stattrak: currentStatTrak,
+      kills: currentKills,
+      nametag: currentNametag,
       rejected: stickerQuery.rejected,
       modelUrl: MODEL_URL,
     });

@@ -10,6 +10,10 @@
  *   view=inspect|front|back     omit = inspect
  *   bg=studio|warm|cool|sun     omit = studio (IBL look, not just a plate)
  *   unlock=1  /  wear=full      wear slider 0–1 (else kit remap)
+ *   st=1  /  st=0  /  st=<kills>  StatTrak overlay; omit / 0 = off
+ *   kills=<n>                   optional kill count (used when StatTrak is on)
+ *   name=<text>                 nametag (URL-encoded, max 20 chars; empty rejected)
+ *   charm=                      stub — rejected (no local keychain extract)
  *
  * Optional screenshot flags (preserved, not part of the inspect):
  *   capture=1  /  fixed=1
@@ -19,6 +23,7 @@
  *
  * Rejected (not applied):
  *   unknown weapon, unknown kit (fade / 38 / 999 — not official AK), s4 / s5 / …
+ *   charm= (M10 stub), empty name=, invalid st=
  * Invalid values fall back: weapon → ak47, kit → 44 Case Hardened.
  */
 import {
@@ -58,6 +63,79 @@ export type BackgroundPlate = EnvLookId;
 export const INSPECT_VIEWS = ["inspect", "front", "back"] as const;
 export const BACKGROUND_PLATES = ENV_LOOK_IDS;
 
+export const NAMETAG_MAX_CHARS = 20;
+export const STATTRAK_KILLS_MAX = 999999;
+
+/** Unicode-safe clamp (code points). Empty / whitespace-only → "". */
+export function clampNametag(raw: string): string {
+  const trimmed = raw.replace(/\s+/g, " ").trim();
+  if (!trimmed) return "";
+  return [...trimmed].slice(0, NAMETAG_MAX_CHARS).join("");
+}
+
+export function clampKills(value: number): number {
+  if (!Number.isFinite(value) || value < 0) return 0;
+  return Math.min(STATTRAK_KILLS_MAX, Math.floor(value));
+}
+
+/**
+ * st omitted / 0 / off / false → off.
+ * st=1 / on / true → on, kills 0 (unless kills= is also present).
+ * st=<n> n>1 → on, kills n.
+ * kills=<n> sets the counter; if st is omitted, kills>0 turns StatTrak on.
+ * Invalid st / kills → ignored + rejected.
+ */
+export function parseStatTrak(params: URLSearchParams): { on: boolean; kills: number; rejected: string[] } {
+  const rejected: string[] = [];
+  const hasSt = params.has("st");
+  const hasKills = params.has("kills");
+  let on = false;
+  let kills = 0;
+
+  if (hasSt) {
+    const raw = (params.get("st") ?? "").trim();
+    const lower = raw.toLowerCase();
+    if (raw === "" || raw === "0" || lower === "false" || lower === "off") {
+      on = false;
+      kills = 0;
+    } else if (raw === "1" || lower === "true" || lower === "on") {
+      on = true;
+      kills = 0;
+    } else {
+      const n = Number(raw);
+      if (Number.isFinite(n) && n > 0) {
+        on = true;
+        kills = clampKills(n);
+      } else {
+        rejected.push("st");
+        on = false;
+        kills = 0;
+      }
+    }
+  }
+
+  if (hasKills) {
+    const raw = (params.get("kills") ?? "").trim();
+    const n = Number(raw);
+    if (Number.isFinite(n) && n >= 0) {
+      kills = clampKills(n);
+      if (!hasSt && kills > 0) on = true;
+    } else {
+      rejected.push("kills");
+    }
+  }
+
+  if (!on) kills = 0;
+  return { on, kills, rejected };
+}
+
+export function parseNametag(params: URLSearchParams): { nametag: string; rejected: string[] } {
+  if (!params.has("name")) return { nametag: "", rejected: [] };
+  const clamped = clampNametag(params.get("name") ?? "");
+  if (!clamped) return { nametag: "", rejected: ["name"] };
+  return { nametag: clamped, rejected: [] };
+}
+
 export type ShareState = {
   weapon: ViewerWeapon;
   /** Painted ViewerKit, or null when the official kit has no shader yet. */
@@ -69,6 +147,12 @@ export type ShareState = {
   view?: InspectView;
   bg?: BackgroundPlate;
   unlockWear?: boolean;
+  /** Visual StatTrak counter. Omit / false = off. */
+  stattrak?: boolean;
+  /** Kill count shown on the StatTrak plate (default 0). */
+  kills?: number;
+  /** Nametag text. Empty / omit = no plate. */
+  nametag?: string;
   capture: boolean;
   fixed: boolean;
 };
@@ -79,6 +163,9 @@ export type ParsedShareQuery = ShareState & {
   view: InspectView;
   bg: BackgroundPlate;
   unlockWear: boolean;
+  stattrak: boolean;
+  kills: number;
+  nametag: string;
 };
 
 export function isViewerWeaponQuery(query: string | null | undefined): boolean {
@@ -160,6 +247,12 @@ export function parseShareQuery(params: URLSearchParams): ParsedShareQuery {
   const stickers = parseStickerQuery(params);
   rejected.push(...stickers.rejected);
 
+  const st = parseStatTrak(params);
+  rejected.push(...st.rejected);
+  const named = parseNametag(params);
+  rejected.push(...named.rejected);
+  if (params.has("charm")) rejected.push("charm");
+
   return {
     weapon,
     kit,
@@ -170,6 +263,9 @@ export function parseShareQuery(params: URLSearchParams): ParsedShareQuery {
     view,
     bg,
     unlockWear,
+    stattrak: st.on,
+    kills: st.kills,
+    nametag: named.nametag,
     capture: params.has("capture"),
     fixed: params.has("fixed"),
     rejected,
@@ -192,6 +288,12 @@ export function serializeShareQuery(state: ShareState): URLSearchParams {
   if (state.view && state.view !== "inspect") params.set("view", state.view);
   if (state.bg && state.bg !== "studio") params.set("bg", state.bg);
   if (state.unlockWear) params.set("unlock", "1");
+  if (state.stattrak) {
+    const kills = clampKills(state.kills ?? 0);
+    params.set("st", kills > 0 ? String(kills) : "1");
+  }
+  const nametag = clampNametag(state.nametag ?? "");
+  if (nametag) params.set("name", nametag);
   if (state.capture) params.set("capture", "1");
   if (state.fixed) params.set("fixed", "1");
   return params;
@@ -208,6 +310,9 @@ export function shareStateFromParsed(parsed: ParsedShareQuery): ShareState {
     view: parsed.view,
     bg: parsed.bg,
     unlockWear: parsed.unlockWear,
+    stattrak: parsed.stattrak,
+    kills: parsed.kills,
+    nametag: parsed.nametag,
     capture: parsed.capture,
     fixed: parsed.fixed,
   };
@@ -222,6 +327,9 @@ export function sameInspect(a: ShareState, b: ShareState): boolean {
   if ((a.view ?? "inspect") !== (b.view ?? "inspect")) return false;
   if ((a.bg ?? "studio") !== (b.bg ?? "studio")) return false;
   if (Boolean(a.unlockWear) !== Boolean(b.unlockWear)) return false;
+  if (Boolean(a.stattrak) !== Boolean(b.stattrak)) return false;
+  if (Boolean(a.stattrak) && clampKills(a.kills ?? 0) !== clampKills(b.kills ?? 0)) return false;
+  if (clampNametag(a.nametag ?? "") !== clampNametag(b.nametag ?? "")) return false;
   if (a.slots.length !== b.slots.length) return false;
   for (let i = 0; i < a.slots.length; i++) {
     const x = a.slots[i];

@@ -73,3 +73,26 @@ export function stickerLabel(row: { nameEn?: string; name_en?: string; nameZh?: 
 export function lookupStickerRow(catalog: readonly StickerLookupRow[], id: number): StickerLookupRow | undefined {
   return catalog.find((r) => r.id === id);
 }
+
+function stickerHaystack(row: StickerLookupRow): string {
+  return [String(row.id), row.name, row.name_en, row.name_zh, row.sticker_material ?? ""]
+    .join("\n")
+    .toLowerCase();
+}
+
+/**
+ * Case-insensitive substring match on id / internal name / en / 中文 / material.
+ * id 0 (items_game default placeholder) is never returned.
+ * Empty query returns the full usable catalog (UI shows the extracted subset).
+ */
+export function filterStickers(rows: readonly StickerLookupRow[], query: string): StickerLookupRow[] {
+  const usable = rows.filter((r) => r.id > 0);
+  const q = query.trim().toLowerCase();
+  if (!q) return [...usable];
+  return usable.filter((r) => stickerHaystack(r).includes(q));
+}
+
+export function isExtractedStickerId(id: number): boolean {
+  return extractedSticker(id) != null;
+}
+

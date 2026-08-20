@@ -61,4 +61,10 @@ interface Window {
   __M9_READY__?: boolean;
   __M9_ERROR__?: string;
   __M9_BG__?: string;
+  __M10_READY__?: boolean;
+  __M10_ERROR__?: string;
+  __M10_STATTRAK__?: boolean;
+  __M10_KILLS__?: number;
+  __M10_NAMETAG__?: string;
+  __M10_PICKQ__?: string;
 }
