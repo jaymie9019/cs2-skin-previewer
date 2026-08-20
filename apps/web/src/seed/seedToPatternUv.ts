@@ -92,6 +92,8 @@ export type SeedUvOptions = {
    */
   paintStyle?: number;
   patternScale?: number;
+  /** vmat g_bIgnoreWeaponSizeScale — scale is just patternScale. */
+  ignoreWeaponSizeScale?: boolean;
 };
 
 /** 1/36 inch — official pattern-sheet size for triplanar styles. */
@@ -107,6 +109,9 @@ export function baseScaleForStyle(options: SeedUvOptions = {}): number {
   const uvScale = options.uvScale ?? AK47_UV_SCALE;
   const weaponLength = options.weaponLength ?? AK47_WEAPON_LENGTH;
   const patternScale = options.patternScale ?? AQ_OILED_PATTERN_SCALE;
+  if (options.ignoreWeaponSizeScale) {
+    return patternScale;
+  }
   // isitabluegem: if (paint_style == 3 || paint_style == 6) scale = weapon_length * 0.027777778
   if (paintStyle === 3 || paintStyle === 6) {
     return weaponLength * INV_PATTERN_SHEET_INCHES * patternScale;

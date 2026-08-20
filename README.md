@@ -21,10 +21,14 @@ The viewer loads `assets/ak47.glb` via a `apps/web/public/assets` symlink so GLT
 Typical commands from the repo root: `npm install` then `npm run dev`.
 From `apps/web`: `npm install` then `npm run dev`.
 
-## Seed + float (M3)
+## Kits + seed + float (M4)
 
-The Seed box (0-999) applies the documented paint-seed UV transform live. The Float slider (0-1) mixes wear + grunge on **painted metal only** (Patina / Case Hardened). Wood furniture stays the original glTF albedo. Query `seed=` / `float=` set the start values. `capture=1` or `fixed=1` still locks the camera.
+The Kit dropdown switches among three official AK-47 finishes from `data/ak47_paint_kits.json` (no Fade — AK-47 has none). Labels are English + 中文. Query `kit=44` / `kit=122` / `kit=14` (or slug). Seed (0-999) and Float (0-1) still update live. `capture=1` or `fixed=1` locks the camera.
 
-Pattern: `assets/paints/aq_oiled/oiled.png`. Wear/grunge: `paint_wear.png`, `gun_grunge.png`. HD mask/cavity: `assets/composite/weapon_rif_ak47_*.png`. All official PNGs are gitignored; see `assets/paints/README.md`.
+- Case Hardened / 表面淬火 (44, style 8) — metal-only Patina
+- Jungle Spray / 丛林涂装 (122, style 3) — matte camo on receiver + furniture
+- Red Laminate / 红色层压板 (14, style 2) — hydrographic on wood furniture
 
-Tests: from `apps/web`, `npx vitest run` (or `apps/web/run-tests.sh`). Notes: `docs/MILESTONE_3.md`.
+Official PNGs are gitignored; see `assets/paints/README.md`.
+
+Tests: from `apps/web`, `npx vitest run` (or `apps/web/run-tests.sh`). Notes: `docs/MILESTONE_4.md`.

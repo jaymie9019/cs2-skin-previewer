@@ -1,45 +1,79 @@
 # Local paint extracts (gitignored binaries)
 
-Official Case Hardened / wear / grunge PNGs live under `aq_oiled/` and are
+Official paint / wear / grunge PNGs live under kit folders and are
 gitignored (`assets/**/*.png`). Do not commit them.
 
-Kit: **AK-47 | Case Hardened** (`aq_oiled`, paint kit 44, style 8 / Patina).
-
-Extract (Source2Viewer-CLI 20.0, local CS2 VPKs):
+Extract with **Source2Viewer-CLI 20.0** against the local CS2 install.
+Always pass `--game /workspace/cs2/game/csgo/gameinfo.gi` so imported
+VPKs resolve.
 
 ```bash
-Source2Viewer-CLI \
-  -i /workspace/cs2/game/csgo/pak01_dir.vpk \
-  -f "materials/models/weapons/customization/paints/vmats/aq_oiled.vmat_c" \
-  -o /tmp/aq_oiled -d \
-  --game /workspace/cs2/game/csgo/gameinfo.gi
+CLI=/workspace/tools/source2viewer/Source2Viewer-CLI
+GI=/workspace/cs2/game/csgo/gameinfo.gi
+VPK=/workspace/cs2/game/csgo/pak01_dir.vpk
 ```
 
-That decompile writes:
+## Case Hardened — `aq_oiled` / kit 44 / style 8 Patina
+
+```bash
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/aq_oiled.vmat_c" \
+  -o /tmp/aq_oiled
+```
+
+Copy into `assets/paints/aq_oiled/` (served as `/assets/paints/aq_oiled/...`):
 
 | File | VPK source | Role |
 | --- | --- | --- |
-| `oiled.png` | `materials/models/weapons/customization/paints/antiqued/oiled_psd_9f35e709.vtex` | Pattern (`g_tPattern`) |
-| `paint_wear.png` | `materials/models/weapons/customization/shared/paint_wear_psd_a2abffd8.vtex` | Wear map (same seed transform; M3) |
-| `gun_grunge.png` | `materials/models/weapons/customization/shared/gun_grunge_psd_f3419fed.vtex` | Grunge map (same seed transform; M3) |
+| `oiled.png` | `.../paints/antiqued/oiled_psd_9f35e709.vtex` | Pattern (`g_tPattern`) |
+| `paint_wear.png` | `.../shared/paint_wear_psd_a2abffd8.vtex` | Wear map (shared) |
+| `gun_grunge.png` | `.../shared/gun_grunge_psd_f3419fed.vtex` | Grunge map (shared) |
 
-Copy into `assets/paints/aq_oiled/` for the Vite symlink (`/assets/paints/aq_oiled/oiled.png`).
-
-## Weapon composite inputs (M3, gitignored)
-
-HD AK-47 paint-by-number + cavity, used so Case Hardened paints **metal only**
-(stock / grip / handguard stay wood). Extracted from the same VPKs:
+## Jungle Spray — `sp_spray_jungle` / kit 122 / style 3 Spray-Paint
 
 ```bash
-Source2Viewer-CLI \
-  -i /workspace/cs2/game/csgo/pak01_dir.vpk \
-  -d \
-  --game /workspace/cs2/game/csgo/gameinfo.gi \
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/sp_spray_jungle.vmat_c" \
+  -o /tmp/sp_spray_jungle
+```
+
+Copy into `assets/paints/sp_spray_jungle/`:
+
+| File | VPK source | Role |
+| --- | --- | --- |
+| `camo_daubs.png` | `.../paints/spray/camo_daubs_psd_4e8a0acc.vtex` | Pattern RGB blend mask |
+
+vmat: `F_PAINT_STYLE` 2 (= items_game style 3), `g_flPatternTexCoordScale` 1.65,
+`g_flPaintRoughness` 0.6, `g_vColor0..3` olive / lime / tan / brown.
+
+## Red Laminate — `hy_ak47lam` / kit 14 / style 2 Hydrographic
+
+```bash
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/hy_ak47lam.vmat_c" \
+  -o /tmp/hy_ak47lam
+```
+
+Copy into `assets/paints/hy_ak47lam/`:
+
+| File | VPK source | Role |
+| --- | --- | --- |
+| `laminate_ak47.png` | `.../paints/hydrographic/laminate_ak47_psd_2ce8f5f0.vtex` | UV-aligned hydrographic film |
+
+vmat: `F_PAINT_STYLE` 1 (= items_game style 2), `g_bIgnoreWeaponSizeScale` 1,
+`g_flPaintRoughness` 0.45, `g_vColor0..3` dark brown / red / tan / orange.
+
+## Weapon composite inputs (per-kit mask source)
+
+HD AK-47 paint-by-number + cavity. Mask *mode* is per kit (M4), not global.
+
+```bash
+$CLI -i $VPK -d --game $GI \
   -f "weapons/models/ak47/materials/composite_inputs/weapon_rif_ak47_composite_inputs.vmat_c" \
   -o /tmp/m3-ak
 ```
 
-Copy into `assets/composite/` (served as `/assets/composite/...`):
+Copy into `assets/composite/`:
 
 | File | VPK source | Role |
 | --- | --- | --- |

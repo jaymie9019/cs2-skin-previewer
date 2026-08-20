@@ -5,6 +5,7 @@ import { defineConfig, type Plugin } from "vite";
 const appRoot = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(appRoot, "../..");
 const assetsDir = path.resolve(repoRoot, "assets");
+const dataDir = path.resolve(repoRoot, "data");
 
 /** 1x1 PNG used to hold document load until the glTF + pattern shader are ready. */
 const PIXEL_PNG = Buffer.from(
@@ -17,9 +18,9 @@ function holdLoadUntilReady(): Plugin {
   const waiters: Array<() => void> = [];
 
   const isHold = (url: string): boolean =>
-    url === "/m1-hold.png" || url === "/m2-hold.png" || url === "/m3-hold.png" || url === "/hold.png";
+    url === "/m1-hold.png" || url === "/m2-hold.png" || url === "/m3-hold.png" || url === "/m4-hold.png" || url === "/hold.png";
   const isRelease = (url: string): boolean =>
-    url === "/m1-release" || url === "/m2-release" || url === "/m3-release" || url === "/release";
+    url === "/m1-release" || url === "/m2-release" || url === "/m3-release" || url === "/m4-release" || url === "/release";
 
   const release = (): void => {
     released = true;
@@ -65,7 +66,7 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     fs: {
-      allow: [appRoot, assetsDir],
+      allow: [appRoot, assetsDir, dataDir, repoRoot],
     },
   },
   preview: {

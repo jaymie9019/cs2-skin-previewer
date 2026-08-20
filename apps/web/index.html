@@ -3,11 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CS2 Skin Previewer — M3</title>
+    <title>CS2 Skin Previewer — M4</title>
   </head>
   <body>
-    <div id="status">Loading AK-47 + Case Hardened…</div>
+    <div id="status">Loading AK-47 + paint kit…</div>
     <div id="seed-panel">
+      <label>
+        <span>Kit</span>
+        <select id="kit-select"></select>
+      </label>
       <label>
         <span>Seed</span>
         <input id="seed-input" type="number" min="0" max="999" step="1" value="0" />
@@ -19,7 +23,7 @@
         <span id="float-value">0.00</span>
       </label>
     </div>
-    <img id="m1-hold" src="/m3-hold.png" alt="" width="1" height="1" />
+    <img id="m1-hold" src="/m4-hold.png" alt="" width="1" height="1" />
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

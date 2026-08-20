@@ -16,4 +16,10 @@ interface Window {
   __M3_ERROR__?: string;
   __M3_SEED__?: number;
   __M3_FLOAT__?: number;
+  __M4_READY__?: boolean;
+  __M4_ERROR__?: string;
+  __M4_SEED__?: number;
+  __M4_FLOAT__?: number;
+  __M4_KIT__?: number;
+  __M4_STYLE__?: number;
 }
