@@ -12,4 +12,8 @@ interface Window {
     rotationDeg: number;
     scale: number;
   };
+  __M3_READY__?: boolean;
+  __M3_ERROR__?: string;
+  __M3_SEED__?: number;
+  __M3_FLOAT__?: number;
 }

@@ -32,8 +32,8 @@ canvas {
   right: 12px;
   z-index: 2;
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
   padding: 8px 10px;
   border-radius: 8px;
   background: rgba(12, 14, 18, 0.72);
@@ -42,7 +42,13 @@ canvas {
   backdrop-filter: blur(6px);
 }
 
-#seed-panel input {
+#seed-panel label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#seed-panel input[type="number"] {
   width: 72px;
   padding: 4px 6px;
   border: 1px solid #4a5160;
@@ -52,8 +58,14 @@ canvas {
   font: inherit;
 }
 
-#seed-value {
-  min-width: 2.4em;
+#seed-panel input[type="range"] {
+  width: 120px;
+  accent-color: #c9a36a;
+}
+
+#seed-value,
+#float-value {
+  min-width: 2.6em;
   font-variant-numeric: tabular-nums;
   color: #c7d2e0;
 }
