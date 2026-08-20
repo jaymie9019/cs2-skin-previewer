@@ -55,3 +55,8 @@ assets/*.packed.glb
 
 # Local in-game inspect screenshots (calibration only, do not publish)
 docs/reference/
+
+# Raw Valve items_game + localization dumps (large, Valve IP).
+# Re-extract with the commands in docs/ITEMS_GAME.md; then:
+#   python3 scripts/extract_items_game.py
+data/raw/

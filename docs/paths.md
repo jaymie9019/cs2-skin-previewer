@@ -158,3 +158,50 @@ Inspected JSON chunk:
 - Do not copy `/workspace/cs2` or any `*.vpk` into a public-looking tree or git remote.
 - The exported `assets/ak47.glb` is a local-dev convenience only. Treat Valve IP as not redistributable.
 - `.gitignore` excludes VPKs, compiled Source 2 files, the CS2 install, and sidecar PNGs.
+
+
+## items_game + localization extract (schema study)
+
+Not in `csgo_imported` / `csgo_core`. Only `scripts/items/items_game.txt` exists under `scripts/items/` in the main VPK (no `items_game_cdn.txt` split). Localization is `resource/csgo_*.txt` in the same pak01.
+
+```bash
+export PATH="/workspace/tools/source2viewer:$PATH"
+mkdir -p /workspace/cs2-skin-previewer/data/raw
+
+Source2Viewer-CLI \
+  -i /workspace/cs2/game/csgo/pak01_dir.vpk \
+  -o /workspace/cs2-skin-previewer/data/raw \
+  -f "scripts/items/items_game.txt"
+
+Source2Viewer-CLI \
+  -i /workspace/cs2/game/csgo/pak01_dir.vpk \
+  -o /workspace/cs2-skin-previewer/data/raw \
+  -f "resource/csgo_english.txt"
+
+Source2Viewer-CLI \
+  -i /workspace/cs2/game/csgo/pak01_dir.vpk \
+  -o /workspace/cs2-skin-previewer/data/raw \
+  -f "resource/csgo_schinese.txt"
+
+Source2Viewer-CLI \
+  -i /workspace/cs2/game/csgo/pak01_dir.vpk \
+  -o /workspace/cs2-skin-previewer/data/raw \
+  -f "resource/csgo_tchinese.txt"
+
+# List-only checks used:
+# Source2Viewer-CLI -i .../pak01_dir.vpk -l -f "scripts/items"
+# Source2Viewer-CLI -i .../pak01_dir.vpk -l -f "resource/"
+
+python3 /workspace/cs2-skin-previewer/scripts/extract_items_game.py
+```
+
+Local dump (gitignored):
+
+| File | Size (this extract) | VPK CRC / packed size |
+| --- | --- | --- |
+| `data/raw/scripts/items/items_game.txt` | 8.0M | CRC `00da1564c5`, packed 8,382,779 |
+| `data/raw/resource/csgo_english.txt` | 4.7M | CRC `0057f3ed58`, packed 4,841,762 |
+| `data/raw/resource/csgo_schinese.txt` | 4.7M | CRC `000202a951`, packed 4,893,409 |
+| `data/raw/resource/csgo_tchinese.txt` | 4.4M | CRC `00ef4e3e0a`, packed 4,591,162 |
+
+Derived catalogs (committed): `data/ak47_paint_kits.json`, `data/stickers.json`, `data/paint_kits_all.json`.

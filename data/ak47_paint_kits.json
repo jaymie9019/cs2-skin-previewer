@@ -1,0 +1,1588 @@
+[
+  {
+    "paint_index": 14,
+    "name": "hy_ak47lam",
+    "name_en": "Red Laminate",
+    "name_zh": "红色层压板",
+    "name_zht": "紅層壓版",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": null,
+    "wear_remap_max": null,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": 0.05,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_ak47lam_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_esports"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 44,
+    "name": "aq_oiled",
+    "name_en": "Case Hardened",
+    "name_zh": "表面淬火",
+    "name_zht": "外殼硬化",
+    "style": 8,
+    "style_name": "Patina",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": 0.0,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_aq_oiled_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_weapons_i"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 72,
+    "name": "sp_mesh_tan",
+    "name_en": "Safari Mesh",
+    "name_zh": "狩猎网格",
+    "name_zht": "狩獵網格",
+    "style": 3,
+    "style_name": "Spray-Paint",
+    "wear_remap_min": null,
+    "wear_remap_max": null,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": 0.2,
+    "rarity": "common",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_sp_mesh_tan_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_dust_2"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 113,
+    "name": "ak47_t_bus",
+    "name_en": "The Outsiders",
+    "name_zh": "局外人",
+    "name_zht": "邊緣人",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.9,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.9,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": "weapons/paints/community/community_34/ak47_t_bus.vcompmat",
+    "vmt_path": null,
+    "description_tag": "PaintKit_ak47_t_bus_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_34"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 122,
+    "name": "sp_spray_jungle",
+    "name_en": "Jungle Spray",
+    "name_zh": "丛林涂装",
+    "name_zht": "叢林浪花",
+    "style": 3,
+    "style_name": "Spray-Paint",
+    "wear_remap_min": null,
+    "wear_remap_max": null,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": 0.3,
+    "rarity": "common",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_sp_spray_jungle_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_aztec"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 142,
+    "name": "cu_overpass_monster_ak47",
+    "name_en": "B the Monster",
+    "name_zh": "怪兽在B",
+    "name_zht": "B 成怪獸",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.8,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.8,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": "weapons/paints/set_overpass_2024/cu_overpass_monster_ak47.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_overpass_monster_ak47_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_overpass_2024"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 170,
+    "name": "sp_zebracam",
+    "name_en": "Predator",
+    "name_zh": "捕食者",
+    "name_zht": "掠食者",
+    "style": 3,
+    "style_name": "Spray-Paint",
+    "wear_remap_min": null,
+    "wear_remap_max": null,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "common",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_sp_zebracam_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_dust"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 172,
+    "name": "hy_ak47lam_bw",
+    "name_en": "Black Laminate",
+    "name_zh": "黑色层压板",
+    "name_zht": "黑層壓版",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": null,
+    "wear_remap_max": null,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": 0.05,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_ak47lam_bw_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_vertigo"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 180,
+    "name": "cu_fireserpent_ak47_bravo",
+    "name_en": "Fire Serpent",
+    "name_zh": "火蛇",
+    "name_zht": "火蛇",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": null,
+    "wear_remap_max": 0.76,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.76,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_fireserpent_ak47_bravo_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_bravo_i"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 226,
+    "name": "hy_ak47lam_blue",
+    "name_en": "Blue Laminate",
+    "name_zh": "蓝色层压板",
+    "name_zht": "藍層壓版",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.02,
+    "wear_remap_max": 0.4,
+    "wear_remap_min_effective": 0.02,
+    "wear_remap_max_effective": 0.4,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_ak47lam_blue_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_esports_ii"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 282,
+    "name": "cu_ak47_cobra",
+    "name_en": "Redline",
+    "name_zh": "红线",
+    "name_zht": "赤色流線",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.1,
+    "wear_remap_max": 0.7,
+    "wear_remap_min_effective": 0.1,
+    "wear_remap_max_effective": 0.7,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_awp_cobra_tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_2"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 300,
+    "name": "cu_pinstripe_ak47",
+    "name_en": "Emerald Pinstripe",
+    "name_zh": "翡翠细条纹",
+    "name_zht": "翡翠細紋",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_pinstripe_ak47_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_bank"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 302,
+    "name": "cu_ak47_rubber",
+    "name_en": "Vulcan",
+    "name_zh": "火神",
+    "name_zht": "瓦肯",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.9,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.9,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_rubber_ak47_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_3"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 316,
+    "name": "cu_panther_ak47",
+    "name_en": "Jaguar",
+    "name_zh": "美洲猛虎",
+    "name_zht": "捷豹",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_panther_ak47_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_esports_iii"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 340,
+    "name": "cu_well_traveled_ak47",
+    "name_en": "Jet Set",
+    "name_zh": "酷炫涂鸦皮革",
+    "name_zht": "炫富旅人",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_well_traveled_ak47_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_baggage"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 341,
+    "name": "cu_green_leather_ak47",
+    "name_en": "First Class",
+    "name_zh": "至高皮革",
+    "name_zht": "頭等艙",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_green_leather_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_baggage"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 380,
+    "name": "cu_tribute_ak47",
+    "name_en": "Wasteland Rebel",
+    "name_zh": "荒野反叛",
+    "name_zht": "荒土之亂",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.05,
+    "wear_remap_max": 0.7,
+    "wear_remap_min_effective": 0.05,
+    "wear_remap_max_effective": 0.7,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_tribute_ak47_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_5"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 394,
+    "name": "aq_ak47_cartel",
+    "name_en": "Cartel",
+    "name_zh": "卡特尔",
+    "name_zht": "卡特爾",
+    "style": 8,
+    "style_name": "Patina",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.75,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.75,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_aq_p250_cartel_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_6"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 422,
+    "name": "cu_ak47_mastery",
+    "name_en": "Elite Build",
+    "name_zh": "精英之作",
+    "name_zht": "菁英傑作",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak47_mastery_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_7"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 456,
+    "name": "am_bamboo_jungle",
+    "name_en": "Hydroponic",
+    "name_zh": "水栽竹",
+    "name_zht": "水耕",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.8,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.8,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_bamboo_jungle_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_kimono"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 474,
+    "name": "cu_ak47_courage_alt",
+    "name_en": "Aquamarine Revenge",
+    "name_zh": "深海复仇",
+    "name_zht": "碧綠復仇",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak47_courage_alt_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_8"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 490,
+    "name": "cu_ak47_winter_sport",
+    "name_en": "Frontside Misty",
+    "name_zh": "前线迷雾",
+    "name_zht": "撲朔迷離",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.02,
+    "wear_remap_max": 0.87,
+    "wear_remap_min_effective": 0.02,
+    "wear_remap_max_effective": 0.87,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak47_winter_sport_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_9"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 506,
+    "name": "cu_ak47_point_disarray",
+    "name_en": "Point Disarray",
+    "name_zh": "混沌点阵",
+    "name_zht": "混亂點",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.67,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.67,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak47_point_disarray_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_10"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 524,
+    "name": "gs_ak47_supercharged",
+    "name_en": "Fuel Injector",
+    "name_zh": "燃料喷射器",
+    "name_zht": "油槍",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_ak47_supercharged_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_11"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 600,
+    "name": "cu_ak47_anarchy",
+    "name_en": "Neon Revolution",
+    "name_zh": "霓虹革命",
+    "name_zht": "霓虹革命",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.8,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.8,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_AK47_Anarchy_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_gamma_2"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 639,
+    "name": "gs_ak47_bloodsport",
+    "name_en": "Bloodsport",
+    "name_zh": "血腥运动",
+    "name_zht": "血紅運動",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.45,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.45,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_ak47_bloodsport_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_16"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 656,
+    "name": "gs_ak_colony01_red",
+    "name_en": "Orbit Mk01",
+    "name_zh": "轨道 Mk01",
+    "name_zht": "環球一號",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.55,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.55,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_ak_colony01_red_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_17"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 675,
+    "name": "gs_ak47_empress",
+    "name_en": "The Empress",
+    "name_zh": "皇后",
+    "name_zht": "女皇",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_ak47_empress_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_18"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 707,
+    "name": "cu_ak_neon_rider",
+    "name_en": "Neon Rider",
+    "name_zh": "霓虹骑士",
+    "name_zht": "霓虹騎士",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.8,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.8,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak_neon_rider_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_20"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 724,
+    "name": "cu_ak_island_floral",
+    "name_en": "Wild Lotus",
+    "name_zh": "野荷",
+    "name_zht": "野蓮",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak_island_floral_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_stmarc"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 745,
+    "name": "hy_veneto_purple",
+    "name_en": "Baroque Purple",
+    "name_zh": "巴洛克之紫",
+    "name_zht": "巴洛克之紫",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "common",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_veneto_purple_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_canals"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 795,
+    "name": "hy_mesh_safetyorange",
+    "name_en": "Safety Net",
+    "name_zh": "安全网",
+    "name_zht": "安全網",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.6,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.6,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_mesh_safetyorange_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_inferno_2"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 801,
+    "name": "cu_ak47_asiimov",
+    "name_en": "Asiimov",
+    "name_zh": "二西莫夫",
+    "name_zht": "艾西莫夫",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.05,
+    "wear_remap_max": 0.7,
+    "wear_remap_min_effective": 0.05,
+    "wear_remap_max_effective": 0.7,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak47_asiimov_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_21"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 836,
+    "name": "cu_ak47_aztec",
+    "name_en": "Uncharted",
+    "name_zh": "迷踪秘境",
+    "name_zht": "未知秘境",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.75,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.75,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak47_aztec_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_22"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 885,
+    "name": "gs_ak47_nibbler",
+    "name_en": "Rat Rod",
+    "name_zh": "复古浪潮",
+    "name_zht": "Rat Rod",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_ak47_nibbler_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_23"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 912,
+    "name": "cu_graphic_overlay_ak47",
+    "name_en": "Crossfade",
+    "name_zh": "交叉渐变",
+    "name_zht": "交叉漸淡",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.5,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.5,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": "weapons/paints/set_graphic_design/cu_graphic_overlay_ak47.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_graphic_overlay_ak47_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_graphic_design"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 921,
+    "name": "gs_ak47_gold_arabesque",
+    "name_en": "Gold Arabesque",
+    "name_zh": "黄金藤蔓",
+    "name_zht": "金色阿拉伯風",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.7,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.7,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_ak47_gold_arabesque_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_dust_2_2021"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 941,
+    "name": "cu_ak-47_phantom_disruptor",
+    "name_en": "Phantom Disruptor",
+    "name_zh": "幻影破坏者",
+    "name_zht": "幻影破壞者",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.65,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.65,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak-47_phantom_disruptor_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_25"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 959,
+    "name": "cu_ak47_anubis",
+    "name_en": "Legion of Anubis",
+    "name_zh": "阿努比斯军团",
+    "name_zht": "阿努比斯軍團",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.7,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.7,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak47_anubis_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_26"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1004,
+    "name": "cu_ak_xray",
+    "name_en": "X-Ray",
+    "name_zh": "X 射线",
+    "name_zht": "X 光",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak_xray_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_op10_t"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1018,
+    "name": "cu_ak_jaguar",
+    "name_en": "Panthera onca",
+    "name_zh": "美洲豹",
+    "name_zht": "美洲豹",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak_jaguar_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_op10_ancient"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1035,
+    "name": "gs_ak47_professional",
+    "name_en": "Slate",
+    "name_zh": "墨岩",
+    "name_zht": "板岩",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_ak47_professional_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_28"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1070,
+    "name": "hy_ak47lam_green",
+    "name_en": "Green Laminate",
+    "name_zh": "绿色层压板",
+    "name_zht": "綠層壓版",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.02,
+    "wear_remap_max": 0.4,
+    "wear_remap_min_effective": 0.02,
+    "wear_remap_max_effective": 0.4,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_ak47lam_green_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_vertigo_2021"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1087,
+    "name": "gs_ak47_abstract",
+    "name_en": "Leet Museo",
+    "name_zh": "抽象派 1337",
+    "name_zht": "館藏遊戲菁英",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.65,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.65,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_ak47_abstract_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_29"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1141,
+    "name": "cu_ak47_nightwish",
+    "name_en": "Nightwish",
+    "name_zh": "夜愿",
+    "name_zht": "黑夜迷願",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak47_nightwish_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_30"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1143,
+    "name": "cu_ak47_cogthings",
+    "name_en": "Ice Coaled",
+    "name_zh": "可燃冰",
+    "name_zht": "極度寒冰",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.77,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.77,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak47_cogthings_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_31"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1171,
+    "name": "ak_porcelain",
+    "name_en": "Inheritance",
+    "name_zh": "传承",
+    "name_zht": "傳承",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.797346,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.797346,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": "weapons/paints/community/community_33/ak_porcelain.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_ak_porcelain_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_33"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1179,
+    "name": "ht_poly_camo_ak47",
+    "name_en": "Olive Polycam",
+    "name_zh": "橄榄迷彩",
+    "name_zht": "橄欖多重迷彩",
+    "style": 3,
+    "style_name": "Spray-Paint",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.5,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.5,
+    "wear_default": null,
+    "rarity": "common",
+    "composite_material_path": "weapons/paints/set_realism_camo/ht_poly_camo_ak47.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_ht_poly_camo_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_realism_camo"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1207,
+    "name": "ak47_explosive",
+    "name_en": "Searing Rage",
+    "name_zh": "灼心怒焰",
+    "name_zht": "燃燒怒火",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": "weapons/paints/community/community_35/ak47_explosive.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_ak47_explosive_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_35"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1218,
+    "name": "soe_iridescent_purple",
+    "name_en": "Midnight Laminate",
+    "name_zh": "午夜层压板",
+    "name_zht": "午夜層壓版",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.75,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.75,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": "weapons/paints/timed_drops/soe_iridescent_purple.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_soe_iridescent_purple_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_timed_drops_cool"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1221,
+    "name": "cu_ak_head_shot_holo",
+    "name_en": "Head Shot",
+    "name_zh": "一发入魂",
+    "name_zht": "爆頭",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_ak_head_shot_holo_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_32"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1238,
+    "name": "gs_ak47_strone",
+    "name_en": "Steel Delta",
+    "name_zh": "钢铁三角洲",
+    "name_zht": "鋼鐵三角洲",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.73,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.73,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_ak47_strone_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_anubis"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1283,
+    "name": "soe_metallic_green_2",
+    "name_en": "Wintergreen",
+    "name_zh": "寒翠",
+    "name_zht": "冬青",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.75,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.75,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": "weapons/paints/timed_drops/soe_metallic_green_2.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_soe_metallic_green_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_timed_drops_neutral"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1288,
+    "name": "soe_varicamo",
+    "name_en": "VariCamo Grey",
+    "name_zh": "灰变迷彩",
+    "name_zht": "多重迷彩灰",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.671875,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.671875,
+    "wear_default": null,
+    "rarity": "common",
+    "composite_material_path": "weapons/paints/timed_drops/soe_varicamo.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_soe_varicamo_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_timed_drops_neutral"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1309,
+    "name": "hye_ak47_nouveau",
+    "name_en": "Nouveau Rouge",
+    "name_zh": "新红浪潮",
+    "name_zht": "新潮紅",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": "weapons/paints/timed_drops/hye_ak47_nouveau.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hye_ak47_nouveau_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_timed_drops_warm"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1352,
+    "name": "ak47_puffer_custom",
+    "name_en": "The Oligarch",
+    "name_zh": "流金王朝",
+    "name_zht": "寡頭霸權",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": "weapons/paints/community/community_36/ak47_puffer_custom.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_ak47_puffer_custom_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_36"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1358,
+    "name": "hye_zeds",
+    "name_en": "Breakthrough",
+    "name_zh": "突破",
+    "name_zht": "突破",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.75,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.75,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": "weapons/paints/timed_drops/hye_zeds.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hye_zeds_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_timed_drops_achroma"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1397,
+    "name": "gsch_ak_djiin",
+    "name_en": "Aphrodite",
+    "name_zh": "爱神",
+    "name_zht": "阿芙羅黛蒂",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": "weapons/paints/limited_time/gsch_ak_djiin.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gsch_ak_djiin_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_xpshop_wpn_01"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1425,
+    "name": "ak47_crane_flight",
+    "name_en": "Crane Flight",
+    "name_zh": "翔鹤",
+    "name_zht": "鶴翔",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": "weapons/paints/community/community_37/ak47_crane_flight.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_ak47_crane_flight_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_community_37"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1449,
+    "name": "ak47_autoexec_camo",
+    "name_en": "AUTOEXEC",
+    "name_zh": "AUTOEXEC",
+    "name_zht": "AUTOEXEC",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": "weapons/paints/set_spy_tech/ak47_autoexec_camo.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_ak47_autoexec_camo_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_spy_tech"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1466,
+    "name": "ak47_jinn_consequence",
+    "name_en": "Consequence of the Jinn",
+    "name_zh": "精灵之噬",
+    "name_zht": "燈神之果",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": "weapons/paints/set_arabesque/ak47_jinn_consequence.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_ak47_jinn_consequence_Tag",
+    "weapon": "weapon_ak47",
+    "item_sets": [
+      "set_arabesque"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  }
+]

@@ -1,0 +1,317 @@
+{
+  "source": {
+    "items_game": "/workspace/cs2-skin-previewer/data/raw/scripts/items/items_game.txt",
+    "loc_en": "/workspace/cs2-skin-previewer/data/raw/resource/csgo_english.txt",
+    "loc_zh": "/workspace/cs2-skin-previewer/data/raw/resource/csgo_schinese.txt"
+  },
+  "counts": {
+    "paint_kits": 1481,
+    "sticker_kits": 11789,
+    "item_sets": 97,
+    "ak47_skins": 61,
+    "paint_kit_id_collisions": 0,
+    "ak_kits_missing_definition": [],
+    "sticker_unresolved_en": 1
+  },
+  "ak47_item_defindex": "7",
+  "ak47_item": {
+    "name": "weapon_ak47",
+    "prefab": "weapon_ak47_prefab",
+    "item_quality": "normal",
+    "baseitem": "1",
+    "flexible_loadout_slot": "rifle1",
+    "flexible_loadout_default": "1"
+  },
+  "game_info": {
+    "first_valid_class": "2",
+    "last_valid_class": "3",
+    "first_valid_item_slot": "0",
+    "last_valid_item_slot": "54",
+    "num_item_presets": "4",
+    "max_num_stickers": "5",
+    "max_num_patches": "3"
+  },
+  "alternate_icons2_keys": [
+    "casket_icons"
+  ],
+  "fade_on_ak47": [],
+  "fade_exact_tag": [
+    {
+      "paint_index": 38,
+      "name": "aa_fade",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_glock",
+        "weapon_mac10"
+      ]
+    },
+    {
+      "paint_index": 522,
+      "name": "aa_fade_revolver",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_revolver"
+      ]
+    },
+    {
+      "paint_index": 752,
+      "name": "aa_fade_mp7",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_mp7"
+      ]
+    },
+    {
+      "paint_index": 879,
+      "name": "aa_fade_ump",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_ump45"
+      ]
+    },
+    {
+      "paint_index": 1026,
+      "name": "aa_awp_fade",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_awp"
+      ]
+    },
+    {
+      "paint_index": 1177,
+      "name": "aa_fade_m4a1s",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_m4a1_silencer"
+      ]
+    },
+    {
+      "paint_index": 10063,
+      "name": "specialist_fade",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": []
+    }
+  ],
+  "fade_related_kits": [
+    {
+      "paint_index": 38,
+      "name": "aa_fade",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_glock",
+        "weapon_mac10"
+      ]
+    },
+    {
+      "paint_index": 176,
+      "name": "sp_zebracam_bw",
+      "name_en": "Faded Zebra",
+      "name_zh": "渐变斑纹",
+      "weapons": [
+        "weapon_m4a1"
+      ]
+    },
+    {
+      "paint_index": 246,
+      "name": "aa_fade_metallic",
+      "name_en": "Amber Fade",
+      "name_zh": "渐变琥珀",
+      "weapons": [
+        "weapon_aug",
+        "weapon_galilar",
+        "weapon_hkp2000",
+        "weapon_mac10",
+        "weapon_sawedoff"
+      ]
+    },
+    {
+      "paint_index": 253,
+      "name": "aa_fade_grassland",
+      "name_en": "Acid Fade",
+      "name_zh": "渐变强酸",
+      "weapons": [
+        "weapon_ssg08"
+      ]
+    },
+    {
+      "paint_index": 413,
+      "name": "am_marble_fade",
+      "name_en": "Marble Fade",
+      "name_zh": "渐变大理石",
+      "weapons": []
+    },
+    {
+      "paint_index": 522,
+      "name": "aa_fade_revolver",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_revolver"
+      ]
+    },
+    {
+      "paint_index": 523,
+      "name": "aa_fade_metallic_revolver",
+      "name_en": "Amber Fade",
+      "name_zh": "渐变琥珀",
+      "weapons": [
+        "weapon_revolver"
+      ]
+    },
+    {
+      "paint_index": 654,
+      "name": "aq_xm_leaf_fade",
+      "name_en": "Seasons",
+      "name_zh": "四季",
+      "weapons": [
+        "weapon_xm1014"
+      ]
+    },
+    {
+      "paint_index": 752,
+      "name": "aa_fade_mp7",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_mp7"
+      ]
+    },
+    {
+      "paint_index": 856,
+      "name": "am_marble_fade_widow",
+      "name_en": "Marble Fade",
+      "name_zh": "渐变大理石",
+      "weapons": []
+    },
+    {
+      "paint_index": 879,
+      "name": "aa_fade_ump",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_ump45"
+      ]
+    },
+    {
+      "paint_index": 912,
+      "name": "cu_graphic_overlay_ak47",
+      "name_en": "Crossfade",
+      "name_zh": "交叉渐变",
+      "weapons": [
+        "weapon_ak47"
+      ]
+    },
+    {
+      "paint_index": 947,
+      "name": "cu_mac10_nacre",
+      "name_en": "Disco Tech",
+      "name_zh": "渐变迪斯科",
+      "weapons": [
+        "weapon_mac10"
+      ]
+    },
+    {
+      "paint_index": 1002,
+      "name": "aa_fade_red_blue",
+      "name_en": "Berries And Cherries",
+      "name_zh": "蓝莓樱桃",
+      "weapons": [
+        "weapon_fiveseven"
+      ]
+    },
+    {
+      "paint_index": 1026,
+      "name": "aa_awp_fade",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_awp"
+      ]
+    },
+    {
+      "paint_index": 1177,
+      "name": "aa_fade_m4a1s",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": [
+        "weapon_m4a1_silencer"
+      ]
+    },
+    {
+      "paint_index": 10063,
+      "name": "specialist_fade",
+      "name_en": "Fade",
+      "name_zh": "渐变之色",
+      "weapons": []
+    },
+    {
+      "paint_index": 10065,
+      "name": "specialist_marble_fade",
+      "name_en": "Marble Fade",
+      "name_zh": "渐变大理石",
+      "weapons": []
+    }
+  ],
+  "style_name_source": "https://www.counter-strike.net/workshop/workshopfinishes/",
+  "wear_bands_inspect_float": [
+    {
+      "code": "FN",
+      "name": "Factory New",
+      "min": 0.0,
+      "max_exclusive_except_bs": 0.07
+    },
+    {
+      "code": "MW",
+      "name": "Minimal Wear",
+      "min": 0.07,
+      "max_exclusive_except_bs": 0.15
+    },
+    {
+      "code": "FT",
+      "name": "Field-Tested",
+      "min": 0.15,
+      "max_exclusive_except_bs": 0.38
+    },
+    {
+      "code": "WW",
+      "name": "Well-Worn",
+      "min": 0.38,
+      "max_exclusive_except_bs": 0.45
+    },
+    {
+      "code": "BS",
+      "name": "Battle-Scarred",
+      "min": 0.45,
+      "max_exclusive_except_bs": 1.0
+    }
+  ],
+  "prefab_chain": {
+    "item": "weapon_ak47 (items defindex 7)",
+    "prefab": "weapon_ak47_prefab",
+    "weapon_ak47_prefab.prefab": "rifle",
+    "rifle.prefab": "primary",
+    "primary.prefab": "weapon_base weapon_supports_stickers weapon_supports_keychains",
+    "used_by_classes": {
+      "terrorists": "1"
+    },
+    "paint_data": {
+      "PaintableMaterial0": {
+        "Name": "rif_ak47",
+        "OrigMat": "ak47",
+        "ViewmodelDim": "2048",
+        "WorldDim": "512",
+        "BaseTextureOverride": "0",
+        "WeaponLength": "37.746201",
+        "UVScale": "0.549000"
+      }
+    }
+  }
+}
