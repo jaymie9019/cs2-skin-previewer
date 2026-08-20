@@ -61,6 +61,11 @@ function prepColorMap(tex: Texture, clamp: boolean): Texture {
   tex.colorSpace = SRGBColorSpace;
   tex.wrapS = clamp ? ClampToEdgeWrapping : RepeatWrapping;
   tex.wrapT = clamp ? ClampToEdgeWrapping : RepeatWrapping;
+  if (clamp) {
+    // UV-authored hydrographic film: same space as masks/cavity, RGB are mix weights.
+    tex.flipY = false;
+    tex.colorSpace = NoColorSpace;
+  }
   tex.needsUpdate = true;
   return tex;
 }
@@ -114,6 +119,9 @@ export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMa
   const color3 = { value: [...PATINA_COLOR3] };
   const patternMapUniform = { value: maps.pattern };
   const clampPatternUniform = { value: 0 };
+  const grainOrigin = { value: [0, 0] };
+  const grainSize = { value: [1, 1] };
+  const grainTileUniform = { value: 1 };
 
   const hook: PatternHook = {
     setLayers(layers) {
@@ -139,6 +147,16 @@ export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMa
       color1.value = [...kit.colors[1]];
       color2.value = [...kit.colors[2]];
       color3.value = [...kit.colors[3]];
+      const win = kit.grainWindow;
+      if (win) {
+        grainOrigin.value = [...win.origin];
+        grainSize.value = [...win.size];
+        grainTileUniform.value = win.tile;
+      } else {
+        grainOrigin.value = [0, 0];
+        grainSize.value = [1, 1];
+        grainTileUniform.value = 1;
+      }
     },
   };
 
@@ -166,6 +184,9 @@ export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMa
     shader.uniforms.uWearRemapMin = wearRemapMinUniform;
     shader.uniforms.uWearRemapMax = wearRemapMaxUniform;
     shader.uniforms.uClampPattern = clampPatternUniform;
+    shader.uniforms.uGrainOrigin = grainOrigin;
+    shader.uniforms.uGrainSize = grainSize;
+    shader.uniforms.uGrainTile = grainTileUniform;
 
     shader.fragmentShader = shader.fragmentShader
       .replace(
@@ -192,6 +213,9 @@ uniform float uPatternGain;
 uniform float uWearRemapMin;
 uniform float uWearRemapMax;
 uniform float uClampPattern;
+uniform vec2 uGrainOrigin;
+uniform vec2 uGrainSize;
+uniform float uGrainTile;
 float cs2PaintMask = 0.0;
 `,
       )
@@ -238,6 +262,12 @@ float cs2PaintMask = 0.0;
 		painted = saturate( cPatina * cGrunge );
 	} else {
 		vec3 p = pattern;
+		if ( abs( uStyle - 2.0 ) < 0.5 ) {
+			// HD UVs miss the UV-atlas film. Tile the dense plywood window.
+			// Wear-matrix translation is seed-stable (same seed → same grain).
+			vec2 grainUv = uGrainOrigin + fract( vMapUv * uGrainTile + uWearMatrix[2].xy ) * uGrainSize;
+			p = texture2D( uPatternMap, grainUv ).rgb * uPatternGain;
+		}
 		if ( abs( uStyle - 3.0 ) < 0.5 ) {
 			float k = 1.0 - saturate( wearTex ) * uFloat;
 			p *= k;
@@ -248,7 +278,6 @@ float cs2PaintMask = 0.0;
 		if ( abs( uStyle - 2.0 ) < 0.5 ) {
 			color = mix( color, uPatinaC2, saturate( masks.g ) );
 			color = mix( color, uPatinaC3, saturate( masks.b ) );
-			color = mix( color, uPatinaC1, 0.42 );
 			float wearOff = smoothstep( 0.2, 0.9, wearTex * uFloat );
 			cs2PaintMask *= ( 1.0 - wearOff );
 		}
@@ -271,6 +300,6 @@ float cs2PaintMask = 0.0;
 	metalnessFactor = mix( metalnessFactor, uPaintMetalness, cs2PaintMask );`,
       );
   };
-  material.customProgramCacheKey = () => "m4-multi-kit-mask";
+  material.customProgramCacheKey = () => "m4-kit14-laminate-grain";
   return hook;
 }

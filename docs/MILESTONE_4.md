@@ -46,14 +46,14 @@ apps/web/src/kits/catalog.ts imports data/ak47_paint_kits.json. officialKit(inde
 Same 11-float Valve draw. Base scale:
 - Style 8: AK UVScale 0.549
 - Style 3: weapon_length / 36 * patternScale (1.65 from sp_spray_jungle.vmat)
-- g_bIgnoreWeaponSizeScale (Red Laminate): scale = patternScale = 1. Pattern UV is identity so the UV-authored film stays on furniture islands; seed still drives wear/grunge.
+- g_bIgnoreWeaponSizeScale (Red Laminate): scale = patternScale = 1. Pattern *matrix* stays identity (legacy UV-atlas). HD UVs miss those islands, so style 2 samples a dense plywood window (see calibration) tiled on furniture UVs; seed 796 shifts it via the wear-matrix translation.
 
 ### Color mix
 
 - Style 8: existing Patina mix (mixPatinaAlbedo). oiled.png is already colour-ramped.
 - Styles 2 / 3: nested RGB from https://pattern.wiki/wiki/pattern_colors
   color = mix(mix(mix(C0, C1, R), C2, G), C3, B)
-- Style 2: plus mask.g to C2, mask.b to C3. Wear to substrate via wear-map x float on the paint mask.
+- Style 2: plus mask.g to C2, mask.b to C3. Wear to substrate via wear-map x float on the paint mask. Do not mix toward Color1 after the nested lerp (that flattened kit 14 to a dull red).
 - Style 3: wear multiplies pattern RGB before the nested mix. Matte (roughness 0.6, metalness 0.12).
 
 Style 3 officially uses triplanar projection (workshop). This viewer uses 2D UV with the documented style-3 scale. Colorization is the same formula.
@@ -84,6 +84,20 @@ Jungle Spray reference: docs/reference/ingame_ak47_jungle_spray.png (gitignored)
 Wavy olive / lime / brown camo on receiver and wood furniture (stock + handguard), magazine too. Barrel / front sight read as dark metal in that inspect (Dust 2 lighting). Matte, not metallic patina.
 Case Hardened still matches the M3 inspect pair (seed 923 FN / seed 673 BS).
 
+Red Laminate inspect: docs/reference/ingame_ak47_red_laminate_seed796_mw.png
+(kit 14 / hy_ak47lam / seed 796 / float 0.1412112265825271 / Minimal Wear).
+Stock, pistol grip, handguards: wavy horizontal plywood — saturated red bands
+alternating with charcoal, grain along each part. Metal (receiver, barrel, mag,
+sights) stays worn gunmetal. Not a flat red fill.
+
+The official laminate_ak47.png is a UV-atlas RGB mix-mask (legacy UVs). Nested
+RGB of hy_ak47lam.vmat Color0..3 already *is* the plywood; the M4 baseline
+looked flat because (1) HD TEXCOORD_0 misses the atlas (~13% hit → Color0) and
+(2) the style-2 shader then mixed 42% toward Color1. Fix: sample a dense grain
+window (512×256 @ 1040,1440) tiled across furniture UVs, drop the Color1 crush,
+keep furniture mask. Seed 796 shifts that window via the seed-stable wear
+translation (same seed bit-identical). Lighting stays the dim M1 setup (IBL deferred).
+
 ## Tests
 
 From apps/web: npx vitest run.
@@ -97,6 +111,7 @@ Fixed camera (M1 pose), 1280x720, headless Chrome + SwiftShader. Hold /m4-hold.p
 - tests/baselines/m4_kit44_case_hardened.png — kit=44&seed=923&float=0.056&capture=1
 - tests/baselines/m4_kit122_jungle_spray.png — kit=122&seed=923&float=0.056&capture=1
 - tests/baselines/m4_kit14_red_laminate.png — kit=14&seed=0&float=0.05&capture=1
+- tests/baselines/m4_kit14_seed796_mw.png — kit=14&seed=796&float=0.1412112265825271&capture=1
 
 ## What was built
 

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { luma } from "../patina/patinaWearMix";
+import { KIT_RED_LAMINATE } from "./catalog";
 import {
   hydroMaskOverride,
   mixNestedAlbedo,
@@ -100,5 +101,45 @@ describe("grunge still darkens nested styles", () => {
       colors: COLORS,
     });
     expect(luma(dirty)).toBeLessThan(luma(clean));
+  });
+});
+
+describe("kit 14 nested RGB must not crush plywood to Color1", () => {
+  const colors = KIT_RED_LAMINATE.colors;
+  const white: [number, number, number] = [1, 1, 1];
+
+  it("black bands stay Color0 (charcoal), not flattened toward the red", () => {
+    const dark = mixNestedAlbedo({
+      style: 2,
+      pattern: [0, 0, 0],
+      wearTex: 0,
+      grunge: white,
+      floatAmt: 0,
+      colors,
+    });
+    expect(dark[0]).toBeCloseTo(colors[0][0], 5);
+    expect(dark[1]).toBeCloseTo(colors[0][1], 5);
+    expect(dark[2]).toBeCloseTo(colors[0][2], 5);
+  });
+
+  it("high-contrast R channel keeps a luma split (wavy grain)", () => {
+    const dark = mixNestedAlbedo({
+      style: 2,
+      pattern: [0, 0, 0],
+      wearTex: 0,
+      grunge: white,
+      floatAmt: 0,
+      colors,
+    });
+    const redBand = mixNestedAlbedo({
+      style: 2,
+      pattern: [1, 0, 0],
+      wearTex: 0,
+      grunge: white,
+      floatAmt: 0,
+      colors,
+    });
+    expect(luma(redBand)).toBeGreaterThan(luma(dark) + 0.12);
+    expect(redBand[0]).toBeGreaterThan(redBand[1] + 0.4);
   });
 });

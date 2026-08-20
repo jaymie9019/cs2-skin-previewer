@@ -11,6 +11,10 @@
  *   color = mix(color, Color2, mask.g)
  *   color = mix(color, Color3, mask.b)
  *
+ * Do not mix toward Color1 afterwards — that crushes plywood grain to a
+ * flat red (kit 14 / hy_ak47lam). The official film is an RGB mix-mask;
+ * Color0 charcoal + Color1 red *is* the laminate.
+ *
  * Style 3 spray: wear multiplies pattern RGB *before* the nested mix.
  * Style 2 hydrographic: wears directly to the substrate (caller fades
  * the paint mask with the wear map); this function still applies grunge.

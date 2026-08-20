@@ -39,6 +39,20 @@ export type OfficialAk47Kit = {
 
 export type MaskMode = "metal" | "spray" | "furniture";
 
+/**
+ * Style-2 hydrographic film window. laminate_ak47.png is a UV atlas
+ * authored for the legacy AK; HD TEXCOORD_0 misses those islands
+ * (~13% hit → nested mix of black → Color0, which the old 0.42 mix
+ * toward Color1 crushed to a flat dull red). Sample this dense
+ * plywood-grain rectangle instead and tile it across weapon UVs.
+ * Coordinates are PNG-space (flipY = false), 0–1.
+ */
+export type GrainWindow = {
+  origin: readonly [number, number];
+  size: readonly [number, number];
+  tile: number;
+};
+
 export type ViewerKit = {
   paintIndex: number;
   internalName: string;
@@ -59,6 +73,7 @@ export type ViewerKit = {
   paintRoughness: number;
   paintMetalness: number;
   maskMode: MaskMode;
+  grainWindow: GrainWindow | null;
   aliases: readonly string[];
 };
 
@@ -90,6 +105,7 @@ function viewerKit(
     paintRoughness: number;
     paintMetalness: number;
     maskMode: MaskMode;
+    grainWindow?: GrainWindow | null;
     aliases: readonly string[];
   },
 ): ViewerKit {
@@ -114,6 +130,7 @@ function viewerKit(
     paintRoughness: extras.paintRoughness,
     paintMetalness: extras.paintMetalness,
     maskMode: extras.maskMode,
+    grainWindow: extras.grainWindow ?? null,
     aliases: extras.aliases,
   };
 }
@@ -158,9 +175,12 @@ export const KIT_JUNGLE_SPRAY: ViewerKit = viewerKit(122, {
 
 /**
  * Kit 14 / hy_ak47lam / style 2 Hydrographic.
- * UV-aligned laminate_ak47.png (vmat g_bIgnoreWeaponSizeScale = 1).
- * Nested RGB mix. Furniture mask — red plywood on stock/handguard/grip,
- * factory metal elsewhere. Colors from hy_ak47lam.vmat.
+ * Official film is a UV-atlas RGB *mask* (not a flat color and not a
+ * pre-colored photo). Nested RGB of g_vColor0..3 from hy_ak47lam.vmat
+ * already produces the wavy red/charcoal plywood — do not flatten
+ * toward Color1. g_bIgnoreWeaponSizeScale = 1 (scale = patternScale).
+ * HD UVs miss the atlas; grainWindow is the densest plywood rectangle
+ * in laminate_ak47.png (512×256 @ 1040,1440, ~91% fill).
  */
 export const KIT_RED_LAMINATE: ViewerKit = viewerKit(14, {
   slug: "redlaminate",
@@ -177,6 +197,11 @@ export const KIT_RED_LAMINATE: ViewerKit = viewerKit(14, {
   paintRoughness: 0.45,
   paintMetalness: 0.08,
   maskMode: "furniture",
+  grainWindow: {
+    origin: [1040 / 2048, 1440 / 2048],
+    size: [512 / 2048, 256 / 2048],
+    tile: 2,
+  },
   aliases: ["14", "redlam", "redlaminate", "red-laminate", "hy_ak47lam", "红色层压板"],
 });
 

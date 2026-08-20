@@ -112,3 +112,44 @@ describe("kit seed UV (reuse M2 RNG, style-correct scale)", () => {
     expect(a.wear.scale).toBe(b.wear.scale);
   });
 });
+
+describe("kit 14 Red Laminate extras (vmat + grain window)", () => {
+  it("keeps official vmat colors / scale / ignoreWeaponSizeScale", () => {
+    expect(KIT_RED_LAMINATE.patternScale).toBe(1);
+    expect(KIT_RED_LAMINATE.ignoreWeaponSizeScale).toBe(true);
+    expect(KIT_RED_LAMINATE.colors[0][0]).toBeCloseTo(0.211765, 5);
+    expect(KIT_RED_LAMINATE.colors[1][0]).toBeCloseTo(0.870588, 5);
+    expect(KIT_RED_LAMINATE.colors[1][1]).toBeCloseTo(0.090196, 5);
+    expect(KIT_RED_LAMINATE.maskMode).toBe("furniture");
+  });
+
+  it("samples a dense plywood window, not the empty UV-atlas border", () => {
+    const w = KIT_RED_LAMINATE.grainWindow;
+    expect(w).not.toBeNull();
+    expect(w!.size[0]).toBeGreaterThan(0.1);
+    expect(w!.size[1]).toBeGreaterThan(0.05);
+    expect(w!.origin[0] + w!.size[0]).toBeLessThanOrEqual(1);
+    expect(w!.origin[1] + w!.size[1]).toBeLessThanOrEqual(1);
+    expect(w!.tile).toBeGreaterThanOrEqual(1);
+    expect(KIT_CASE_HARDENED.grainWindow).toBeNull();
+    expect(KIT_JUNGLE_SPRAY.grainWindow).toBeNull();
+  });
+});
+
+describe("kit 14 seed 796 (ignoreWeaponSizeScale)", () => {
+  it("is bit-identical and uses patternScale 1", () => {
+    const a = seedToPatternUv(796, kitSeedOptions(KIT_RED_LAMINATE));
+    const b = seedToPatternUv(796, kitSeedOptions(KIT_RED_LAMINATE));
+    expect(a.baseScale).toBe(1);
+    expect(a.pattern.translateX).toBe(b.pattern.translateX);
+    expect(a.pattern.rotationDeg).toBe(b.pattern.rotationDeg);
+    expect(a.wear.matrix.tx).toBe(b.wear.matrix.tx);
+    expect(a.wear.matrix.ty).toBe(b.wear.matrix.ty);
+  });
+
+  it("seed 796 wear offset differs from seed 0 (grain shift source)", () => {
+    const a = seedToPatternUv(796, kitSeedOptions(KIT_RED_LAMINATE));
+    const b = seedToPatternUv(0, kitSeedOptions(KIT_RED_LAMINATE));
+    expect(a.wear.matrix.tx === b.wear.matrix.tx && a.wear.matrix.ty === b.wear.matrix.ty).toBe(false);
+  });
+});
