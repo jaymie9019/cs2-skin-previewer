@@ -80,6 +80,57 @@ canvas {
   color: #c7d2e0;
 }
 
+#seed-panel {
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+}
+
+#sticker-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid #2c3340;
+}
+
+.sticker-heading {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9aa6b8;
+}
+
+.sticker-slot {
+  margin: 0;
+  padding: 6px 8px 8px;
+  border: 1px solid #3a4150;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sticker-slot legend {
+  padding: 0 4px;
+  color: #c9a36a;
+  font-size: 11px;
+}
+
+.sticker-slot input[type="number"] {
+  width: 64px;
+}
+
+.sticker-name,
+.float-like {
+  font-size: 11px;
+  color: #c7d2e0;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 body.capture #status,
 body.capture #seed-panel,
 #m1-hold {

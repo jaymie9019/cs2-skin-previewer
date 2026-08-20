@@ -1,0 +1,56 @@
+[
+  {
+    "id": 259,
+    "name": "dinked",
+    "name_en": "Dinked",
+    "name_zh": "射穿啦",
+    "sticker_material": "community02/dinked",
+    "style": "paper",
+    "colorPath": "/assets/stickers/dinked/color.png",
+    "wearPath": "/assets/stickers/dinked/wear.png"
+  },
+  {
+    "id": 14,
+    "name": "std_aces_high",
+    "name_en": "Aces High",
+    "name_zh": "黑桃 A",
+    "sticker_material": "standard/aces_high",
+    "style": "paper",
+    "colorPath": "/assets/stickers/aces_high/color.png",
+    "wearPath": "/assets/stickers/aces_high/wear.png"
+  },
+  {
+    "id": 15,
+    "name": "std_aces_high_holo",
+    "name_en": "Aces High (Holo)",
+    "name_zh": "黑桃 A（全息）",
+    "sticker_material": "standard/aces_high_holo",
+    "style": "holo",
+    "colorPath": "/assets/stickers/aces_high_holo/color.png",
+    "wearPath": "/assets/stickers/aces_high_holo/wear.png",
+    "holoMaskPath": "/assets/stickers/aces_high_holo/holomask.png",
+    "spectrumPath": "/assets/stickers/aces_high_holo/spectrum.png"
+  },
+  {
+    "id": 13,
+    "name": "std_thirteen",
+    "name_en": "Lucky 13",
+    "name_zh": "幸运十三",
+    "sticker_material": "standard/thirteen",
+    "style": "paper",
+    "colorPath": "/assets/stickers/thirteen/color.png",
+    "wearPath": "/assets/stickers/thirteen/wear.png"
+  },
+  {
+    "id": 278,
+    "name": "firestarter_holo",
+    "name_en": "Firestarter (Holo)",
+    "name_zh": "喷射火焰（全息）",
+    "sticker_material": "community02/firestarter_holo",
+    "style": "holo",
+    "colorPath": "/assets/stickers/firestarter_holo/color.png",
+    "wearPath": "/assets/stickers/firestarter_holo/wear.png",
+    "holoMaskPath": "/assets/stickers/firestarter_holo/holomask.png",
+    "spectrumPath": "/assets/stickers/firestarter_holo/spectrum.png"
+  }
+]

@@ -32,3 +32,7 @@ The Kit dropdown switches among three official AK-47 finishes from `data/ak47_pa
 Official PNGs are gitignored; see `assets/paints/README.md`.
 
 Tests: from `apps/web`, `npx vitest run` (or `apps/web/run-tests.sh`). Notes: `docs/MILESTONE_4.md`.
+
+## Stickers (M5)
+
+Up to **4** layers on the AK via mesh `TEXCOORD_1` + `StickerMarkup` offsets (not world-space quads). Query `s0=id,x,y,rot,wear` (s1–s3). `s4` is rejected. Empty slot / id `0` is a no-op. UI: four slots, extracted subset (Dinked 259, Aces High, Aces High Holo, Lucky 13, Firestarter Holo) plus id lookup against `data/stickers.json`. Wear is an approximation of engine-applied scrape + UnWear (https://www.counter-strike.net/workshop/workshopstickers/). Official sticker PNGs are gitignored; see `assets/stickers/README.md`. Notes: `docs/MILESTONE_5.md`.

@@ -22,4 +22,14 @@ interface Window {
   __M4_FLOAT__?: number;
   __M4_KIT__?: number;
   __M4_STYLE__?: number;
+  __M5_READY__?: boolean;
+  __M5_ERROR__?: string;
+  __M5_SLOTS__?: Array<{
+    id: number;
+    offsetX: number;
+    offsetY: number;
+    rotationDeg: number;
+    wear: number;
+  }>;
+  __M5_REJECTED__?: string[];
 }

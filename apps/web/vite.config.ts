@@ -18,9 +18,9 @@ function holdLoadUntilReady(): Plugin {
   const waiters: Array<() => void> = [];
 
   const isHold = (url: string): boolean =>
-    url === "/m1-hold.png" || url === "/m2-hold.png" || url === "/m3-hold.png" || url === "/m4-hold.png" || url === "/hold.png";
+    url === "/m1-hold.png" || url === "/m2-hold.png" || url === "/m3-hold.png" || url === "/m4-hold.png" || url === "/m5-hold.png" || url === "/hold.png";
   const isRelease = (url: string): boolean =>
-    url === "/m1-release" || url === "/m2-release" || url === "/m3-release" || url === "/m4-release" || url === "/release";
+    url === "/m1-release" || url === "/m2-release" || url === "/m3-release" || url === "/m4-release" || url === "/m5-release" || url === "/release";
 
   const release = (): void => {
     released = true;

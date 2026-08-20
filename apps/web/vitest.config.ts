@@ -12,6 +12,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "../../../../data/ak47_paint_kits.json": path.resolve(repoRoot, "data/ak47_paint_kits.json"),
+      "../../../../data/sticker_subset.json": path.resolve(repoRoot, "data/sticker_subset.json"),
+      "../../../../data/stickers.json": path.resolve(repoRoot, "data/stickers.json"),
     },
   },
 });
