@@ -3,6 +3,12 @@
 Local-only 3D preview of a CS2 AK-47 (glTF) using Vite + TypeScript + Three.js.
 
 Official Valve assets stay on this machine. Do not publish VPKs, extracted textures, or packed glbs.
+This repo is local-dev only.
+
+## What works if you clone without CS2
+In git: Vite viewer, shareable URLs, catalog JSON, tests, assets/ak47.glb (mesh only).
+Not in git (needed to texture the inspect): sidecar PNGs next to the glb, assets/paints/, assets/composite/, assets/stickers/.
+Extract commands: docs/paths.md, assets/paints/README.md, assets/stickers/README.md, scripts/extract_items_game.py (see docs/ITEMS_GAME.md).
 
 ## How to run
 
@@ -11,12 +17,18 @@ Install dependencies at the repo root, then start the Vite dev server (workspace
 The page is http://127.0.0.1:5173/ — drag to orbit the rifle.
 
 The viewer loads `assets/ak47.glb` via a `apps/web/public/assets` symlink so GLTFLoader can resolve the sibling official PNGs. Those PNGs are gitignored.
+Changing Kit / Seed / Float / stickers updates the query string with history.replaceState.
+
+## Shareable URL (M6)
+Opening a URL restores the same inspect. Grammar: weapon=ak47 (only AK for now), kit=44|122|14 (or slug), seed=0-999, float=0-1, sN=id,x,y,rot,wear (N=0..3). Unknown kit and s4 are rejected. Full grammar: docs/MILESTONE_6.md.
+Example: ?weapon=ak47&kit=44&seed=923&float=0.056&s0=259,0.02,-0.01,15,0.4
 
 ## Compliance
 
 - Local assets only. The `assets/ak47.glb` export and sidecar PNGs are a local-dev convenience.
 - `.gitignore` excludes `node_modules/`, `assets/**/*.png`, `assets/*.packed.glb`, VPKs, and the CS2 install.
 - Do not copy `/workspace/cs2` or any `*.vpk` into a public-looking tree or git remote.
+- Also gitignored: data/raw/ (Valve items_game dump) and docs/reference/ (in-game inspects). Do not commit official textures.
 
 Typical commands from the repo root: `npm install` then `npm run dev`.
 From `apps/web`: `npm install` then `npm run dev`.
@@ -36,3 +48,9 @@ Tests: from `apps/web`, `npx vitest run` (or `apps/web/run-tests.sh`). Notes: `d
 ## Stickers (M5)
 
 Up to **4** layers on the AK via mesh `TEXCOORD_1` + `StickerMarkup` offsets (not world-space quads). Query `s0=id,x,y,rot,wear` (s1–s3). `s4` is rejected. Empty slot / id `0` is a no-op. UI: four slots, extracted subset (Dinked 259, Aces High, Aces High Holo, Lucky 13, Firestarter Holo) plus id lookup against `data/stickers.json`. Wear is an approximation of engine-applied scrape + UnWear (https://www.counter-strike.net/workshop/workshopstickers/). Official sticker PNGs are gitignored; see `assets/stickers/README.md`. Notes: `docs/MILESTONE_5.md`.
+
+## Lighting (M6)
+
+Dark studio background kept. RoomEnvironment PMREM gives approximate IBL so metal reflects something, plus a slightly stronger key light. Not Dust II / not Skincraft-accurate.
+
+Tests: from apps/web, npx vitest run (or apps/web/run-tests.sh). Notes: docs/MILESTONE_6.md.

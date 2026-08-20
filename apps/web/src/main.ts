@@ -8,6 +8,7 @@ import {
   Mesh,
   MeshStandardMaterial,
   PerspectiveCamera,
+  PMREMGenerator,
   Scene,
   SRGBColorSpace,
   Texture,
@@ -16,6 +17,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
   KITS,
@@ -49,9 +51,9 @@ import {
   clampWear,
   emptySlots,
   isEmptySlot,
-  parseStickerQuery,
   type StickerSlot,
 } from "./stickers/slots";
+import { applyShareUrl, parseShareQuery, type ViewerWeapon } from "./share/query";
 
 /** 3/4 view that reads as a rifle (model is ~1m along +Z). */
 const FIXED_CAMERA = new Vector3(0.95, 0.42, 1.05);
@@ -66,11 +68,12 @@ const BACKING_URL = "/assets/stickers/shared/backing.png";
 const IDENTITY: Affine2D = { a: 1, b: 0, tx: 0, c: 0, d: 1, ty: 0 };
 
 const params = new URLSearchParams(window.location.search);
-const fixedCamera = params.has("fixed") || params.has("capture");
-const seedFromQuery = params.has("seed") ? clampSeed(Number(params.get("seed"))) : 0;
-const floatFromQuery = params.has("float") ? clampFloat(Number(params.get("float"))) : 0;
-const kitFromQuery = resolveKit(params.get("kit"));
-const stickerQuery = parseStickerQuery(params);
+const share = parseShareQuery(params);
+const fixedCamera = share.capture || share.fixed;
+const seedFromQuery = share.seed;
+const floatFromQuery = share.float;
+const kitFromQuery = share.kit;
+const stickerQuery = { slots: share.slots, rejected: share.rejected };
 
 if (fixedCamera) {
   document.body.classList.add("capture");
@@ -95,12 +98,14 @@ function formatFloat(value: number): string {
 }
 
 function releaseDocumentHold(): void {
-  void fetch("/m5-release", { method: "POST" }).catch(() => {
-    void fetch("/m4-release", { method: "POST" }).catch(() => {
-      void fetch("/m3-release", { method: "POST" }).catch(() => {
-        void fetch("/m2-release", { method: "POST" }).catch(() => {
-          void fetch("/m1-release", { method: "POST" }).catch(() => {
-            // Dev-only gate; ignore if the middleware is absent (preview/build).
+  void fetch("/m6-release", { method: "POST" }).catch(() => {
+    void fetch("/m5-release", { method: "POST" }).catch(() => {
+      void fetch("/m4-release", { method: "POST" }).catch(() => {
+        void fetch("/m3-release", { method: "POST" }).catch(() => {
+          void fetch("/m2-release", { method: "POST" }).catch(() => {
+            void fetch("/m1-release", { method: "POST" }).catch(() => {
+              // Dev-only gate; ignore if the middleware is absent (preview/build).
+            });
           });
         });
       });
@@ -109,6 +114,7 @@ function releaseDocumentHold(): void {
 }
 
 function markReady(): void {
+  window.__M6_READY__ = true;
   window.__M5_READY__ = true;
   window.__M4_READY__ = true;
   window.__M3_READY__ = true;
@@ -119,6 +125,7 @@ function markReady(): void {
 }
 
 function markError(message: string): void {
+  window.__M6_ERROR__ = message;
   window.__M5_ERROR__ = message;
   window.__M4_ERROR__ = message;
   window.__M3_ERROR__ = message;
@@ -154,14 +161,23 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = SRGBColorSpace;
 document.body.append(canvas);
 
-const hemi = new HemisphereLight(0xd7e6ff, 0x3d2a1c, 1.15);
+// Conservative IBL: RoomEnvironment -> PMREM so metal actually reflects
+// something. Keep the dark studio; do not chase Dust II / Skincraft sun.
+const pmrem = new PMREMGenerator(renderer);
+const room = new RoomEnvironment();
+const envRt = pmrem.fromScene(room, 0.04);
+scene.environment = envRt.texture;
+room.dispose();
+pmrem.dispose();
+
+const hemi = new HemisphereLight(0xd7e6ff, 0x3d2a1c, 1.22);
 scene.add(hemi);
 
-const key = new DirectionalLight(0xfff4e5, 2.1);
+const key = new DirectionalLight(0xfff4e5, 2.55);
 key.position.set(0.8, 1.2, 0.6);
 scene.add(key);
 
-const fill = new DirectionalLight(0xb7c8e0, 0.55);
+const fill = new DirectionalLight(0xb7c8e0, 0.62);
 fill.position.set(-0.7, 0.3, -0.4);
 scene.add(fill);
 
@@ -191,11 +207,31 @@ requestAnimationFrame(frame);
 const patternHooks: PatternHook[] = [];
 const stickerHooks: StickerHook[] = [];
 const patternByIndex = new Map<number, Texture>();
+let currentWeapon: ViewerWeapon = share.weapon;
 let currentSeed = seedFromQuery;
 let currentFloat = floatFromQuery;
 let currentKit: ViewerKit = kitFromQuery;
 let currentSlots: StickerSlot[] = stickerQuery.slots.map((s) => ({ ...s }));
 let lookupCatalog: StickerLookupRow[] = [];
+
+function syncShareUrl(): void {
+  const qs = applyShareUrl({
+    weapon: currentWeapon,
+    kit: currentKit,
+    seed: currentSeed,
+    float: currentFloat,
+    slots: currentSlots,
+    capture: share.capture,
+    fixed: share.fixed,
+  });
+  window.__M6_WEAPON__ = currentWeapon;
+  window.__M6_KIT__ = currentKit.paintIndex;
+  window.__M6_SEED__ = currentSeed;
+  window.__M6_FLOAT__ = currentFloat;
+  window.__M6_SLOTS__ = currentSlots.map((s) => ({ ...s }));
+  window.__M6_REJECTED__ = share.rejected;
+  window.__M6_URL__ = qs;
+}
 
 function applySeed(seed: number): void {
   const uv = seedToPatternUv(seed, kitSeedOptions(currentKit));
@@ -220,6 +256,7 @@ function applySeed(seed: number): void {
     rotationDeg: uv.pattern.rotationDeg,
     scale: uv.pattern.scale,
   };
+  syncShareUrl();
 }
 
 function applyFloat(floatAmt: number): void {
@@ -235,6 +272,7 @@ function applyFloat(floatAmt: number): void {
   }
   window.__M3_FLOAT__ = currentFloat;
   window.__M4_FLOAT__ = currentFloat;
+  syncShareUrl();
 }
 
 function stickerStatus(): string {
@@ -268,6 +306,7 @@ function applyKit(kit: ViewerKit): void {
   setStatus(
     `AK-47 ${kitLabel(kit)} (${kit.internalName}) — seed ${currentSeed}  float ${formatFloat(currentFloat)}  ${stickerStatus()}`,
   );
+  syncShareUrl();
 }
 
 function applySlots(slots: StickerSlot[]): void {
@@ -580,7 +619,7 @@ Promise.all([
     const box = new Box3().setFromObject(root);
     const size = box.getSize(new Vector3());
     const center = box.getCenter(new Vector3());
-    console.info("[m5] AK-47 stickers", {
+    console.info("[m6] AK-47 share + IBL", {
       size,
       center,
       seed: currentSeed,

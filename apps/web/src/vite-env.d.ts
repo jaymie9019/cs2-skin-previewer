@@ -32,4 +32,19 @@ interface Window {
     wear: number;
   }>;
   __M5_REJECTED__?: string[];
+  __M6_READY__?: boolean;
+  __M6_ERROR__?: string;
+  __M6_WEAPON__?: string;
+  __M6_KIT__?: number;
+  __M6_SEED__?: number;
+  __M6_FLOAT__?: number;
+  __M6_SLOTS__?: Array<{
+    id: number;
+    offsetX: number;
+    offsetY: number;
+    rotationDeg: number;
+    wear: number;
+  }>;
+  __M6_REJECTED__?: string[];
+  __M6_URL__?: string;
 }

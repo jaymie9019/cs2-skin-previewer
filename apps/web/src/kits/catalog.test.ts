@@ -8,6 +8,7 @@ import {
   kitLabel,
   kitSeedOptions,
   officialKit,
+  isViewerKitQuery,
   resolveKit,
 } from "./catalog";
 import { AK47_WEAPON_LENGTH, baseScaleForStyle, seedToPatternUv } from "../seed/seedToPatternUv";
@@ -151,5 +152,15 @@ describe("kit 14 seed 796 (ignoreWeaponSizeScale)", () => {
     const a = seedToPatternUv(796, kitSeedOptions(KIT_RED_LAMINATE));
     const b = seedToPatternUv(0, kitSeedOptions(KIT_RED_LAMINATE));
     expect(a.wear.matrix.tx === b.wear.matrix.tx && a.wear.matrix.ty === b.wear.matrix.ty).toBe(false);
+  });
+});
+
+describe("isViewerKitQuery", () => {
+  it("accepts viewer kits and rejects Fade / unknown", () => {
+    expect(isViewerKitQuery("44")).toBe(true);
+    expect(isViewerKitQuery("redlaminate")).toBe(true);
+    expect(isViewerKitQuery("")).toBe(false);
+    expect(isViewerKitQuery("fade")).toBe(false);
+    expect(isViewerKitQuery("38")).toBe(false);
   });
 });

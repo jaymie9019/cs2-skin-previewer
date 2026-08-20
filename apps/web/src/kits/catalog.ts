@@ -220,15 +220,29 @@ export function kitSeedOptions(kit: ViewerKit): SeedUvOptions {
   };
 }
 
-export function resolveKit(query: string | null | undefined): ViewerKit {
-  if (query == null || query === "") return KIT_CASE_HARDENED;
+/** True when the token names a viewer kit (index, slug, alias). Empty is not a match. */
+export function isViewerKitQuery(query: string | null | undefined): boolean {
+  if (query == null || query.trim() === "") return false;
   const q = query.trim().toLowerCase();
-  const found = KITS.find(
+  return KITS.some(
     (k) =>
       k.slug === q ||
       String(k.paintIndex) === q ||
       k.internalName.toLowerCase() === q ||
       k.aliases.some((a) => a.toLowerCase() === q),
   );
-  return found ?? KIT_CASE_HARDENED;
+}
+
+export function resolveKit(query: string | null | undefined): ViewerKit {
+  if (!isViewerKitQuery(query)) return KIT_CASE_HARDENED;
+  const q = (query ?? "").trim().toLowerCase();
+  return (
+    KITS.find(
+      (k) =>
+        k.slug === q ||
+        String(k.paintIndex) === q ||
+        k.internalName.toLowerCase() === q ||
+        k.aliases.some((a) => a.toLowerCase() === q),
+    ) ?? KIT_CASE_HARDENED
+  );
 }

@@ -1,4 +1,4 @@
 #!/bin/sh
-# M2 seed + M3 patina + M4 kit-catalog + M5 sticker unit tests (Vitest).
+# M2–M6 unit tests (Vitest): seed, patina, kits, stickers, share URL.
 cd "$(dirname "$0")"
 exec npx vitest run
