@@ -12,6 +12,9 @@
  */
 
 import officialKits from "../../../../data/ak47_paint_kits.json";
+import officialGlockKits from "../../../../data/glock_paint_kits.json";
+import type { ViewerWeapon } from "../share/weapons";
+import { WEAPON_GLOCK } from "../share/weapons";
 import {
   PATINA_COLOR0,
   PATINA_COLOR1,
@@ -23,6 +26,9 @@ import {
   type Rgb,
 } from "../patina/patinaWearMix";
 import type { SeedUvOptions } from "../seed/seedToPatternUv";
+
+/** Same items_game row shape for any weapon catalog. */
+export type OfficialKit = OfficialAk47Kit;
 
 export type OfficialAk47Kit = {
   paint_index: number;
@@ -105,25 +111,44 @@ export function officialKit(paintIndex: number): OfficialAk47Kit {
   return row;
 }
 
-function viewerKit(
-  paintIndex: number,
-  extras: {
-    slug: string;
-    patternPath: string;
-    patternScale: number;
-    ignoreWeaponSizeScale: boolean;
-    colors: readonly [Rgb, Rgb, Rgb, Rgb];
-    patternGain: number;
-    paintRoughness: number;
-    paintMetalness: number;
-    maskMode: MaskMode;
-    grainWindow?: GrainWindow | null;
-    uvAligned?: boolean;
-    patternAsAlbedo?: boolean;
-    aliases: readonly string[];
-  },
-): ViewerKit {
-  const row = officialKit(paintIndex);
+/** Official 59-kit Glock-18 catalog. Pairing is [kit]weapon_glock. Includes Fade 38. */
+export const OFFICIAL_GLOCK_KITS: readonly OfficialKit[] = officialGlockKits as OfficialKit[];
+
+const officialGlockByIndex = new Map(OFFICIAL_GLOCK_KITS.map((k) => [k.paint_index, k]));
+
+export function officialGlockKit(paintIndex: number): OfficialKit {
+  const row = officialGlockByIndex.get(paintIndex);
+  if (!row) {
+    throw new Error(`paint index ${paintIndex} is not an official Glock-18 kit in data/glock_paint_kits.json`);
+  }
+  return row;
+}
+
+export function officialCatalogFor(weapon: ViewerWeapon): readonly OfficialKit[] {
+  return weapon === WEAPON_GLOCK ? OFFICIAL_GLOCK_KITS : OFFICIAL_AK47_KITS;
+}
+
+export function officialKitFor(weapon: ViewerWeapon, paintIndex: number): OfficialKit {
+  return weapon === WEAPON_GLOCK ? officialGlockKit(paintIndex) : officialKit(paintIndex);
+}
+
+type ViewerKitExtras = {
+  slug: string;
+  patternPath: string;
+  patternScale: number;
+  ignoreWeaponSizeScale: boolean;
+  colors: readonly [Rgb, Rgb, Rgb, Rgb];
+  patternGain: number;
+  paintRoughness: number;
+  paintMetalness: number;
+  maskMode: MaskMode;
+  grainWindow?: GrainWindow | null;
+  uvAligned?: boolean;
+  patternAsAlbedo?: boolean;
+  aliases: readonly string[];
+};
+
+function viewerKitFromRow(row: OfficialKit, extras: ViewerKitExtras): ViewerKit {
   return {
     paintIndex: row.paint_index,
     internalName: row.name,
@@ -149,6 +174,10 @@ function viewerKit(
     grainWindow: extras.grainWindow ?? null,
     aliases: extras.aliases,
   };
+}
+
+function viewerKit(paintIndex: number, extras: ViewerKitExtras): ViewerKit {
+  return viewerKitFromRow(officialKit(paintIndex), extras);
 }
 
 /** Kit 44 / aq_oiled / style 8 Patina. Metal-only mask (M3). */
@@ -484,4 +513,123 @@ export function formatWearRange(kit: OfficialAk47Kit): string {
     return String(rounded);
   };
   return `${fmt(kit.wear_remap_min_effective)}–${fmt(kit.wear_remap_max_effective)}`;
+}
+
+/**
+ * Kit 38 / aa_fade / style 6 Anodized Airbrushed. Glock-18 only.
+ * vmat F_PAINT_STYLE 5, g_tPattern fade.png (1D color ramp),
+ * g_vColor0..3 silver / gold / pink / purple, ignoreWeaponSizeScale,
+ * roughness 0.25. Workshop: gradient along the weapon.
+ *   https://www.counter-strike.net/workshop/workshopfinishes/
+ * Do not add this row to KITS / AK catalog.
+ */
+export const KIT_FADE: ViewerKit = viewerKitFromRow(officialGlockKit(38), {
+  slug: "fade",
+  patternPath: "/assets/paints/aa_fade/fade.png",
+  patternScale: 1,
+  ignoreWeaponSizeScale: true,
+  colors: [
+    [0.862745, 0.827451, 0.807843],
+    [0.988235, 0.701961, 0.396078],
+    [0.945098, 0.337255, 0.458824],
+    [0.435294, 0.482353, 0.854902],
+  ],
+  patternGain: 1,
+  paintRoughness: 0.25,
+  paintMetalness: 0.92,
+  maskMode: "metal",
+  aliases: ["38", "fade", "aa_fade", "渐变之色", "漸層彩虹"],
+});
+
+/**
+ * Kit 3 / so_red / style 1 Solid Color. Glock-18 Candy Apple / 红苹果.
+ * No g_tPattern in so_red.vmat — Color1 candy red on metal. Wear 0–0.3.
+ */
+export const KIT_CANDY_APPLE: ViewerKit = viewerKitFromRow(officialGlockKit(3), {
+  slug: "candyapple",
+  patternPath: "/assets/paints/so_red/solid.png",
+  patternScale: 1,
+  ignoreWeaponSizeScale: true,
+  colors: [
+    [0.290196, 0.290196, 0.290196],
+    [0.741176, 0.168627, 0.168627],
+    [0.290196, 0.290196, 0.290196],
+    [0.290196, 0.290196, 0.290196],
+  ],
+  patternGain: 1,
+  paintRoughness: 0.4,
+  paintMetalness: 0.22,
+  maskMode: "metal",
+  aliases: ["3", "candy", "candyapple", "candy-apple", "so_red", "红苹果"],
+});
+
+/** Glock live set (M11). Not merged into KITS — kit=38 on AK must stay rejected. */
+export const GLOCK_KITS: readonly ViewerKit[] = [KIT_FADE, KIT_CANDY_APPLE];
+
+export function liveKitsFor(weapon: ViewerWeapon): readonly ViewerKit[] {
+  return weapon === WEAPON_GLOCK ? GLOCK_KITS : KITS;
+}
+
+export function hasPaintPreviewOn(weapon: ViewerWeapon, paintIndex: number): boolean {
+  return liveKitsFor(weapon).some((k) => k.paintIndex === paintIndex);
+}
+
+export function viewerKitForWeapon(weapon: ViewerWeapon, official: OfficialKit): ViewerKit | null {
+  return liveKitsFor(weapon).find((k) => k.paintIndex === official.paint_index) ?? null;
+}
+
+function officialExactTokensOn(kit: OfficialKit): string[] {
+  return [String(kit.paint_index), kit.name, kit.name_en, kit.name_zh, kit.name_zht ?? ""]
+    .filter((t) => t.length > 0)
+    .map((t) => t.toLowerCase());
+}
+
+export function isOfficialGlockKitQuery(query: string | null | undefined): boolean {
+  if (query == null || query.trim() === "") return false;
+  const q = query.trim().toLowerCase();
+  return OFFICIAL_GLOCK_KITS.some((k) => officialExactTokensOn(k).includes(q));
+}
+
+export function resolveOfficialGlockKit(query: string | null | undefined): OfficialKit | undefined {
+  if (!isOfficialGlockKitQuery(query)) return undefined;
+  const q = (query ?? "").trim().toLowerCase();
+  return OFFICIAL_GLOCK_KITS.find((k) => officialExactTokensOn(k).includes(q));
+}
+
+export function isOfficialKitQueryOn(weapon: ViewerWeapon, query: string | null | undefined): boolean {
+  return weapon === WEAPON_GLOCK ? isOfficialGlockKitQuery(query) : isOfficialAk47KitQuery(query);
+}
+
+export function resolveOfficialKitOn(weapon: ViewerWeapon, query: string | null | undefined): OfficialKit | undefined {
+  return weapon === WEAPON_GLOCK ? resolveOfficialGlockKit(query) : resolveOfficialAk47Kit(query);
+}
+
+export function isGlockViewerKitQuery(query: string | null | undefined): boolean {
+  if (query == null || query.trim() === "") return false;
+  const q = query.trim().toLowerCase();
+  return GLOCK_KITS.some(
+    (k) =>
+      k.slug === q ||
+      String(k.paintIndex) === q ||
+      k.internalName.toLowerCase() === q ||
+      k.aliases.some((a) => a.toLowerCase() === q),
+  );
+}
+
+export function resolveGlockKit(query: string | null | undefined): ViewerKit {
+  if (!isGlockViewerKitQuery(query)) return KIT_FADE;
+  const q = (query ?? "").trim().toLowerCase();
+  return (
+    GLOCK_KITS.find(
+      (k) =>
+        k.slug === q ||
+        String(k.paintIndex) === q ||
+        k.internalName.toLowerCase() === q ||
+        k.aliases.some((a) => a.toLowerCase() === q),
+    ) ?? KIT_FADE
+  );
+}
+
+export function defaultOfficialFor(weapon: ViewerWeapon): OfficialKit {
+  return weapon === WEAPON_GLOCK ? officialGlockKit(38) : officialKit(44);
 }

@@ -336,3 +336,65 @@ describe("M10 StatTrak / nametag / charm", () => {
     expect(serializeShareQuery(noExtra).get("s0")).toBe("259,0.02,-0.01,15,0.4");
   });
 });
+
+describe("M11 Glock weapon + Fade kit", () => {
+  it("accepts weapon=glock&kit=38 Fade", () => {
+    const q = parseShareQuery(params("weapon=glock&kit=38"));
+    expect(q.weapon).toBe("glock");
+    expect(q.rejected).not.toContain("weapon");
+    expect(q.rejected).not.toContain("kit");
+    expect(q.official.paint_index).toBe(38);
+    expect(q.official.name_en).toBe("Fade");
+    expect(q.official.name_zh).toBe("渐变之色");
+    expect(q.kit?.paintIndex).toBe(38);
+    expect(serializeShareQuery(q).get("weapon")).toBe("glock");
+    expect(serializeShareQuery(q).get("kit")).toBe("38");
+  });
+
+  it("rejects weapon=ak47&kit=38 and still falls back to Case Hardened", () => {
+    const q = parseShareQuery(params("weapon=ak47&kit=38"));
+    expect(q.weapon).toBe("ak47");
+    expect(q.rejected).toContain("kit");
+    expect(q.kit).toBe(KIT_CASE_HARDENED);
+    expect(q.official.paint_index).toBe(44);
+  });
+
+  it("rejects weapon=awp", () => {
+    const q = parseShareQuery(params("weapon=awp&kit=38"));
+    expect(q.weapon).toBe("ak47");
+    expect(q.rejected).toContain("weapon");
+  });
+
+  it("accepts Glock aliases", () => {
+    for (const raw of ["glock", "glock-18", "glock18", "weapon_glock", "Glock-18"]) {
+      const q = parseShareQuery(params(`weapon=${raw}&kit=38`));
+      expect(q.weapon).toBe("glock");
+      expect(q.rejected).not.toContain("weapon");
+    }
+  });
+
+  it("does not paint Case Hardened onto Glock (kit=44 rejected)", () => {
+    const q = parseShareQuery(params("weapon=glock&kit=44"));
+    expect(q.weapon).toBe("glock");
+    expect(q.rejected).toContain("kit");
+    expect(q.official.paint_index).toBe(38);
+    expect(q.kit?.paintIndex).toBe(38);
+    expect(q.official.name_en).toBe("Fade");
+  });
+
+  it("sameInspect includes weapon (glock vs ak47)", () => {
+    const g = parseShareQuery(params("weapon=glock&kit=38"));
+    const a = parseShareQuery(params("weapon=ak47&kit=44"));
+    expect(sameInspect(shareStateFromParsed(g), shareStateFromParsed(a))).toBe(false);
+    const again = parseShareQuery(serializeShareQuery(shareStateFromParsed(g)));
+    expect(sameInspect(shareStateFromParsed(g), shareStateFromParsed(again))).toBe(true);
+  });
+
+  it("accepts Candy Apple on Glock (kit=3)", () => {
+    const q = parseShareQuery(params("weapon=glock&kit=3"));
+    expect(q.rejected).not.toContain("kit");
+    expect(q.official.paint_index).toBe(3);
+    expect(q.official.name_en).toBe("Candy Apple");
+    expect(q.kit?.paintIndex).toBe(3);
+  });
+});

@@ -205,3 +205,61 @@ Local dump (gitignored):
 | `data/raw/resource/csgo_tchinese.txt` | 4.4M | CRC `00ef4e3e0a`, packed 4,591,162 |
 
 Derived catalogs (committed): `data/ak47_paint_kits.json`, `data/stickers.json`, `data/paint_kits_all.json`.
+
+
+## Glock-18 compiled model (M11)
+
+Listed from `weapons/models` (do not guess; `-f` is a path prefix):
+
+```bash
+Source2Viewer-CLI \
+  -i /workspace/cs2/game/csgo/pak01_dir.vpk \
+  -l -f "weapons/models" -e "vmdl_c"
+```
+
+Target file:
+
+- VPK entry: `weapons/models/glock18/weapon_pist_glock18.vmdl_c`
+- CRC: `00e99d3325`
+- Packed size: `556155` bytes
+- Magazine sibling (not exported): `weapons/models/glock18/weapon_pist_glock18_mag.vmdl_c`
+
+```bash
+export PATH="/workspace/tools/source2viewer:$PATH"
+
+Source2Viewer-CLI \
+  -i /workspace/cs2/game/csgo/pak01_dir.vpk \
+  -f "weapons/models/glock18/weapon_pist_glock18.vmdl_c" \
+  -o /workspace/cs2-skin-previewer/assets/glock.glb \
+  -d \
+  --gltf_export_format glb \
+  --gltf_export_materials \
+  --gltf_textures_adapt \
+  --game /workspace/cs2/game/csgo/gameinfo.gi
+```
+
+| File | Size | Role |
+| --- | --- | --- |
+| `/workspace/cs2-skin-previewer/assets/glock.glb` | 1,539,028 bytes | Local-dev Glock mesh |
+| sidecar `glock_*.png` | gitignored | Official extracted textures |
+
+Inspected JSON chunk: meshes `body_legacy`, `body_hd`; materials `pist_glock18`, `weapon_pist_glock`. Hide `body_legacy`. HD has `TEXCOORD_1` (stickers).
+
+Composite inputs (masks + packed cavity R/G/A):
+
+```bash
+Source2Viewer-CLI -i $VPK -d --game $GI \
+  -f "weapons/models/glock18/materials/composite_inputs/weapon_pist_glock_composite_inputs.vmat_c" \
+  -o /tmp/glock_composite
+```
+
+Copy `weapon_pist_glock18_masks.png` and pack cavity/AO/nopaint into
+`assets/composite/weapon_pist_glock18_cavity.png` (gitignored PNGs).
+
+Pairing token for items_game is `[kit]weapon_glock`. Re-run:
+
+```bash
+python3 /workspace/cs2-skin-previewer/scripts/extract_items_game.py
+```
+
+Derived: `data/glock_paint_kits.json` (59 official, includes kit 38 Fade).

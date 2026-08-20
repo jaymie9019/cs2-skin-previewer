@@ -14,6 +14,9 @@
  * Style 7 Custom (Redline): UV-aligned albedo sample, metal mask.
  * Style 9 Gunsmith (Fuel Injector / Bloodsport): custom-like albedo,
  *   spray mask. Patina-on-metal split is not implemented.
+ * Style 6 Anodized Airbrushed (Fade): 1D LUT along UV.x + seed, nested RGB
+ *   of g_vColor0..3 (silver / gold / pink / purple). Metal mask.
+ * Style 1 Solid Color (Candy Apple): Color1 on metal, no pattern.
  *
  * Style 3 officially uses triplanar; this viewer uses 2D UV with the
  * documented style-3 scale (weapon_length/36 * patternScale).
@@ -290,6 +293,23 @@ float cs2PaintMask = 0.0;
 		painted = saturate( pattern * cGrunge );
 		float wearOff = smoothstep( 0.2, 0.9, wearTex * uFloat );
 		cs2PaintMask *= ( 1.0 - wearOff );
+	} else if ( abs( uStyle - 6.0 ) < 0.5 ) {
+		// Style 6 Anodized Airbrushed / Fade: 1D lookup along the weapon.
+		// Workshop: gradient along length. Seed translateX shifts fade %.
+		// https://www.counter-strike.net/workshop/workshopfinishes/
+		float fadeT = fract( vMapUv.x * 0.85 + 0.08 + uPatternMatrix[2].x * 0.45 );
+		vec3 p = texture2D( uPatternMap, vec2( fadeT, 0.5 ) ).rgb * uPatternGain;
+		vec3 color = mix( uPatinaC0, uPatinaC1, saturate( p.r ) );
+		color = mix( color, uPatinaC2, saturate( p.g ) );
+		color = mix( color, uPatinaC3, saturate( p.b ) );
+		painted = saturate( color * cGrunge );
+		float wearOff = smoothstep( 0.25, 0.95, wearTex * uFloat );
+		cs2PaintMask *= ( 1.0 - wearOff );
+	} else if ( abs( uStyle - 1.0 ) < 0.5 ) {
+		// Style 1 Solid Color (Candy Apple): vmat Color1, no pattern.
+		painted = saturate( uPatinaC1 * cGrunge );
+		float wearOff = smoothstep( 0.2, 0.9, wearTex * uFloat );
+		cs2PaintMask *= ( 1.0 - wearOff );
 	} else {
 		vec3 p = pattern;
 		if ( abs( uStyle - 2.0 ) < 0.5 ) {
@@ -330,6 +350,6 @@ float cs2PaintMask = 0.0;
 	metalnessFactor = mix( metalnessFactor, uPaintMetalness, cs2PaintMask );`,
       );
   };
-  material.customProgramCacheKey = () => "m8-paint-styles";
+  material.customProgramCacheKey = () => "m11-paint-styles";
   return hook;
 }

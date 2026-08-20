@@ -541,3 +541,15 @@ body.capture #preview-badge,
 #m1-hold {
   display: none;
 }
+
+#weapon-row {
+  margin: 6px 0 8px;
+}
+
+#weapon-row button {
+  flex: 1;
+}
+
+.catalog-head .btn-row {
+  margin-top: 6px;
+}

@@ -183,3 +183,33 @@ Copy into `assets/paints/gs_ak47_bloodsport/`:
 
 vmat: `F_PAINT_STYLE` 8 (= items_game style 9), `g_bIgnoreWeaponSizeScale` 1,
 `g_flPaintRoughness` 0.4, `g_flPaintMetalness` 1. Wear remap 0–0.45.
+
+
+## Fade — `aa_fade` / kit 38 / style 6 Anodized Airbrushed (Glock)
+
+```bash
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/aa_fade.vmat_c" \
+  -o /tmp/aa_fade
+```
+
+Copy into `assets/paints/aa_fade/`:
+
+| File | VPK source | Role |
+| --- | --- | --- |
+| `fade.png` | `.../paints/anodized_air/fade_psd_24407e73.vtex` | 1D color ramp LUT (`g_tPattern`) |
+
+vmat: `F_PAINT_STYLE` 5 (= items_game style 6), `g_bIgnoreWeaponSizeScale` 1,
+`g_flPaintRoughness` 0.25, `g_vColor0..3` silver / gold / pink / purple.
+Wear remap 0–0.08. Glock only (not AK).
+
+## Candy Apple — `so_red` / kit 3 / style 1 Solid Color (Glock)
+
+```bash
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/so_red.vmat_c" \
+  -o /tmp/so_red
+```
+
+No `g_tPattern`. Viewer uses Color1 `[0.741176 0.168627 0.168627]` on the metal
+mask. `assets/paints/so_red/solid.png` is a 1×1 dummy (gitignored).

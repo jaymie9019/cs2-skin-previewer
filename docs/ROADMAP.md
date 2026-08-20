@@ -25,13 +25,14 @@ M0–M6 stay as shipped (AK-47, 3 kits, stickers, share URL). New work is M7+.
 | milestone-8 | Representative live paint styles (9 kits / 6 styles) |
 | milestone-9 | Authored IBL looks (`bg=` → PMREM); metal reads reflections |
 | milestone-10 | Sticker catalog picker + StatTrak / nametag (charm stubbed) |
+| milestone-11 | Glock-18 inspect + official Fade (38) / Candy Apple live |
 
 ## Gap vs a Skincraft-class site
 
 - Catalog UX (search, all skins, wear locked to real min/max)
 - Only 3 of 61 AK kits have a paint shader
 - Lighting is authored IBL looks (studio / warm / cool / sun), not game-accurate map probes
-- One weapon; no knives/gloves
+- Two weapons (AK-47 + Glock-18); no knives/gloves
 - Stickers are a searchable catalog (extracted subset still small); charm / keychain stubbed
 - Renderer is MeshStandard approximations, not a Source 2 material graph
 
@@ -69,9 +70,7 @@ Site chrome around the existing viewer.
 **Done** (`milestone-10`): searchable `stickers.json` picker (en/zh/id), 4 slots unchanged, visual StatTrak + nametag. Charm stubbed (no clean keychain extract).
 
 ### M11 — More weapons
-- Second weapon from the same pipeline (suggest AWP or Glock — Glock has Fade, which AK does not)
-- items_game driven kit list per weapon
-- URL `weapon=` already reserved
+**Done** (`milestone-11`): Glock-18 from the same pipeline. Official catalog from `[kit]weapon_glock`. Live Fade (38) + Candy Apple (3). AK path unchanged (61 kits, no Fade).
 
 ### M12 — Shader fidelity (original)
 The hard look gap. **Write our own** materials from vmat / workshop / VRF, not from another site.

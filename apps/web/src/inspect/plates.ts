@@ -133,10 +133,29 @@ export function createNametagPlate(): PlateHook & { setText: (text: string) => v
 
 /** Place plates on the AK receiver (authored, not a CS2 attach point). */
 export function placeInspectPlates(st: Mesh, nt: Mesh, center: { x: number; y: number; z: number }): void {
-  // Receiver / +X side so the default inspect + front cameras read the LCD.
+  placeInspectPlatesOn(st, nt, center, "ak47");
+}
+
+/** Glock is ~0.2 m along +Z — plates sit on the slide, not empty space. */
+export function placeInspectPlatesOn(
+  st: Mesh,
+  nt: Mesh,
+  center: { x: number; y: number; z: number },
+  weapon: "ak47" | "glock",
+): void {
+  if (weapon === "glock") {
+    st.position.set(center.x + 0.014, center.y + 0.01, center.z + 0.02);
+    st.rotation.set(-0.1, -Math.PI / 2, 0);
+    st.scale.setScalar(0.72);
+    nt.position.set(center.x + 0.002, center.y + 0.028, center.z + 0.03);
+    nt.rotation.set(-0.45, 0.1, 0);
+    nt.scale.setScalar(0.72);
+    return;
+  }
+  st.scale.setScalar(1);
+  nt.scale.setScalar(1);
   st.position.set(center.x + 0.036, center.y + 0.01, center.z - 0.02);
   st.rotation.set(-0.15, -Math.PI / 2, 0);
-  // Nameplate above the dust cover, tilted toward the inspect camera.
   nt.position.set(center.x + 0.004, center.y + 0.044, center.z + 0.02);
   nt.rotation.set(-0.55, 0.12, 0);
 }

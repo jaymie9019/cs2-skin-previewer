@@ -3,18 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CS2 Skin Previewer — M10</title>
+    <title>CS2 Skin Previewer — M11</title>
   </head>
   <body>
     <aside id="catalog-panel">
       <div class="catalog-head">
-        <h1>AK-47 kits</h1>
+        <h1 id="catalog-title">AK-47 kits</h1>
+        <div class="btn-row" id="weapon-row">
+          <button type="button" data-weapon="ak47">AK-47</button>
+          <button type="button" data-weapon="glock">Glock-18</button>
+        </div>
         <p class="catalog-count" id="catalog-count">61 official</p>
         <input id="catalog-search" type="search" placeholder="Search en / 中文 / index…" autocomplete="off" />
       </div>
       <div id="catalog-list"></div>
     </aside>
-    <div id="status">Loading AK-47 + catalog…</div>
+    <div id="status">Loading inspect + catalog…</div>
     <div id="preview-badge" hidden>preview not implemented / 尚未做涂装</div>
     <div id="seed-panel">
       <label>
@@ -49,7 +53,7 @@
         <button type="button" data-bg="cool">Cool</button>
         <button type="button" data-bg="sun">Sun</button>
       </div>
-      <a id="catalog-link" href="/catalog/ak47.html">All AK-47 kits</a>
+      <a id="catalog-link" href="/catalog/ak47.html">All official kits</a>
       <div id="extras-panel">
         <div class="sticker-heading">Inspect extras</div>
         <label class="unlock-row">
@@ -78,7 +82,7 @@
       </div>
       <div id="nametag-plate" hidden></div>
     </div>
-    <img id="m1-hold" src="/m10-hold.png" alt="" width="1" height="1" />
+    <img id="m1-hold" src="/m11-hold.png" alt="" width="1" height="1" />
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

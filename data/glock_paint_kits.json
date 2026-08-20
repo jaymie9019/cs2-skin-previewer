@@ -1,0 +1,1536 @@
+[
+  {
+    "paint_index": 2,
+    "name": "so_olive",
+    "name_en": "Groundwater",
+    "name_zh": "地下水",
+    "name_zht": "地下水",
+    "style": 1,
+    "style_name": "Solid Color",
+    "wear_remap_min": null,
+    "wear_remap_max": null,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": 0.2,
+    "rarity": "common",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_so_olive_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_mirage"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 3,
+    "name": "so_red",
+    "name_en": "Candy Apple",
+    "name_zh": "红苹果",
+    "name_zht": "蜜糖紅蘋",
+    "style": 1,
+    "style_name": "Solid Color",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.3,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.3,
+    "wear_default": 0.12,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_so_red_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_italy"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 38,
+    "name": "aa_fade",
+    "name_en": "Fade",
+    "name_zh": "渐变之色",
+    "name_zht": "漸層彩虹",
+    "style": 6,
+    "style_name": "Anodized Airbrushed",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.08,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.08,
+    "wear_default": 0.2,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_aa_fade_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_assault"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 40,
+    "name": "so_night",
+    "name_en": "Night",
+    "name_zh": "噩梦之夜",
+    "name_zht": "惡夢之夜",
+    "style": 1,
+    "style_name": "Solid Color",
+    "wear_remap_min": null,
+    "wear_remap_max": null,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": 0.17,
+    "rarity": "common",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_so_night_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_overpass"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 48,
+    "name": "am_dragon_glock",
+    "name_en": "Dragon Tattoo",
+    "name_zh": "黑龙纹身",
+    "name_zht": "猛龍騰紋",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.08,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.08,
+    "wear_default": 0.04,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_dragon_glock_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_weapons_i"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 84,
+    "name": "hy_ddpat_pink",
+    "name_en": "Pink DDPAT",
+    "name_zh": "粉红 DDPAT",
+    "name_zht": "數位粉紅",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": null,
+    "wear_remap_max": null,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": 0.02,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_ddpat_pink_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_mirage_2021"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 129,
+    "name": "glock_chomper",
+    "name_en": "Gold Toof",
+    "name_zh": "大金牙",
+    "name_zht": "金牙",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.730496,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.730496,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": "weapons/paints/community/community_34/glock_chomper.vcompmat",
+    "vmt_path": null,
+    "description_tag": "PaintKit_glock_chomper_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_34"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 152,
+    "name": "hy_overpass_tagged_teal",
+    "name_en": "Teal Graf",
+    "name_zh": "凫色涂鸦",
+    "name_zht": "青色塗鴉",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.5,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.5,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": "weapons/paints/set_overpass_2024/hy_overpass_tagged_teal.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_overpass_tagged_teal_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_overpass_2024"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 159,
+    "name": "aq_brass",
+    "name_en": "Brass",
+    "name_zh": "黄铜",
+    "name_zht": "黃銅",
+    "style": 8,
+    "style_name": "Patina",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": 0.1,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_aq_brass_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_dust"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 208,
+    "name": "so_sand_bravo",
+    "name_en": "Sand Dune",
+    "name_zh": "沙丘之黄",
+    "name_zht": "黃石沙丘",
+    "style": 1,
+    "style_name": "Solid Color",
+    "wear_remap_min": null,
+    "wear_remap_max": null,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": 0.21,
+    "rarity": "common",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_so_sand_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_bravo_ii"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 230,
+    "name": "am_ddpatdense_silver",
+    "name_en": "Steel Disruption",
+    "name_zh": "钢铁禁锢",
+    "name_zht": "鋼鐵分裂",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.2,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.2,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_ddpatdense_silver_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_esports_iii"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 278,
+    "name": "hy_craquelure",
+    "name_en": "Blue Fissure",
+    "name_zh": "蓝色裂纹",
+    "name_zht": "碎裂鬱藍",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.06,
+    "wear_remap_max": 0.58,
+    "wear_remap_min_effective": 0.06,
+    "wear_remap_max_effective": 0.58,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_craquelure_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_weapons_iii"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 293,
+    "name": "hy_nerodia",
+    "name_en": "Death Rattle",
+    "name_zh": "夺命撼响",
+    "name_zht": "亡命響尾",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.08,
+    "wear_remap_max": 0.5,
+    "wear_remap_min_effective": 0.08,
+    "wear_remap_max_effective": 0.5,
+    "wear_default": null,
+    "rarity": "common",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_nerodia_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_bank"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 353,
+    "name": "cu_glock-liquescent",
+    "name_en": "Water Elemental",
+    "name_zh": "水灵",
+    "name_zht": "水元素",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.7,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.7,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock-liquescent_tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_4"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 367,
+    "name": "am_nuclear_pattern1_glock",
+    "name_en": "Reactor",
+    "name_zh": "核子反应",
+    "name_zht": "反應爐",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_nuclear_pattern1_glock_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_cache"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 381,
+    "name": "aq_glock_coiled",
+    "name_en": "Grinder",
+    "name_zh": "粉碎者",
+    "name_zht": "粉碎者",
+    "style": 8,
+    "style_name": "Patina",
+    "wear_remap_min": 0.02,
+    "wear_remap_max": 0.25,
+    "wear_remap_min_effective": 0.02,
+    "wear_remap_max_effective": 0.25,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_aq_glock_coiled_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_5"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 399,
+    "name": "cu_glock_deathtoll",
+    "name_en": "Catacombs",
+    "name_zh": "亡者之寝",
+    "name_zht": "地下墓穴",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.5,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.5,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock_deathtoll_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_6"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 437,
+    "name": "am_aqua_flecks",
+    "name_en": "Twilight Galaxy",
+    "name_zh": "暮光星系",
+    "name_zht": "暮光星海",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.2,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.2,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_aqua_flecks_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_chopshop"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 479,
+    "name": "aq_glock18_flames_blue",
+    "name_en": "Bunsen Burner",
+    "name_zh": "本生灯",
+    "name_zht": "本生燈",
+    "style": 8,
+    "style_name": "Patina",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.8,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.8,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_aq_glock18_flames_blue_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_8"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 495,
+    "name": "gs_glock18_wrathys",
+    "name_en": "Wraiths",
+    "name_zh": "幻影冥魂",
+    "name_zht": "冥魂",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.8,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.8,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_glock18_wrathys_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_9"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 532,
+    "name": "gs_glock18_award",
+    "name_en": "Royal Legion",
+    "name_zh": "皇家军团",
+    "name_zht": "皇家軍團",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_glock18_award_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_11"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 586,
+    "name": "cu_glock_wasteland_rebel",
+    "name_en": "Wasteland Rebel",
+    "name_zh": "荒野反叛",
+    "name_zht": "荒土之亂",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.54,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.54,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock_wasteland_rebel_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_13"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 607,
+    "name": "cu_glock18_weasel",
+    "name_en": "Weasel",
+    "name_zh": "鼬鼠",
+    "name_zht": "黃鼠狼",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_Glock18_Weasel_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_gamma_2"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 623,
+    "name": "aq_glock_dark-fall",
+    "name_en": "Ironwork",
+    "name_zh": "铁之作",
+    "name_zht": "鐵作飾紋",
+    "style": 8,
+    "style_name": "Patina",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_aq_glock_dark-fall_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_15"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 680,
+    "name": "cu_glock_indigo",
+    "name_en": "Off World",
+    "name_zh": "异星世界",
+    "name_zht": "離世靛痕",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock_indigo_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_18"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 694,
+    "name": "aa_glock_18_urban_moon_fever",
+    "name_en": "Moonrise",
+    "name_zh": "城里的月光",
+    "name_zht": "月出",
+    "style": 6,
+    "style_name": "Anodized Airbrushed",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.65,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.65,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_aa_glock_18_urban_moon_fever_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_19"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 713,
+    "name": "gs_glock_thunder_dust",
+    "name_en": "Warhawk",
+    "name_zh": "战鹰",
+    "name_zht": "戰鷹",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_glock_thunder_dust_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_20"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 732,
+    "name": "hy_leaf_blue",
+    "name_en": "Synth Leaf",
+    "name_zh": "合成叶",
+    "name_zht": "合成葉",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.7,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.7,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hy_leaf_blue_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_stmarc"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 789,
+    "name": "am_nuclear_skulls_green",
+    "name_en": "Nuclear Garden",
+    "name_zh": "核子花园",
+    "name_zht": "核子樂園",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.7,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.7,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_nuclear_skulls_green_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_nuke_2"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 799,
+    "name": "aa_vertigo_blue",
+    "name_en": "High Beam",
+    "name_zh": "远光灯",
+    "name_zht": "遠光燈",
+    "style": 6,
+    "style_name": "Anodized Airbrushed",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.08,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.08,
+    "wear_default": null,
+    "rarity": "common",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_aa_vertigo_blue_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_inferno_2"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 808,
+    "name": "cu_glock18_corroden",
+    "name_en": "Oxide Blaze",
+    "name_zh": "锈蚀烈焰",
+    "name_zht": "氧化焰痕",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.85,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.85,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock18_corroden_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_21"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 832,
+    "name": "gsch_axia_glock",
+    "name_en": "AXIA",
+    "name_zh": "AXIA",
+    "name_zht": "AXIA",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.7,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.7,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": "weapons/paints/set_realism_camo/gsch_axia_glock.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gsch_axia_glock_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_realism_camo"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 918,
+    "name": "cu_glock_hero",
+    "name_en": "Sacrifice",
+    "name_zh": "烈焰天使",
+    "name_zht": "犧牲小我",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock_hero_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_24"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 957,
+    "name": "cu_glock18_warmaiden",
+    "name_en": "Bullet Queen",
+    "name_zh": "子弹皇后",
+    "name_zht": "子彈皇后",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock18_warmaiden_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_25"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 963,
+    "name": "cu_glock_eyecontact",
+    "name_en": "Vogue",
+    "name_zh": "摩登时代",
+    "name_zht": "時尚之眼",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.75,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.75,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock_eyecontact_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_26"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 988,
+    "name": "cu_glock_noir",
+    "name_en": "Neo-Noir",
+    "name_zh": "黑色魅影",
+    "name_zht": "穎黑",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock_noir_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_27"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1016,
+    "name": "cu_money_glock",
+    "name_en": "Franklin",
+    "name_zh": "富兰克林",
+    "name_zht": "富蘭克林",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.4,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.4,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_money_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_op10_t"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1039,
+    "name": "gs_glock_polymer",
+    "name_en": "Clear Polymer",
+    "name_zh": "一目了然",
+    "name_zht": "透明聚合物",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_glock_polymer_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_28"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1079,
+    "name": "sp_tire_tread_red",
+    "name_en": "Red Tire",
+    "name_zh": "红色轮胎",
+    "name_zht": "紅色輪胎",
+    "style": 3,
+    "style_name": "Spray-Paint",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.55,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.55,
+    "wear_default": null,
+    "rarity": "common",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_sp_tire_tread_red_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_vertigo_2021"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1100,
+    "name": "cu_glock_snackattack",
+    "name_en": "Snack Attack",
+    "name_zh": "零食派对",
+    "name_zht": "速食攻擊",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock_snackattack_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_29"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1119,
+    "name": "am_emerald_marbleized_glock",
+    "name_en": "Gamma Doppler",
+    "name_zh": "伽玛多普勒",
+    "name_zht": "伽傌都卜勒",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.5,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.5,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_marbleized_g_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_train_2021"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1120,
+    "name": "am_gamma_doppler_phase1_glock",
+    "name_en": "Gamma Doppler",
+    "name_zh": "伽玛多普勒",
+    "name_zht": "伽傌都卜勒",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.5,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.5,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_marbleized_g_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_train_2021"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1121,
+    "name": "am_gamma_doppler_phase2_glock",
+    "name_en": "Gamma Doppler",
+    "name_zh": "伽玛多普勒",
+    "name_zht": "伽傌都卜勒",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.5,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.5,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_marbleized_g_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_train_2021"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1122,
+    "name": "am_gamma_doppler_phase3_glock",
+    "name_en": "Gamma Doppler",
+    "name_zh": "伽玛多普勒",
+    "name_zht": "伽傌都卜勒",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.5,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.5,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_marbleized_g_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_train_2021"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1123,
+    "name": "am_gamma_doppler_phase4_glock",
+    "name_en": "Gamma Doppler",
+    "name_zh": "伽玛多普勒",
+    "name_zht": "伽傌都卜勒",
+    "style": 5,
+    "style_name": "Anodized Multicolored",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.5,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.5,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_am_marbleized_g_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_train_2021"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1158,
+    "name": "gs_glock_elite_camo",
+    "name_en": "Winterized",
+    "name_zh": "冬季战术",
+    "name_zht": "冬季化",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_gs_glock_elite_camo_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_31"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1167,
+    "name": "glock_brick_mondrian",
+    "name_en": "Block-18",
+    "name_zh": "崩络克18型",
+    "name_zht": "Block-18",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.671875,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.671875,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": "weapons/paints/community/community_33/glock_brick_mondrian.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_glock_brick_mondrian_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_33"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1200,
+    "name": "glock_train_green",
+    "name_en": "Green Line",
+    "name_zh": "格林线",
+    "name_zht": "綠線火車",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": "weapons/paints/set_train_2025/glock_train_green.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_glock_train_green_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_train_2025"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1208,
+    "name": "glock_shinobu",
+    "name_en": "Shinobu",
+    "name_zh": "忍瞳",
+    "name_zht": "蝶忍",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": "weapons/paints/community/community_35/glock_shinobu.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_glock_shinobu_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_35"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1227,
+    "name": "cu_glock_moon_rabbit",
+    "name_en": "Umbral Rabbit",
+    "name_zh": "圆影玉兔",
+    "name_zht": "月兔",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.75,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.75,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock_moon_rabbit_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_32"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1240,
+    "name": "cu_glock_ramzes",
+    "name_en": "Ramese's Reach",
+    "name_zh": "拉美西斯之触",
+    "name_zht": "拉美西斯之伸",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": null,
+    "vmt_path": null,
+    "description_tag": "#PaintKit_cu_glock_ramzes_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_anubis"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1265,
+    "name": "hye_topo",
+    "name_en": "Ocean Topo",
+    "name_zh": "深海地貌",
+    "name_zht": "海洋地形圖",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.6,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.6,
+    "wear_default": null,
+    "rarity": "common",
+    "composite_material_path": "weapons/paints/timed_drops/hye_topo.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_hye_topo_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_timed_drops_cool"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1282,
+    "name": "spe_missile",
+    "name_en": "Glockingbird",
+    "name_zh": "格更鸟",
+    "name_zht": "格洛舌鳥",
+    "style": 3,
+    "style_name": "Spray-Paint",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.67,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.67,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": "weapons/paints/timed_drops/spe_missile.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_spe_missile_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_timed_drops_neutral"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1312,
+    "name": "soe_roses",
+    "name_en": "Coral Bloom",
+    "name_zh": "珊红花汛",
+    "name_zht": "橘紅玫瑰",
+    "style": 2,
+    "style_name": "Hydrographic",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.752941,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.752941,
+    "wear_default": null,
+    "rarity": "uncommon",
+    "composite_material_path": "weapons/paints/timed_drops/soe_roses.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_soe_roses_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_timed_drops_warm"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1348,
+    "name": "glock_mirror_maze_v2_pearl",
+    "name_en": "Mirror Mosaic",
+    "name_zh": "镜面马赛克",
+    "name_zht": "鏡面馬賽克",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "mythical",
+    "composite_material_path": "weapons/paints/community/community_36/glock_mirror_maze_v2_pearl.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_glock_mirror_maze_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_36"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1357,
+    "name": "ht_white_edges",
+    "name_en": "Trace Lock",
+    "name_zh": "追踪锁定",
+    "name_zht": "追蹤鎖定",
+    "style": 3,
+    "style_name": "Spray-Paint",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.7,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.7,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": "weapons/paints/timed_drops/ht_white_edges.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_ht_white_edges_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_timed_drops_achroma"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1421,
+    "name": "glock_jdpeek",
+    "name_en": "Fully Tuned",
+    "name_zh": "巅峰状态",
+    "name_zht": "完全調諧",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": "weapons/paints/community/community_37/glock_jdpeek.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_glock_jdpeek_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_community_37"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1450,
+    "name": "glock_ghost_protocol_red",
+    "name_en": "Ghost Protocol",
+    "name_zh": "幽灵协议",
+    "name_zht": "幽靈協議",
+    "style": 7,
+    "style_name": "Custom Paint Job",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 0.9,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 0.9,
+    "wear_default": null,
+    "rarity": "legendary",
+    "composite_material_path": "weapons/paints/set_spy_tech/glock_ghost_protocol_red.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_glock_ghost_protocol_red_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_spy_tech"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  },
+  {
+    "paint_index": 1460,
+    "name": "glock_ifrit_lattice",
+    "name_en": "Ifrit Lattice",
+    "name_zh": "火灵纹阵",
+    "name_zht": "妖靈格柵",
+    "style": 9,
+    "style_name": "Gunsmith",
+    "wear_remap_min": 0.0,
+    "wear_remap_max": 1.0,
+    "wear_remap_min_effective": 0.0,
+    "wear_remap_max_effective": 1.0,
+    "wear_default": null,
+    "rarity": "rare",
+    "composite_material_path": "weapons/paints/set_arabesque/glock_ifrit_lattice.vcompmat",
+    "vmt_path": null,
+    "description_tag": "#PaintKit_glock_ifrit_lattice_Tag",
+    "weapon": "weapon_glock",
+    "item_sets": [
+      "set_arabesque"
+    ],
+    "pairing_sources": [
+      "client_loot_lists",
+      "item_sets"
+    ]
+  }
+]

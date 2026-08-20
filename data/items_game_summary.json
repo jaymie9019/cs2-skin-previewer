@@ -9,8 +9,10 @@
     "sticker_kits": 11789,
     "item_sets": 97,
     "ak47_skins": 61,
+    "glock_skins": 59,
     "paint_kit_id_collisions": 0,
     "ak_kits_missing_definition": [],
+    "glock_kits_missing_definition": [],
     "sticker_unresolved_en": 1
   },
   "ak47_item_defindex": "7",

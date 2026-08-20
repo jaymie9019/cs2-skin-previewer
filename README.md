@@ -1,12 +1,12 @@
 # CS2 skin previewer
 
-Local-only 3D preview of a CS2 AK-47 (glTF) using Vite + TypeScript + Three.js.
+Local-only 3D preview of CS2 AK-47 and Glock-18 (glTF) using Vite + TypeScript + Three.js.
 
 Official Valve assets stay on this machine. Do not publish VPKs, extracted textures, or packed glbs.
 This repo is local-dev only.
 
 ## What works if you clone without CS2
-In git: Vite viewer, shareable URLs, catalog JSON, tests, assets/ak47.glb (mesh only).
+In git: Vite viewer, shareable URLs, catalog JSON, tests, assets/ak47.glb + assets/glock.glb (mesh only).
 Not in git (needed to texture the inspect): sidecar PNGs next to the glb, assets/paints/, assets/composite/, assets/stickers/.
 Extract commands: docs/paths.md, assets/paints/README.md, assets/stickers/README.md, scripts/extract_items_game.py (see docs/ITEMS_GAME.md).
 
@@ -14,17 +14,17 @@ Extract commands: docs/paths.md, assets/paints/README.md, assets/stickers/README
 
 Install dependencies at the repo root, then start the Vite dev server (workspace script `dev`, or the same script inside `apps/web`).
 
-The page is http://127.0.0.1:5173/ — left catalog of 61 official AK-47 kits, drag to orbit the rifle.
+The page is http://127.0.0.1:5173/ — left catalog of official AK-47 or Glock-18 kits, drag to orbit. Switch weapon in the HUD or via `weapon=`.
 
 The viewer loads `assets/ak47.glb` via a `apps/web/public/assets` symlink so GLTFLoader can resolve the sibling official PNGs. Those PNGs are gitignored.
 Changing Kit / Seed / Float / stickers / view / background updates the query string with history.replaceState.
 
-Static catalog table (search + inspect links): http://127.0.0.1:5173/catalog/ak47.html
+Static catalog tables: http://127.0.0.1:5173/catalog/ak47.html and http://127.0.0.1:5173/catalog/glock.html
 
-## Shareable URL (M6–M10)
-Opening a URL restores the same inspect. Grammar: weapon=ak47 (only AK for now), kit=<official paint index or slug>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool|sun (IBL look, not just a plate), st=1 or st=<kills> (StatTrak), name=<text> (nametag, max 20). Unknown kit (fade / 38 / 999), s4, and charm= are rejected. Official listed kits without a shader (e.g. kit=180 Fire Serpent) are accepted and show the vanilla AK. Live kits include 14 / 44 / 72 / 122 / 226 / 282 / 456 / 524 / 639. Full grammar: docs/MILESTONE_7.md + docs/MILESTONE_8.md + docs/MILESTONE_9.md + docs/MILESTONE_10.md.
+## Shareable URL (M6–M11)
+Opening a URL restores the same inspect. Grammar: weapon=ak47|glock (aliases: ak-47, weapon_ak47, ak / glock-18, glock18, weapon_glock), kit=<official paint index or slug for that weapon>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool|sun, st=1 or st=<kills>, name=<text>. Unknown weapon (awp) rejected. Kit must be official for the selected weapon: kit=38 Fade is accepted on Glock and rejected on AK; kit=44 Case Hardened is accepted on AK and rejected on Glock (falls back to Fade). Official listed kits without a shader show vanilla glTF + “尚未做涂装”. Live AK: 14 / 44 / 72 / 122 / 226 / 282 / 456 / 524 / 639. Live Glock: 38 Fade / 3 Candy Apple. Full grammar: docs/MILESTONE_11.md.
 Example: ?weapon=ak47&kit=44&seed=923&float=0.056&s0=259,0.02,-0.01,15,0.4
-Example: ?weapon=ak47&kit=226&view=front&bg=warm
+Example: ?weapon=glock&kit=38
 Example: ?weapon=ak47&kit=44&st=1&name=jaymie
 
 ## Compliance
@@ -39,7 +39,7 @@ From `apps/web`: `npm install` then `npm run dev`.
 
 ## Kits + seed + float (M4)
 
-The Kit dropdown and left catalog list all 61 official AK-47 finishes from `data/ak47_paint_kits.json` (no Fade — AK-47 has none). Nine have a live paint shader. Labels are English + 中文. Query `kit=44` / `kit=122` / `kit=14` / `kit=72` / `kit=226` / `kit=282` (or slug). Seed (0-999) and Float (clamped to the kit remap) still update live. `capture=1` or `fixed=1` locks the camera.
+The left catalog lists official kits for the current weapon (`data/ak47_paint_kits.json` = 61, no Fade; `data/glock_paint_kits.json` includes kit 38 Fade / 渐变之色). Nine have a live paint shader. Labels are English + 中文. Query `kit=44` / `kit=122` / `kit=14` / `kit=72` / `kit=226` / `kit=282` (or slug). Seed (0-999) and Float (clamped to the kit remap) still update live. `capture=1` or `fixed=1` locks the camera.
 
 - Case Hardened / 表面淬火 (44, style 8) — metal-only Patina
 - Jungle Spray / 丛林涂装 (122, style 3) — matte camo on receiver + furniture
@@ -66,6 +66,10 @@ StatTrak toggle (`st=1` / `st=<kills>`) draws an authored LCD plate on the recei
 ## Lighting (M6 + M9)
 
 `bg=` selects an environment (PMREM IBL) plus a matching plate. Default `studio` is the M6 RoomEnvironment bake (same lights) so Case Hardened / Red Laminate stay in class. `warm` / `cool` / `sun` are authored Three scenes — dusty courtyard, overcast, high-sun key — not ripped map cubemaps or Skincraft videos. Metal reads reflections; still approximate. Notes: docs/MILESTONE_6.md, docs/MILESTONE_9.md.
+
+## Glock-18 (M11)
+
+Second weapon from the same pipeline. `weapon=glock` loads `assets/glock.glb` + the official Glock catalog. Live kits: Fade / 渐变之色 (38, anodized airbrush from `aa_fade.vmat`) and Candy Apple / 红苹果 (3, solid Color1). Listed Glock kits stay vanilla + “尚未做涂装”. AK path unchanged. Notes: `docs/MILESTONE_11.md`.
 
 ## Catalog HUD (M7)
 

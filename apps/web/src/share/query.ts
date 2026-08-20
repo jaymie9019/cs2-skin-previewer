@@ -2,7 +2,7 @@
  * Shareable inspect URL (M6 + M7 catalog / view / bg / wear clamp).
  *
  * Grammar (query string):
- *   weapon=ak47                 only AK-47 for now (aliases: ak-47, weapon_ak47, ak)
+ *   weapon=ak47|glock          AK-47 or Glock-18 (aliases below)
  *   kit=44                      official paint index or ViewerKit slug; official listed kits (72, 226, …) accepted
  *   seed=923                    0–999
  *   float=0.056                 clamped to kit wear remap unless unlock=1 / wear=full
@@ -22,22 +22,35 @@
  * history.replaceState (no extra history entries).
  *
  * Rejected (not applied):
- *   unknown weapon, unknown kit (fade / 38 / 999 — not official AK), s4 / s5 / …
+ *   unknown weapon (awp), kit not official for THAT weapon (fade / 38 on AK; 44 on Glock), s4 / s5 / …
  *   charm= (M10 stub), empty name=, invalid st=
- * Invalid values fall back: weapon → ak47, kit → 44 Case Hardened.
+ * Invalid values fall back: weapon → ak47; kit → 44 on AK, 38 Fade on Glock.
  */
 import {
   KIT_CASE_HARDENED,
+  KIT_FADE,
   isOfficialAk47KitQuery,
+  isOfficialGlockKitQuery,
+  isGlockViewerKitQuery,
   isViewerKitQuery,
   officialKit,
+  officialGlockKit,
   resolveKit,
+  resolveGlockKit,
   resolveOfficialAk47Kit,
+  resolveOfficialGlockKit,
   viewerKitFor,
+  viewerKitForWeapon,
   clampFloatToKit,
-  type OfficialAk47Kit,
+  type OfficialKit,
   type ViewerKit,
 } from "../kits/catalog";
+import {
+  WEAPON_AK47,
+  WEAPON_GLOCK,
+  resolveViewerWeapon,
+  type ViewerWeapon,
+} from "./weapons";
 import { clampSeed } from "../seed/seedToPatternUv";
 import {
   ENV_LOOK_IDS,
@@ -51,10 +64,7 @@ import {
   type StickerSlot,
 } from "../stickers/slots";
 
-export const WEAPON_AK47 = "ak47";
-export type ViewerWeapon = typeof WEAPON_AK47;
-
-const WEAPON_ALIASES = new Set(["ak47", "ak-47", "weapon_ak47", "ak"]);
+export { WEAPON_AK47, WEAPON_GLOCK, isViewerWeaponQuery, type ViewerWeapon } from "./weapons";
 
 export type InspectView = "inspect" | "front" | "back";
 /** M9: `bg=` selects an IBL look (PMREM). Alias kept for M7 call sites. */
@@ -140,7 +150,7 @@ export type ShareState = {
   weapon: ViewerWeapon;
   /** Painted ViewerKit, or null when the official kit has no shader yet. */
   kit: ViewerKit | null;
-  official?: OfficialAk47Kit;
+  official?: OfficialKit;
   seed: number;
   float: number;
   slots: StickerSlot[];
@@ -159,7 +169,7 @@ export type ShareState = {
 
 export type ParsedShareQuery = ShareState & {
   rejected: string[];
-  official: OfficialAk47Kit;
+  official: OfficialKit;
   view: InspectView;
   bg: BackgroundPlate;
   unlockWear: boolean;
@@ -167,11 +177,6 @@ export type ParsedShareQuery = ShareState & {
   kills: number;
   nametag: string;
 };
-
-export function isViewerWeaponQuery(query: string | null | undefined): boolean {
-  if (query == null || query.trim() === "") return false;
-  return WEAPON_ALIASES.has(query.trim().toLowerCase());
-}
 
 export function formatQueryFloat(value: number): string {
   if (!Number.isFinite(value)) return "0";
@@ -186,18 +191,15 @@ export function officialIndexOf(state: ShareState): number {
   return state.official?.paint_index ?? state.kit?.paintIndex ?? 44;
 }
 
-function defaultOfficial(): OfficialAk47Kit {
-  return officialKit(44);
-}
-
 export function parseShareQuery(params: URLSearchParams): ParsedShareQuery {
   const rejected: string[] = [];
 
   const weaponRaw = params.get("weapon");
   let weapon: ViewerWeapon = WEAPON_AK47;
   if (weaponRaw != null && weaponRaw.trim() !== "") {
-    if (isViewerWeaponQuery(weaponRaw)) {
-      weapon = WEAPON_AK47;
+    const resolved = resolveViewerWeapon(weaponRaw);
+    if (resolved) {
+      weapon = resolved;
     } else {
       rejected.push("weapon");
       weapon = WEAPON_AK47;
@@ -205,20 +207,40 @@ export function parseShareQuery(params: URLSearchParams): ParsedShareQuery {
   }
 
   const kitRaw = params.get("kit");
-  let kit: ViewerKit | null = KIT_CASE_HARDENED;
-  let official = defaultOfficial();
-  if (kitRaw != null && kitRaw.trim() !== "") {
-    // ViewerKit slugs (casehardened / junglespray / …) first so M4 aliases keep working.
-    if (isViewerKitQuery(kitRaw)) {
-      kit = resolveKit(kitRaw);
-      official = officialKit(kit.paintIndex);
-    } else if (isOfficialAk47KitQuery(kitRaw)) {
-      official = resolveOfficialAk47Kit(kitRaw) ?? defaultOfficial();
-      kit = viewerKitFor(official);
-    } else {
-      rejected.push("kit");
-      kit = KIT_CASE_HARDENED;
-      official = defaultOfficial();
+  let kit: ViewerKit | null;
+  let official: OfficialKit;
+  if (weapon === WEAPON_GLOCK) {
+    kit = KIT_FADE;
+    official = officialGlockKit(38);
+    if (kitRaw != null && kitRaw.trim() !== "") {
+      if (isGlockViewerKitQuery(kitRaw)) {
+        kit = resolveGlockKit(kitRaw);
+        official = officialGlockKit(kit.paintIndex);
+      } else if (isOfficialGlockKitQuery(kitRaw)) {
+        official = resolveOfficialGlockKit(kitRaw) ?? officialGlockKit(38);
+        kit = viewerKitForWeapon(WEAPON_GLOCK, official);
+      } else {
+        rejected.push("kit");
+        kit = KIT_FADE;
+        official = officialGlockKit(38);
+      }
+    }
+  } else {
+    kit = KIT_CASE_HARDENED;
+    official = officialKit(44);
+    if (kitRaw != null && kitRaw.trim() !== "") {
+      // ViewerKit slugs (casehardened / junglespray / …) first so M4 aliases keep working.
+      if (isViewerKitQuery(kitRaw)) {
+        kit = resolveKit(kitRaw);
+        official = officialKit(kit.paintIndex);
+      } else if (isOfficialAk47KitQuery(kitRaw)) {
+        official = resolveOfficialAk47Kit(kitRaw) ?? officialKit(44);
+        kit = viewerKitFor(official);
+      } else {
+        rejected.push("kit");
+        kit = KIT_CASE_HARDENED;
+        official = officialKit(44);
+      }
     }
   }
 

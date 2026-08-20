@@ -207,6 +207,63 @@ def as_int(v, default=None):
         return default
 
 
+
+def build_weapon_catalog(weapon: str, kits_by_name: dict, item_sets, loot) -> tuple[list, list]:
+    """Official [kit]weapon pairings → catalog rows (en + 中文 + style + wear)."""
+    pairs: dict[str, dict] = {}
+    collect_pairs(item_sets, weapon, pairs, "item_sets")
+    collect_pairs(loot, weapon, pairs, "client_loot_lists")
+    catalog = []
+    missing = []
+    for kit_name, meta in sorted(pairs.items()):
+        kit = kits_by_name.get(kit_name)
+        if not kit:
+            missing.append(kit_name)
+            continue
+        sets = sorted(set(meta["sets"]))
+        sources = sorted(set(meta["sources"]))
+        row = {
+            **{k: kit[k] for k in (
+                "paint_index", "name", "name_en", "name_zh", "name_zht",
+                "style", "style_name", "wear_remap_min", "wear_remap_max",
+                "wear_remap_min_effective", "wear_remap_max_effective",
+                "wear_default", "rarity", "composite_material_path", "vmt_path",
+                "description_tag",
+            )},
+            "weapon": weapon,
+            "item_sets": sets,
+            "pairing_sources": sources,
+        }
+        catalog.append(row)
+    catalog.sort(key=lambda r: (isinstance(r["paint_index"], str), r["paint_index"] if isinstance(r["paint_index"], int) else 0))
+    return catalog, missing
+
+
+def write_weapon_md(catalog: list, dest: Path) -> None:
+    md = []
+    md.append("| # | paint index | internal name | English | 中文 | style | wear min | wear max | rarity |")
+    md.append("| ---: | ---: | --- | --- | --- | ---: | ---: | ---: | --- |")
+    for i, r in enumerate(catalog, 1):
+        wmin = r["wear_remap_min"]
+        wmax = r["wear_remap_max"]
+        wmin_s = f"{wmin:.6f}".rstrip("0").rstrip(".") if wmin is not None else "*(omit → 0)*"
+        wmax_s = f"{wmax:.6f}".rstrip("0").rstrip(".") if wmax is not None else "*(omit → 1)*"
+        md.append(
+            "| {i} | {idx} | `{name}` | {en} | {zh} | {style} | {wmin} | {wmax} | {rar} |".format(
+                i=i,
+                idx=r["paint_index"],
+                name=r["name"],
+                en=(r.get("name_en") or "—").replace("|", "/"),
+                zh=(r.get("name_zh") or "—").replace("|", "/"),
+                style=r["style"] if r["style"] is not None else "—",
+                wmin=wmin_s,
+                wmax=wmax_s,
+                rar=r.get("rarity") or "—",
+            )
+        )
+    dest.write_text("\n".join(md) + "\n", encoding="utf-8")
+
+
 PAIR_RE = re.compile(r"^\[([^\]]+)\](weapon_[A-Za-z0-9_]+)$")
 
 
@@ -296,34 +353,9 @@ def main() -> None:
 
     all_kits.sort(key=lambda r: (isinstance(r["paint_index"], str), r["paint_index"] if isinstance(r["paint_index"], int) else 0, str(r["paint_index"])))
 
-    # Weapon pairing
-    ak_pairs: dict[str, dict] = {}
-    collect_pairs(item_sets, "weapon_ak47", ak_pairs, "item_sets")
-    collect_pairs(loot, "weapon_ak47", ak_pairs, "client_loot_lists")
-
-    ak_catalog = []
-    missing_kits = []
-    for kit_name, meta in sorted(ak_pairs.items()):
-        kit = kits_by_name.get(kit_name)
-        if not kit:
-            missing_kits.append(kit_name)
-            continue
-        sets = sorted(set(meta["sets"]))
-        sources = sorted(set(meta["sources"]))
-        row = {
-            **{k: kit[k] for k in (
-                "paint_index", "name", "name_en", "name_zh", "name_zht",
-                "style", "style_name", "wear_remap_min", "wear_remap_max",
-                "wear_remap_min_effective", "wear_remap_max_effective",
-                "wear_default", "rarity", "composite_material_path", "vmt_path",
-                "description_tag",
-            )},
-            "weapon": "weapon_ak47",
-            "item_sets": sets,
-            "pairing_sources": sources,
-        }
-        ak_catalog.append(row)
-    ak_catalog.sort(key=lambda r: (isinstance(r["paint_index"], str), r["paint_index"] if isinstance(r["paint_index"], int) else 0))
+    # Weapon pairing (items_game [kit]weapon_* in item_sets / client_loot_lists)
+    ak_catalog, missing_kits = build_weapon_catalog("weapon_ak47", kits_by_name, item_sets, loot)
+    glock_catalog, glock_missing = build_weapon_catalog("weapon_glock", kits_by_name, item_sets, loot)
 
     # Fade: kits whose English tag is exactly "Fade", plus name contains fade
     fade_exact = []
@@ -417,8 +449,10 @@ def main() -> None:
             "sticker_kits": len(stickers),
             "item_sets": len(item_sets) if isinstance(item_sets, dict) else None,
             "ak47_skins": len(ak_catalog),
+            "glock_skins": len(glock_catalog),
             "paint_kit_id_collisions": len(collisions),
             "ak_kits_missing_definition": missing_kits,
+            "glock_kits_missing_definition": glock_missing,
             "sticker_unresolved_en": sticker_unresolved,
         },
         "ak47_item_defindex": ak_item_id,
@@ -450,6 +484,9 @@ def main() -> None:
     (OUT / "ak47_paint_kits.json").write_text(
         json.dumps(ak_catalog, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+    (OUT / "glock_paint_kits.json").write_text(
+        json.dumps(glock_catalog, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     (OUT / "stickers.json").write_text(
         json.dumps(stickers, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
@@ -457,29 +494,8 @@ def main() -> None:
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
 
-    # Markdown table for AK-47
-    md = []
-    md.append("| # | paint index | internal name | English | 中文 | style | wear min | wear max | rarity |")
-    md.append("| ---: | ---: | --- | --- | --- | ---: | ---: | ---: | --- |")
-    for i, r in enumerate(ak_catalog, 1):
-        wmin = r["wear_remap_min"]
-        wmax = r["wear_remap_max"]
-        wmin_s = f"{wmin:.6f}".rstrip("0").rstrip(".") if wmin is not None else "*(omit → 0)*"
-        wmax_s = f"{wmax:.6f}".rstrip("0").rstrip(".") if wmax is not None else "*(omit → 1)*"
-        md.append(
-            "| {i} | {idx} | `{name}` | {en} | {zh} | {style} | {wmin} | {wmax} | {rar} |".format(
-                i=i,
-                idx=r["paint_index"],
-                name=r["name"],
-                en=(r.get("name_en") or "—").replace("|", "/"),
-                zh=(r.get("name_zh") or "—").replace("|", "/"),
-                style=r["style"] if r["style"] is not None else "—",
-                wmin=wmin_s,
-                wmax=wmax_s,
-                rar=r.get("rarity") or "—",
-            )
-        )
-    (OUT / "ak47_paint_kits.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+    write_weapon_md(ak_catalog, OUT / "ak47_paint_kits.md")
+    write_weapon_md(glock_catalog, OUT / "glock_paint_kits.md")
 
     # Sticker sample markdown
     sample = stickers[:20]
@@ -497,9 +513,11 @@ def main() -> None:
     (OUT / "stickers_sample.md").write_text("\n".join(sm) + "\n", encoding="utf-8")
 
     write_catalog_html(ak_catalog, fade_exact, len(all_kits), len(stickers))
+    write_glock_catalog_html(glock_catalog, fade_exact, len(all_kits))
 
     print("paint_kits", len(all_kits))
     print("ak47 skins", len(ak_catalog))
+    print("glock skins", len(glock_catalog))
     print("stickers", len(stickers), "unresolved_en", sticker_unresolved)
     print("fade_on_ak47", fade_on_ak)
     print("fade_exact kits", len(fade_exact))
@@ -579,6 +597,7 @@ def write_catalog_html(ak_catalog, fade_exact, n_kits, n_stickers):
   </style>
 </head>
 <body>
+  <p class="sub"><a href="/catalog/ak47.html">AK-47</a> · <a href="/catalog/glock.html">Glock-18</a></p>
   <h1>AK-47 paint kits from items_game.txt</h1>
   <p class="sub">Derived catalog (not Valve’s raw dump). Pairing is <code>[paint_kit]weapon_ak47</code> in
     <code>item_sets</code> / <code>client_loot_lists</code>. Names from <code>csgo_english.txt</code> /
@@ -606,6 +625,110 @@ def write_catalog_html(ak_catalog, fade_exact, n_kits, n_stickers):
 </html>
 """
     dest = ROOT / "apps" / "web" / "public" / "catalog" / "ak47.html"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(page, encoding="utf-8")
+
+
+def write_glock_catalog_html(glock_catalog, fade_exact, n_kits):
+    rows = []
+    for r in glock_catalog:
+        wmin = r["wear_remap_min"]
+        wmax = r["wear_remap_max"]
+        wmin_s = f"{wmin:.4g}" if wmin is not None else "0†"
+        wmax_s = f"{wmax:.4g}" if wmax is not None else "1†"
+        rarity = r.get("rarity") or ""
+        rows.append(
+            "<tr>"
+            f"<td class='num'>{html.escape(str(r['paint_index']))}</td>"
+            f"<td><code>{html.escape(r['name'])}</code></td>"
+            f"<td>{html.escape(r.get('name_en') or '—')}</td>"
+            f"<td>{html.escape(r.get('name_zh') or '—')}</td>"
+            f"<td class='num'>{r['style'] if r['style'] is not None else '—'}</td>"
+            f"<td>{html.escape(r.get('style_name') or '')}</td>"
+            f"<td class='num'>{wmin_s}–{wmax_s}</td>"
+            f"<td class='rar {html.escape(rarity)}'>{html.escape(rarity)}</td>"
+            "</tr>"
+        )
+    fade_rows = [x for x in fade_exact if "weapon_glock" in (x.get("weapons") or [])]
+    fade_note = (
+        "Confirmed: <strong>kit 38 <code>aa_fade</code> Fade / 渐变之色 pairs with Glock-18</strong> "
+        "(and MAC-10). Not on AK-47. "
+        + ", ".join(
+            f"{html.escape(x['name'])} ({', '.join(html.escape(w) for w in x['weapons']) or 'no weapon pair'})"
+            for x in fade_rows
+        )
+    )
+    page = f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Glock-18 paint kits — items_game catalog</title>
+  <style>
+    :root {{ color-scheme: dark; }}
+    body {{
+      margin: 0; padding: 28px 32px 48px;
+      background: #14161a; color: #e8e4dc;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 14px;
+    }}
+    h1 {{ font-size: 22px; font-weight: 650; margin: 0 0 8px; color: #f2eee6; }}
+    .sub {{ color: #9aa3b2; margin: 0 0 18px; max-width: 920px; line-height: 1.45; }}
+    .sub a {{ color: #c9a36a; }}
+    .stats {{ display: flex; gap: 16px; margin: 0 0 20px; flex-wrap: wrap; }}
+    .stat {{
+      background: #1b1f27; border: 1px solid #2c3340; border-radius: 8px;
+      padding: 10px 14px; min-width: 120px;
+    }}
+    .stat b {{ display: block; font-size: 20px; color: #c9a36a; }}
+    .stat span {{ color: #9aa3b2; font-size: 12px; }}
+    table {{ border-collapse: collapse; width: 100%; background: #181b22; }}
+    th, td {{ padding: 6px 10px; border-bottom: 1px solid #2a3140; text-align: left; }}
+    th {{
+      position: sticky; top: 0; background: #1f2430; color: #c7d2e0;
+      font-weight: 600; font-size: 12px; letter-spacing: .03em; text-transform: uppercase;
+    }}
+    td.num {{ font-variant-numeric: tabular-nums; text-align: right; }}
+    code {{ font-size: 12px; color: #9ecbff; }}
+    .rar.mythical {{ color: #d47fff; }}
+    .rar.legendary {{ color: #eb4b4b; }}
+    .rar.ancient {{ color: #eb4b4b; }}
+    .rar.rare {{ color: #4b69ff; }}
+    .rar.uncommon {{ color: #5e98d9; }}
+    .rar.common {{ color: #b0c3d9; }}
+    .note {{
+      margin: 0 0 18px; padding: 10px 12px; border-left: 3px solid #c9a36a;
+      background: #1b1f27; color: #d7d0c4; max-width: 980px;
+    }}
+  </style>
+</head>
+<body>
+  <p class="sub"><a href="/catalog/ak47.html">AK-47</a> · <a href="/catalog/glock.html">Glock-18</a></p>
+  <h1>Glock-18 paint kits from items_game.txt</h1>
+  <p class="sub">Derived catalog (not Valve’s raw dump). Pairing is <code>[paint_kit]weapon_glock</code> in
+    <code>item_sets</code> / <code>client_loot_lists</code>. Names from <code>csgo_english.txt</code> /
+    <code>csgo_schinese.txt</code> via <code>description_tag</code>.</p>
+  <div class="stats">
+    <div class="stat"><b>{len(glock_catalog)}</b><span>Glock-18 skins</span></div>
+    <div class="stat"><b>{n_kits}</b><span>paint kits (all)</span></div>
+    <div class="stat"><b>38</b><span>Fade / 渐变之色</span></div>
+  </div>
+  <p class="note">{fade_note}</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Index</th><th>Internal</th><th>English</th><th>中文</th>
+        <th>Style</th><th>Finish</th><th>Wear remap</th><th>Rarity</th>
+      </tr>
+    </thead>
+    <tbody>
+      {''.join(rows)}
+    </tbody>
+  </table>
+  <p class="sub">† omitted in items_game; treated as 0–1. Wear remap is visual, not the inspect float band.</p>
+</body>
+</html>
+"""
+    dest = ROOT / "apps" / "web" / "public" / "catalog" / "glock.html"
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(page, encoding="utf-8")
 

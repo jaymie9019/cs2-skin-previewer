@@ -67,4 +67,9 @@ interface Window {
   __M10_KILLS__?: number;
   __M10_NAMETAG__?: string;
   __M10_PICKQ__?: string;
+  __M11_READY__?: boolean;
+  __M11_ERROR__?: string;
+  __M11_WEAPON__?: string;
+  __M11_KIT__?: number;
+  __M11_STICKERS__?: boolean;
 }

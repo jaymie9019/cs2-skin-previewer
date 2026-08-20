@@ -11,6 +11,7 @@ import {
   PMREMGenerator,
   Scene,
   SRGBColorSpace,
+  Object3D,
   Texture,
   TextureLoader,
   Vector3,
@@ -20,18 +21,19 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
   KITS,
+  GLOCK_KITS,
   KIT_CASE_HARDENED,
-  OFFICIAL_AK47_KITS,
   clampFloatToKit,
+  defaultOfficialFor,
   filterOfficialKits,
   formatWearRange,
-  hasPaintPreview,
+  hasPaintPreviewOn,
   kitSeedOptions,
-  officialKit,
+  officialCatalogFor,
   officialKitLabel,
-  resolveOfficialAk47Kit,
-  viewerKitFor,
-  type OfficialAk47Kit,
+  resolveOfficialKitOn,
+  viewerKitForWeapon,
+  type OfficialKit,
   type ViewerKit,
 } from "./kits/catalog";
 import { attachPatternMap, type PatternHook } from "./patternMaterial";
@@ -69,9 +71,12 @@ import {
   parseShareQuery,
   type BackgroundPlate,
   type InspectView,
+  WEAPON_AK47,
+  WEAPON_GLOCK,
   type ViewerWeapon,
 } from "./share/query";
-import { createNametagPlate, createStatTrakPlate, placeInspectPlates } from "./inspect/plates";
+import { weaponCatalogTitle, weaponLabel } from "./share/weapons";
+import { createNametagPlate, createStatTrakPlate, placeInspectPlatesOn } from "./inspect/plates";
 import {
   ENV_LOOKS,
   envLookPlateHex,
@@ -81,22 +86,43 @@ import {
 import { createEnvironmentScene, disposeEnvironmentScene } from "./env/author";
 
 /** 3/4 view that reads as a rifle (model is ~1m along +Z). */
-const FIXED_CAMERA = new Vector3(0.95, 0.42, 1.05);
-const FIXED_TARGET = new Vector3(-0.01, -0.025, 0.18);
-/** Receiver / right side (+X). */
-const FRONT_CAMERA = new Vector3(1.35, 0.12, 0.18);
-/** Magazine / left side (−X). */
-const BACK_CAMERA = new Vector3(-1.35, 0.12, 0.18);
+const AK_FIXED_CAMERA = new Vector3(0.95, 0.42, 1.05);
+const AK_FIXED_TARGET = new Vector3(-0.01, -0.025, 0.18);
+const AK_FRONT_CAMERA = new Vector3(1.35, 0.12, 0.18);
+const AK_BACK_CAMERA = new Vector3(-1.35, 0.12, 0.18);
 
-const VIEW_PRESETS: Record<InspectView, { camera: Vector3; target: Vector3 }> = {
-  inspect: { camera: FIXED_CAMERA, target: FIXED_TARGET },
-  front: { camera: FRONT_CAMERA, target: FIXED_TARGET },
-  back: { camera: BACK_CAMERA, target: FIXED_TARGET },
+/** Glock-18 body_hd is ~0.20 m along +Z — much closer than AK. */
+const GLOCK_FIXED_CAMERA = new Vector3(0.22, 0.12, 0.26);
+const GLOCK_FIXED_TARGET = new Vector3(0.0, 0.013, 0.061);
+const GLOCK_FRONT_CAMERA = new Vector3(0.34, 0.04, 0.061);
+const GLOCK_BACK_CAMERA = new Vector3(-0.34, 0.04, 0.061);
+
+const VIEW_PRESETS: Record<ViewerWeapon, Record<InspectView, { camera: Vector3; target: Vector3 }>> = {
+  ak47: {
+    inspect: { camera: AK_FIXED_CAMERA, target: AK_FIXED_TARGET },
+    front: { camera: AK_FRONT_CAMERA, target: AK_FIXED_TARGET },
+    back: { camera: AK_BACK_CAMERA, target: AK_FIXED_TARGET },
+  },
+  glock: {
+    inspect: { camera: GLOCK_FIXED_CAMERA, target: GLOCK_FIXED_TARGET },
+    front: { camera: GLOCK_FRONT_CAMERA, target: GLOCK_FIXED_TARGET },
+    back: { camera: GLOCK_BACK_CAMERA, target: GLOCK_FIXED_TARGET },
+  },
 };
 
-const MASKS_URL = "/assets/composite/weapon_rif_ak47_masks.png";
-const CAVITY_URL = "/assets/composite/weapon_rif_ak47_cavity.png";
-const MODEL_URL = "/assets/ak47.glb";
+const MASKS_URL: Record<ViewerWeapon, string> = {
+  ak47: "/assets/composite/weapon_rif_ak47_masks.png",
+  glock: "/assets/composite/weapon_pist_glock18_masks.png",
+};
+const CAVITY_URL: Record<ViewerWeapon, string> = {
+  ak47: "/assets/composite/weapon_rif_ak47_cavity.png",
+  glock: "/assets/composite/weapon_pist_glock18_cavity.png",
+};
+const MODEL_URL: Record<ViewerWeapon, string> = {
+  ak47: "/assets/ak47.glb",
+  glock: "/assets/glock.glb",
+};
+const LIVE_KITS: readonly ViewerKit[] = [...KITS, ...GLOCK_KITS];
 const SCRATCHES_URL = "/assets/stickers/shared/scratches.png";
 const BACKING_URL = "/assets/stickers/shared/backing.png";
 
@@ -107,7 +133,7 @@ const share = parseShareQuery(params);
 const fixedCamera = share.capture || share.fixed;
 const seedFromQuery = share.seed;
 const floatFromQuery = share.float;
-const officialFromQuery = share.official ?? officialKit(44);
+const officialFromQuery = share.official ?? defaultOfficialFor(share.weapon);
 const kitFromQuery = share.kit;
 const stickerQuery = { slots: share.slots, rejected: share.rejected };
 
@@ -150,6 +176,7 @@ function formatFloat(value: number): string {
 
 function releaseDocumentHold(): void {
   const paths = [
+    "/m11-release",
     "/m10-release",
     "/m9-release",
     "/m8-release",
@@ -171,6 +198,7 @@ function releaseDocumentHold(): void {
 }
 
 function markReady(): void {
+  window.__M11_READY__ = true;
   window.__M10_READY__ = true;
   window.__M9_READY__ = true;
   window.__M8_READY__ = true;
@@ -186,6 +214,7 @@ function markReady(): void {
 }
 
 function markError(message: string): void {
+  window.__M11_ERROR__ = message;
   window.__M10_ERROR__ = message;
   window.__M9_ERROR__ = message;
   window.__M8_ERROR__ = message;
@@ -205,7 +234,7 @@ const scene = new Scene();
 scene.background = new Color(ENV_LOOKS[share.bg ?? "studio"].plate);
 
 const camera = new PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.01, 20);
-camera.position.copy(VIEW_PRESETS[share.view ?? "inspect"].camera);
+camera.position.copy(VIEW_PRESETS[share.weapon][share.view ?? "inspect"].camera);
 
 const canvas = document.createElement("canvas");
 const gl = canvas.getContext("webgl2", { antialias: true, alpha: false });
@@ -255,7 +284,7 @@ scene.add(fill);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
-controls.target.copy(VIEW_PRESETS[share.view ?? "inspect"].target);
+controls.target.copy(VIEW_PRESETS[share.weapon][share.view ?? "inspect"].target);
 controls.minDistance = 0.15;
 controls.maxDistance = 4;
 controls.enabled = !fixedCamera;
@@ -278,10 +307,48 @@ requestAnimationFrame(frame);
 const patternHooks: PatternHook[] = [];
 const stickerHooks: StickerHook[] = [];
 const patternByIndex = new Map<number, Texture>();
+
+type WeaponRuntime = {
+  id: ViewerWeapon;
+  root: Object3D;
+  patternHooks: PatternHook[];
+  stickerHooks: StickerHook[];
+  hasStickerUv: boolean;
+  center: Vector3;
+};
+const weaponRuntimes = new Map<ViewerWeapon, WeaponRuntime>();
+
+function meshHasUv1(mesh: Mesh): boolean {
+  const geo = mesh.geometry;
+  return Boolean(geo && "attributes" in geo && geo.attributes.uv1);
+}
+
+function syncWeaponRoots(): void {
+  for (const [id, rt] of weaponRuntimes) {
+    rt.root.visible = id === currentWeapon;
+  }
+  const rt = weaponRuntimes.get(currentWeapon);
+  if (!rt) return;
+  patternHooks.length = 0;
+  patternHooks.push(...rt.patternHooks);
+  stickerHooks.length = 0;
+  stickerHooks.push(...rt.stickerHooks);
+  window.__M11_STICKERS__ = rt.hasStickerUv;
+}
+
+function placeActivePlates(): void {
+  const rt = weaponRuntimes.get(currentWeapon);
+  if (!rt) return;
+  if (stattrakMesh.mesh.parent) stattrakMesh.mesh.parent.remove(stattrakMesh.mesh);
+  if (nametagMesh.mesh.parent) nametagMesh.mesh.parent.remove(nametagMesh.mesh);
+  placeInspectPlatesOn(stattrakMesh.mesh, nametagMesh.mesh, rt.center, currentWeapon);
+  rt.root.add(stattrakMesh.mesh);
+  rt.root.add(nametagMesh.mesh);
+}
 let currentWeapon: ViewerWeapon = share.weapon;
 let currentSeed = seedFromQuery;
 let currentFloat = floatFromQuery;
-let currentOfficial: OfficialAk47Kit = officialFromQuery;
+let currentOfficial: OfficialKit = officialFromQuery;
 let currentKit: ViewerKit | null = kitFromQuery;
 let currentView: InspectView = share.view ?? "inspect";
 let currentBg: BackgroundPlate = share.bg ?? "studio";
@@ -342,6 +409,8 @@ function syncShareUrl(): void {
   window.__M10_KILLS__ = currentKills;
   window.__M10_NAMETAG__ = currentNametag;
   window.__M10_PICKQ__ = pickerQuery;
+  window.__M11_WEAPON__ = currentWeapon;
+  window.__M11_KIT__ = currentOfficial.paint_index;
 }
 
 function setButtonActive(row: Element | null, attr: string, value: string): void {
@@ -353,7 +422,7 @@ function setButtonActive(row: Element | null, attr: string, value: string): void
 
 function applyView(view: InspectView): void {
   currentView = view;
-  const preset = VIEW_PRESETS[view];
+  const preset = VIEW_PRESETS[currentWeapon][view];
   camera.position.copy(preset.camera);
   controls.target.copy(preset.target);
   controls.update();
@@ -471,18 +540,18 @@ function updateStatus(): void {
   if (currentNametag) extraBits.push(`name ${currentNametag}`);
   const extra = extraBits.length ? `  ${extraBits.join("  ")}` : "";
   setStatus(
-    `AK-47 ${label} — seed ${currentSeed}  float ${formatFloat(currentFloat)}  ${stickerStatus()}${extra}${note}`,
+    `${weaponLabel(currentWeapon)} ${label} — seed ${currentSeed}  float ${formatFloat(currentFloat)}  ${stickerStatus()}${extra}${note}`,
   );
   if (previewBadge instanceof HTMLElement) {
     previewBadge.hidden = !vanilla;
   }
 }
 
-function applyOfficial(official: OfficialAk47Kit): void {
+function applyOfficial(official: OfficialKit): void {
   currentOfficial = official;
-  const viewer = viewerKitFor(official);
+  const viewer = viewerKitForWeapon(currentWeapon, official);
   currentKit = viewer;
-  const paintOn = viewer != null && hasPaintPreview(official.paint_index);
+  const paintOn = viewer != null && hasPaintPreviewOn(currentWeapon, official.paint_index);
   for (const hook of patternHooks) {
     hook.setPaintEnabled(paintOn);
     if (viewer) {
@@ -516,17 +585,29 @@ function applySlots(slots: StickerSlot[]): void {
   applyOfficial(currentOfficial);
 }
 
+function officialCatalog(): readonly OfficialKit[] {
+  return officialCatalogFor(currentWeapon);
+}
+
 function renderCatalog(): void {
   if (!(catalogList instanceof HTMLElement)) return;
-  const rows = filterOfficialKits(OFFICIAL_AK47_KITS, catalogFilter);
+  const catalog = officialCatalog();
+  const rows = filterOfficialKits(catalog, catalogFilter);
   if (catalogCount instanceof HTMLElement) {
     catalogCount.textContent = catalogFilter.trim()
-      ? `${rows.length} / 61`
-      : "61 official";
+      ? `${rows.length} / ${catalog.length}`
+      : `${catalog.length} official`;
+  }
+  const title = document.querySelector("#catalog-title");
+  if (title instanceof HTMLElement) title.textContent = weaponCatalogTitle(currentWeapon);
+  const link = document.querySelector("#catalog-link");
+  if (link instanceof HTMLAnchorElement) {
+    link.href = currentWeapon === WEAPON_GLOCK ? "/catalog/glock.html" : "/catalog/ak47.html";
+    link.textContent = currentWeapon === WEAPON_GLOCK ? "All Glock-18 kits" : "All AK-47 kits";
   }
   catalogList.replaceChildren();
   for (const kit of rows) {
-    const live = hasPaintPreview(kit.paint_index);
+    const live = hasPaintPreviewOn(currentWeapon, kit.paint_index);
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "catalog-row";
@@ -564,23 +645,28 @@ function renderCatalog(): void {
   }
 }
 
-if (kitSelect instanceof HTMLSelectElement) {
+function fillKitSelect(): void {
+  if (!(kitSelect instanceof HTMLSelectElement)) return;
   kitSelect.replaceChildren();
-  for (const kit of OFFICIAL_AK47_KITS) {
+  for (const kit of officialCatalog()) {
     const opt = document.createElement("option");
     opt.value = String(kit.paint_index);
-    const tag = hasPaintPreview(kit.paint_index) ? "Live" : "Listed";
+    const tag = hasPaintPreviewOn(currentWeapon, kit.paint_index) ? "Live" : "Listed";
     opt.textContent = `${kitLabelish(kit)} (${tag})`;
     kitSelect.append(opt);
   }
-  kitSelect.value = String(officialFromQuery.paint_index);
+  kitSelect.value = String(currentOfficial.paint_index);
+}
+
+if (kitSelect instanceof HTMLSelectElement) {
+  fillKitSelect();
   kitSelect.addEventListener("change", () => {
-    const next = resolveOfficialAk47Kit(kitSelect.value) ?? officialKit(44);
+    const next = resolveOfficialKitOn(currentWeapon, kitSelect.value) ?? defaultOfficialFor(currentWeapon);
     applyOfficial(next);
   });
 }
 
-function kitLabelish(kit: OfficialAk47Kit): string {
+function kitLabelish(kit: OfficialKit): string {
   return officialKitLabel(kit);
 }
 
@@ -611,6 +697,34 @@ if (unlockWearInput instanceof HTMLInputElement) {
     applyFloat(currentFloat);
     updateStatus();
     syncShareUrl();
+  });
+}
+
+function applyWeapon(next: ViewerWeapon, official?: OfficialKit): void {
+  if (next !== currentWeapon) {
+    currentWeapon = next;
+    const ok = official ?? resolveOfficialKitOn(next, String(currentOfficial.paint_index)) ?? defaultOfficialFor(next);
+    currentOfficial = ok;
+    currentKit = viewerKitForWeapon(next, ok);
+    currentFloat = clampFloatToKit(currentFloat, ok, currentUnlockWear);
+    fillKitSelect();
+    applyView(currentView);
+    syncWeaponRoots();
+    placeActivePlates();
+  } else if (official) {
+    currentOfficial = official;
+    currentKit = viewerKitForWeapon(next, official);
+  }
+  setButtonActive(document.querySelector("#weapon-row"), "data-weapon", currentWeapon);
+  applySlots(currentSlots);
+}
+
+if (document.querySelector("#weapon-row") instanceof HTMLElement) {
+  document.querySelector("#weapon-row")!.addEventListener("click", (ev) => {
+    const el = ev.target;
+    if (!(el instanceof HTMLElement)) return;
+    const w = el.getAttribute("data-weapon");
+    if (w === WEAPON_AK47 || w === WEAPON_GLOCK) applyWeapon(w);
   });
 }
 
@@ -954,6 +1068,7 @@ void fetch("/data/stickers.json")
 buildStickerUi();
 renderCatalog();
 updateWearSliderBounds();
+setButtonActive(document.querySelector("#weapon-row"), "data-weapon", currentWeapon);
 applyView(currentView);
 applyBackground(currentBg);
 syncInspectPlates();
@@ -989,14 +1104,17 @@ function loadExtracted(id: number, colorPath: string, wearPath: string, holoPath
 }
 
 Promise.all([
-  ...KITS.map((kit) => textureLoader.loadAsync(kit.patternPath).then((tex) => ({ kit, tex }))),
+  ...LIVE_KITS.map((kit) => textureLoader.loadAsync(kit.patternPath).then((tex) => ({ kit, tex }))),
   textureLoader.loadAsync(KIT_CASE_HARDENED.wearPath),
   textureLoader.loadAsync(KIT_CASE_HARDENED.grungePath),
-  textureLoader.loadAsync(MASKS_URL),
-  textureLoader.loadAsync(CAVITY_URL),
+  textureLoader.loadAsync(MASKS_URL.ak47),
+  textureLoader.loadAsync(CAVITY_URL.ak47),
+  textureLoader.loadAsync(MASKS_URL.glock),
+  textureLoader.loadAsync(CAVITY_URL.glock),
   textureLoader.loadAsync(SCRATCHES_URL),
   textureLoader.loadAsync(BACKING_URL),
-  gltfLoader.loadAsync(MODEL_URL),
+  gltfLoader.loadAsync(MODEL_URL.ak47),
+  gltfLoader.loadAsync(MODEL_URL.glock),
   ...EXTRACTED_STICKERS.map((s) =>
     loadExtracted(s.id, s.colorPath, s.wearPath, s.holoMaskPath, s.spectrumPath).catch((err) => {
       console.warn("[m8] sticker pack failed; continuing without it", s.id, err);
@@ -1005,15 +1123,19 @@ Promise.all([
   ),
 ])
   .then((loaded) => {
-    const kitTexes = loaded.slice(0, KITS.length) as Array<{ kit: ViewerKit; tex: Texture }>;
-    const wearTex = loaded[KITS.length] as Texture;
-    const grungeTex = loaded[KITS.length + 1] as Texture;
-    const masksTex = loaded[KITS.length + 2] as Texture;
-    const cavityTex = loaded[KITS.length + 3] as Texture;
-    const scratchesTex = loaded[KITS.length + 4] as Texture;
-    const backingTex = loaded[KITS.length + 5] as Texture;
-    const gltf = loaded[KITS.length + 6] as Awaited<ReturnType<GLTFLoader["loadAsync"]>>;
-    const packs = loaded.slice(KITS.length + 7).filter((p): p is ExtractedPack => p != null);
+    const nLive = LIVE_KITS.length;
+    const kitTexes = loaded.slice(0, nLive) as Array<{ kit: ViewerKit; tex: Texture }>;
+    const wearTex = loaded[nLive] as Texture;
+    const grungeTex = loaded[nLive + 1] as Texture;
+    const akMasks = loaded[nLive + 2] as Texture;
+    const akCavity = loaded[nLive + 3] as Texture;
+    const glockMasks = loaded[nLive + 4] as Texture;
+    const glockCavity = loaded[nLive + 5] as Texture;
+    const scratchesTex = loaded[nLive + 6] as Texture;
+    const backingTex = loaded[nLive + 7] as Texture;
+    const akGltf = loaded[nLive + 8] as Awaited<ReturnType<GLTFLoader["loadAsync"]>>;
+    const glockGltf = loaded[nLive + 9] as Awaited<ReturnType<GLTFLoader["loadAsync"]>>;
+    const packs = loaded.slice(nLive + 10).filter((p): p is ExtractedPack => p != null);
 
     for (const { kit, tex } of kitTexes) {
       patternByIndex.set(kit.paintIndex, tex);
@@ -1021,8 +1143,8 @@ Promise.all([
 
     const startPattern =
       (kitFromQuery && patternByIndex.get(kitFromQuery.paintIndex)) ||
-      patternByIndex.get(KIT_CASE_HARDENED.paintIndex);
-    if (!startPattern) throw new Error("missing Case Hardened pattern maps");
+      patternByIndex.get(currentWeapon === WEAPON_GLOCK ? 38 : KIT_CASE_HARDENED.paintIndex);
+    if (!startPattern) throw new Error("missing start pattern maps");
 
     const dummy = makeDummyTextures();
     const stickerMaps: StickerSharedMaps = {
@@ -1036,65 +1158,73 @@ Promise.all([
       stickerMaps.byId.set(pack.id, bindExtracted(pack.id, pack));
     }
 
-    const root = gltf.scene;
-    const maps = {
-      pattern: startPattern,
-      wear: wearTex,
-      grunge: grungeTex,
-      masks: masksTex,
-      cavity: cavityTex,
-    };
-
-    root.traverse((obj) => {
-      const name = obj.name.toLowerCase();
-      if (name.includes("body_legacy")) {
-        obj.visible = false;
-        return;
-      }
-      if (!(obj instanceof Mesh)) return;
-      const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-      for (const mat of mats) {
-        if (!(mat instanceof MeshStandardMaterial)) continue;
-        const isStickerMat = mat.name.toLowerCase().includes("sticker");
-        if (!isStickerMat) {
-          const hook = attachPatternMap(mat, maps);
-          patternHooks.push(hook);
+    function mountWeapon(
+      id: ViewerWeapon,
+      root: Object3D,
+      masks: Texture,
+      cavity: Texture,
+    ): WeaponRuntime {
+      const hooks: PatternHook[] = [];
+      const sHooks: StickerHook[] = [];
+      let hasStickerUv = false;
+      const maps = {
+        pattern: startPattern as Texture,
+        wear: wearTex,
+        grunge: grungeTex,
+        masks,
+        cavity,
+      };
+      root.traverse((obj) => {
+        const name = obj.name.toLowerCase();
+        if (name.includes("body_legacy")) {
+          obj.visible = false;
+          return;
         }
-        const stickerHook = attachStickers(mat, stickerMaps, { gapsOverlay: isStickerMat });
-        stickerHooks.push(stickerHook);
-      }
-    });
+        if (!(obj instanceof Mesh)) return;
+        if (meshHasUv1(obj)) hasStickerUv = true;
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        for (const mat of mats) {
+          if (!(mat instanceof MeshStandardMaterial)) continue;
+          const isStickerMat = mat.name.toLowerCase().includes("sticker");
+          if (!isStickerMat) {
+            hooks.push(attachPatternMap(mat, maps));
+          }
+          sHooks.push(attachStickers(mat, stickerMaps, { gapsOverlay: isStickerMat }));
+        }
+      });
+      const box = new Box3().setFromObject(root);
+      const center = box.getCenter(new Vector3());
+      const rt: WeaponRuntime = { id, root, patternHooks: hooks, stickerHooks: sHooks, hasStickerUv, center };
+      weaponRuntimes.set(id, rt);
+      scene.add(root);
+      return rt;
+    }
 
+    mountWeapon(WEAPON_AK47, akGltf.scene, akMasks, akCavity);
+    mountWeapon(WEAPON_GLOCK, glockGltf.scene, glockMasks, glockCavity);
+    syncWeaponRoots();
     applyOfficial(officialFromQuery);
     applySlots(currentSlots);
-    const box = new Box3().setFromObject(root);
-    const size = box.getSize(new Vector3());
-    const center = box.getCenter(new Vector3());
-    placeInspectPlates(stattrakMesh.mesh, nametagMesh.mesh, center);
-    root.add(stattrakMesh.mesh);
-    root.add(nametagMesh.mesh);
+    placeActivePlates();
     syncInspectPlates();
-    scene.add(root);
 
-    console.info("[m10] AK-47 inspect extras", {
+    const active = weaponRuntimes.get(currentWeapon);
+    const size = active ? new Box3().setFromObject(active.root).getSize(new Vector3()) : new Vector3();
+    console.info("[m11] inspect", {
+      weapon: currentWeapon,
       size,
-      center,
+      center: active?.center,
       seed: currentSeed,
       float: currentFloat,
       kit: currentOfficial.paint_index,
       paint: currentKit != null,
       view: currentView,
       bg: currentBg,
-      slots: currentSlots,
-      stattrak: currentStatTrak,
-      kills: currentKills,
-      nametag: currentNametag,
+      stickers: active?.hasStickerUv,
       rejected: stickerQuery.rejected,
-      modelUrl: MODEL_URL,
     });
 
     if (fixedCamera) {
-      // capture without view= stays on the inspect pose (M6 baselines).
       applyView(currentView);
       renderer.render(scene, camera);
     }
