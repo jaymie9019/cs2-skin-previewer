@@ -27,6 +27,7 @@ M0–M6 stay as shipped (AK-47, 3 kits, stickers, share URL). New work is M7+.
 | milestone-10 | Sticker catalog picker + StatTrak / nametag (charm stubbed) |
 | milestone-11 | Glock-18 inspect + official Fade (38) / Candy Apple live |
 | milestone-12 | Original WebGL paint fidelity (fade %, chrome, extra maps) |
+| milestone-13 | Inspect paste (!gen / steam:// / share) + hosting notes. End of M7-M13. |
 
 ## Gap vs a Skincraft-class site
 
@@ -38,6 +39,8 @@ M0–M6 stay as shipped (AK-47, 3 kits, stickers, share URL). New work is M7+.
 - Renderer is MeshStandard approximations, not a Source 2 material graph
 
 ## New milestones (strict order)
+
+M7-M13 are shipped. Further work is out of scope for this sequence.
 
 ### M7 — Inspect HUD + AK catalog shell
 Site chrome around the existing viewer.
@@ -79,9 +82,10 @@ Site chrome around the existing viewer.
 No WebGPU this tag. CH / RedLam stay same class. Still not 1:1.
 
 ### M13 — Inspect links + ship notes
-- Parse a Steam inspect URL / `S/A/D/M` params into kit, seed, float, stickers
-- README for “how this site is hosted” + compliance (no Valve VPKs on a public CDN)
-- Optional: screenshot export
+**Done** (`milestone-13`). End of the M7-M13 sequence. Do not start M14 here.
+- Parse !gen / our share query / market text into kit, seed, float, stickers
+- Steam S/A/D/M tokens extracted and shown; D is a GC pointer (not decoded)
+- Optional screenshot export; README local hosting notes
 
 ## Working rules (unchanged)
 

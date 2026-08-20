@@ -72,10 +72,12 @@ import {
   parseShareQuery,
   type BackgroundPlate,
   type InspectView,
+  type ParsedShareQuery,
   WEAPON_AK47,
   WEAPON_GLOCK,
   type ViewerWeapon,
 } from "./share/query";
+import { parseInspectPaste } from "./share/inspectPaste";
 import { weaponCatalogTitle, weaponLabel } from "./share/weapons";
 import { createNametagPlate, createStatTrakPlate, placeInspectPlatesOn } from "./inspect/plates";
 import {
@@ -177,6 +179,7 @@ function formatFloat(value: number): string {
 
 function releaseDocumentHold(): void {
   const paths = [
+    "/m13-release",
     "/m12-release",
     "/m11-release",
     "/m10-release",
@@ -200,6 +203,7 @@ function releaseDocumentHold(): void {
 }
 
 function markReady(): void {
+  window.__M13_READY__ = true;
   window.__M12_READY__ = true;
   window.__M11_READY__ = true;
   window.__M10_READY__ = true;
@@ -217,6 +221,7 @@ function markReady(): void {
 }
 
 function markError(message: string): void {
+  window.__M13_ERROR__ = message;
   window.__M12_ERROR__ = message;
   window.__M11_ERROR__ = message;
   window.__M10_ERROR__ = message;
@@ -1081,6 +1086,96 @@ void fetch("/data/stickers.json")
     }));
   });
 
+
+const inspectPaste = document.querySelector("#inspect-paste");
+const inspectApply = document.querySelector("#inspect-apply");
+const screenshotExport = document.querySelector("#screenshot-export");
+const pasteStatus = document.querySelector("#paste-status");
+const steamTokensEl = document.querySelector("#steam-tokens");
+
+function setPasteStatus(result: { applied: boolean; status: string; kind: string; tokens?: { S?: string; A?: string; D?: string; M?: string } }): void {
+  window.__M13_PASTE_KIND__ = result.kind;
+  window.__M13_PASTE_APPLIED__ = result.applied;
+  window.__M13_PASTE_STATUS__ = result.status;
+  window.__M13_TOKENS__ = result.tokens ?? null;
+  if (pasteStatus instanceof HTMLElement) {
+    pasteStatus.textContent = result.status;
+    pasteStatus.classList.toggle("ok", result.applied);
+    pasteStatus.classList.toggle("err", !result.applied);
+  }
+  if (steamTokensEl instanceof HTMLElement) {
+    const tok = result.tokens;
+    if (tok && (tok.S || tok.A || tok.D || tok.M)) {
+      steamTokensEl.textContent = [
+        tok.S != null ? `S=${tok.S}` : null,
+        tok.A != null ? `A=${tok.A}` : null,
+        tok.D != null ? `D=${tok.D}` : null,
+        tok.M != null ? `M=${tok.M}` : null,
+      ]
+        .filter((x): x is string => x != null)
+        .join("  ");
+      steamTokensEl.hidden = false;
+    } else {
+      steamTokensEl.hidden = true;
+    }
+  }
+}
+
+function applyParsedInspect(parsed: ParsedShareQuery): void {
+  currentUnlockWear = parsed.unlockWear;
+  currentSeed = parsed.seed;
+  currentFloat = parsed.float;
+  currentSlots = parsed.slots.map((s) => ({ ...s }));
+  currentView = parsed.view;
+  currentBg = parsed.bg;
+  currentStatTrak = parsed.stattrak;
+  currentKills = parsed.kills;
+  currentNametag = parsed.nametag;
+  if (seedInput instanceof HTMLInputElement) seedInput.value = String(parsed.seed);
+  if (unlockWearInput instanceof HTMLInputElement) unlockWearInput.checked = parsed.unlockWear;
+  applyWeapon(parsed.weapon, parsed.official);
+  applyView(parsed.view);
+  applyBackground(parsed.bg);
+  applyStatTrak(parsed.stattrak, parsed.kills);
+  applyNametag(parsed.nametag);
+  updateStatus();
+}
+
+function onInspectPasteApply(): void {
+  const raw = inspectPaste instanceof HTMLTextAreaElement ? inspectPaste.value : "";
+  const result = parseInspectPaste(raw);
+  setPasteStatus(result);
+  if (result.applied && result.share) {
+    applyParsedInspect(result.share);
+  }
+}
+
+function exportScreenshot(): void {
+  renderer.render(scene, camera);
+  const a = document.createElement("a");
+  a.href = renderer.domElement.toDataURL("image/png");
+  const kit = currentOfficial.paint_index;
+  a.download = `inspect-${currentWeapon}-${kit}-s${currentSeed}.png`;
+  a.click();
+}
+
+if (inspectApply instanceof HTMLButtonElement) {
+  inspectApply.addEventListener("click", onInspectPasteApply);
+}
+if (inspectPaste instanceof HTMLTextAreaElement) {
+  const prefill = params.get("inspectq");
+  if (prefill) inspectPaste.value = prefill;
+  inspectPaste.addEventListener("keydown", (ev) => {
+    if ((ev.ctrlKey || ev.metaKey) && ev.key === "Enter") {
+      ev.preventDefault();
+      onInspectPasteApply();
+    }
+  });
+}
+if (screenshotExport instanceof HTMLButtonElement) {
+  screenshotExport.addEventListener("click", exportScreenshot);
+}
+
 buildStickerUi();
 renderCatalog();
 updateWearSliderBounds();
@@ -1247,7 +1342,7 @@ Promise.all([
 
     const active = weaponRuntimes.get(currentWeapon);
     const size = active ? new Box3().setFromObject(active.root).getSize(new Vector3()) : new Vector3();
-    console.info("[m12] inspect", {
+    console.info("[m13] inspect", {
       weapon: currentWeapon,
       size,
       center: active?.center,
@@ -1261,6 +1356,9 @@ Promise.all([
       rejected: stickerQuery.rejected,
     });
 
+    if (inspectPaste instanceof HTMLTextAreaElement && params.get("inspectq")) {
+      onInspectPasteApply();
+    }
     if (fixedCamera) {
       applyView(currentView);
       renderer.render(scene, camera);

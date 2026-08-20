@@ -21,11 +21,22 @@ Changing Kit / Seed / Float / stickers / view / background updates the query str
 
 Static catalog tables: http://127.0.0.1:5173/catalog/ak47.html and http://127.0.0.1:5173/catalog/glock.html
 
-## Shareable URL (M6–M12)
-Opening a URL restores the same inspect. Grammar: weapon=ak47|glock (aliases: ak-47, weapon_ak47, ak / glock-18, glock18, weapon_glock), kit=<official paint index or slug for that weapon>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool|sun, st=1 or st=<kills>, name=<text>. Unknown weapon (awp) rejected. Kit must be official for the selected weapon: kit=38 Fade is accepted on Glock and rejected on AK; kit=44 Case Hardened is accepted on AK and rejected on Glock (falls back to Fade). Official listed kits without a shader show vanilla glTF + “尚未做涂装”. Live AK: 14 / 44 / 72 / 122 / 226 / 282 / 456 / 524 / 639. Live Glock: 38 Fade / 3 Candy Apple. Full grammar: docs/MILESTONE_11.md. M12 deepens Fade / Hydroponic / extra maps: docs/MILESTONE_12.md.
+## Shareable URL (M6–M13)
+Opening a URL restores the same inspect. Grammar: weapon=ak47|glock (aliases: ak-47, weapon_ak47, ak / glock-18, glock18, weapon_glock), kit=<official paint index or slug for that weapon>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool|sun, st=1 or st=<kills>, name=<text>. Unknown weapon (awp) rejected. Kit must be official for the selected weapon: kit=38 Fade is accepted on Glock and rejected on AK; kit=44 Case Hardened is accepted on AK and rejected on Glock (falls back to Fade). Official listed kits without a shader show vanilla glTF + “尚未做涂装”. Live AK: 14 / 44 / 72 / 122 / 226 / 282 / 456 / 524 / 639. Live Glock: 38 Fade / 3 Candy Apple. Full grammar: docs/MILESTONE_11.md. M12 deepens Fade / Hydroponic / extra maps: docs/MILESTONE_12.md. M13 inspect paste: docs/MILESTONE_13.md.
 Example: ?weapon=ak47&kit=44&seed=923&float=0.056&s0=259,0.02,-0.01,15,0.4
 Example: ?weapon=glock&kit=38
 Example: ?weapon=ak47&kit=44&st=1&name=jaymie
+
+## Inspect paste (M13)
+HUD box: Paste inspect / !gen. Apply updates the viewer and writes our share URL via history.replaceState.
+
+- Our query: ?weapon=ak47&kit=44&seed=923&float=0.056
+- !gen: !gen 7 44 923 0.0558851957321166 (AK-47=7, Glock-18=4). !gen 7 38 is rejected (no Fade on AK).
+- steam:// S/A/D or M/A/D: tokens are shown; D is a GC pointer, not paint data. Need !gen to apply.
+- Market text with Pattern: and Float: plus a listed kit name is applied.
+- Screenshot button downloads the canvas PNG. capture=1 hides HUD.
+
+Notes: docs/MILESTONE_13.md. This is not a Steam-connected inventory site.
 
 ## Compliance
 
@@ -33,6 +44,7 @@ Example: ?weapon=ak47&kit=44&st=1&name=jaymie
 - `.gitignore` excludes `node_modules/`, `assets/**/*.png`, `assets/*.packed.glb`, VPKs, and the CS2 install.
 - Do not copy `/workspace/cs2` or any `*.vpk` into a public-looking tree or git remote.
 - Also gitignored: data/raw/ (Valve items_game dump) and docs/reference/ (in-game inspects). Do not commit official textures.
+- Do not host official textures or a CS2 install on a public CDN. This is a local-dev previewer, not an inventory site.
 
 Typical commands from the repo root: `npm install` then `npm run dev`.
 From `apps/web`: `npm install` then `npm run dev`.

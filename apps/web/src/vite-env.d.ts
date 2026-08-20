@@ -75,5 +75,12 @@ interface Window {
   __M12_READY__?: boolean;
   __M12_ERROR__?: string;
   __M12_FADE_PCT__?: number;
+  __M13_READY__?: boolean;
+  __M13_ERROR__?: string;
+  __M13_PASTE_KIND__?: string;
+  __M13_PASTE_APPLIED__?: boolean;
+  __M13_PASTE_STATUS__?: string;
+  __M13_TOKENS__?: { S?: string; A?: string; D?: string; M?: string } | null;
 }
+
 

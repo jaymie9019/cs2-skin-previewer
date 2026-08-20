@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CS2 Skin Previewer — M12</title>
+    <title>CS2 Skin Previewer — M13</title>
   </head>
   <body>
     <aside id="catalog-panel">
@@ -73,6 +73,16 @@
           <input disabled placeholder="coming later / 未接入" />
         </label>
       </div>
+      <div id="paste-panel">
+        <div class="sticker-heading">Paste inspect / !gen</div>
+        <textarea id="inspect-paste" rows="3" placeholder="!gen 7 44 923 0.055…   or  steam://   or  Pattern: 923" autocomplete="off" spellcheck="false"></textarea>
+        <div class="btn-row">
+          <button type="button" id="inspect-apply">Apply</button>
+          <button type="button" id="screenshot-export">Screenshot</button>
+        </div>
+        <div id="paste-status" class="hint"></div>
+        <div id="steam-tokens" class="hint" hidden></div>
+      </div>
       <div id="sticker-panel"></div>
     </div>
     <div id="inspect-plates" hidden>
@@ -82,7 +92,7 @@
       </div>
       <div id="nametag-plate" hidden></div>
     </div>
-    <img id="m1-hold" src="/m12-hold.png" alt="" width="1" height="1" />
+    <img id="m1-hold" src="/m13-hold.png" alt="" width="1" height="1" />
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

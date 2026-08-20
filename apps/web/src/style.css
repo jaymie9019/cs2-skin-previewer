@@ -538,6 +538,7 @@ body.capture #status,
 body.capture #seed-panel,
 body.capture #catalog-panel,
 body.capture #preview-badge,
+body.capture #paste-panel,
 #m1-hold {
   display: none;
 }
@@ -552,4 +553,58 @@ body.capture #preview-badge,
 
 .catalog-head .btn-row {
   margin-top: 6px;
+}
+
+
+#paste-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid #2c3340;
+}
+
+#inspect-paste {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 58px;
+  resize: vertical;
+  padding: 5px 8px;
+  border: 1px solid #4a5160;
+  border-radius: 4px;
+  background: #1b1f27;
+  color: #f2eee6;
+  font: inherit;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+#paste-status.ok {
+  color: #9ee6b8;
+}
+
+#paste-status.err {
+  color: #f0a0a0;
+}
+
+#steam-tokens[hidden] {
+  display: none;
+}
+
+#inspect-apply,
+#screenshot-export {
+  padding: 3px 10px;
+  border: 1px solid #4a5160;
+  border-radius: 999px;
+  background: #1b1f27;
+  color: #e8e4dc;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#inspect-apply:hover,
+#screenshot-export:hover {
+  border-color: #c9a36a;
 }
