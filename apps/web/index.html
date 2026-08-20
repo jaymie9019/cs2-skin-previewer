@@ -3,11 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CS2 Skin Previewer — M1</title>
+    <title>CS2 Skin Previewer — M2</title>
   </head>
   <body>
-    <div id="status">Loading AK-47…</div>
-    <img id="m1-hold" src="/m1-hold.png" alt="" width="1" height="1" />
+    <div id="status">Loading AK-47 + pattern…</div>
+    <label id="seed-panel">
+      <span>Seed</span>
+      <input id="seed-input" type="number" min="0" max="999" step="1" value="0" />
+      <span id="seed-value">0</span>
+    </label>
+    <img id="m1-hold" src="/m2-hold.png" alt="" width="1" height="1" />
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

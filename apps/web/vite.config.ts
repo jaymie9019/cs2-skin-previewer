@@ -6,28 +6,36 @@ const appRoot = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(appRoot, "../..");
 const assetsDir = path.resolve(repoRoot, "assets");
 
-/** 1x1 PNG used to hold document load until the glTF is on screen. */
+/** 1x1 PNG used to hold document load until the glTF + pattern shader are ready. */
 const PIXEL_PNG = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
   "base64",
 );
 
-function holdLoadUntilModel(): Plugin {
+function holdLoadUntilReady(): Plugin {
   let released = false;
   const waiters: Array<() => void> = [];
 
+  const isHold = (url: string): boolean =>
+    url === "/m1-hold.png" || url === "/m2-hold.png" || url === "/hold.png";
+  const isRelease = (url: string): boolean =>
+    url === "/m1-release" || url === "/m2-release" || url === "/release";
+
   const release = (): void => {
+    released = true;
     for (const send of waiters) send();
     waiters.length = 0;
-    released = false;
+    setTimeout(() => {
+      released = false;
+    }, 0);
   };
 
   return {
-    name: "hold-load-until-model",
+    name: "hold-load-until-ready",
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         const url = req.url?.split("?")[0] ?? "";
-        if (url === "/m1-hold.png") {
+        if (isHold(url)) {
           const send = (): void => {
             res.statusCode = 200;
             res.setHeader("Content-Type", "image/png");
@@ -38,7 +46,7 @@ function holdLoadUntilModel(): Plugin {
           else waiters.push(send);
           return;
         }
-        if (url === "/m1-release") {
+        if (isRelease(url)) {
           release();
           res.statusCode = 204;
           res.end();
@@ -51,7 +59,7 @@ function holdLoadUntilModel(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [holdLoadUntilModel()],
+  plugins: [holdLoadUntilReady()],
   server: {
     host: "127.0.0.1",
     port: 5173,

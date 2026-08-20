@@ -20,3 +20,7 @@ The viewer loads `assets/ak47.glb` via a `apps/web/public/assets` symlink so GLT
 
 Typical commands from the repo root: `npm install` then `npm run dev`.
 From `apps/web`: `npm install` then `npm run dev`.
+
+## Seed (M2)
+
+The Seed box (0-999) applies the documented paint-seed UV transform live. A seed query param sets the starting value. capture=1 or fixed=1 still locks the camera. Pattern file: assets/paints/aq_oiled/oiled.png (gitignored; see assets/paints/README.md). Tests: from apps/web, npx vitest run (or apps/web/run-tests.sh). Full notes in docs/MILESTONE_2.md.
