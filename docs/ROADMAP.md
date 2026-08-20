@@ -23,12 +23,13 @@ M0–M6 stay as shipped (AK-47, 3 kits, stickers, share URL). New work is M7+.
 | milestone-6 | Shareable URL + conservative IBL |
 | milestone-7 | Catalog HUD + wear clamp + views |
 | milestone-8 | Representative live paint styles (9 kits / 6 styles) |
+| milestone-9 | Authored IBL looks (`bg=` → PMREM); metal reads reflections |
 
 ## Gap vs a Skincraft-class site
 
 - Catalog UX (search, all skins, wear locked to real min/max)
 - Only 3 of 61 AK kits have a paint shader
-- Lighting is a studio RoomEnvironment, not map probes
+- Lighting is authored IBL looks (studio / warm / cool / sun), not game-accurate map probes
 - One weapon; no knives/gloves
 - Stickers are a small subset; no charms / nametag / StatTrak
 - Renderer is MeshStandard approximations, not a Source 2 material graph
@@ -56,7 +57,7 @@ Site chrome around the existing viewer.
 - Stop when a *representative set* (≥8 kits, ≥4 styles) is interactive and snapshotted — not all 61 in one milestone
 
 ### M9 — Map lighting (ours)
-Close the “too dark” gap without copying anyone’s IBL.
+**Done** (`milestone-9`): authored IBL looks. `bg=` selects PMREM (studio / warm / cool / sun). Default studio = M6 RoomEnvironment. Still approximate; not a Dust II pixel match.
 
 - Local cubemap / HDR from CS2 `env_cubemap` extract **or** a generated studio HDR
 - Map picker (names we choose; assets we extract or author)

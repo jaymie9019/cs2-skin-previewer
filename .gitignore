@@ -40,6 +40,8 @@ assets/**/*.png
 assets/**/*.jpg
 assets/**/*.tga
 assets/**/*.vtex
+assets/**/*.hdr
+assets/**/*.exr
 
 # Extracted official textures written next to glTF exports
 assets/*.png

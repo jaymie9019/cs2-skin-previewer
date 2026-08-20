@@ -58,4 +58,7 @@ interface Window {
   __M7_WEAR_MIN__?: number;
   __M7_WEAR_MAX__?: number;
   __M7_UNLOCK__?: boolean;
+  __M9_READY__?: boolean;
+  __M9_ERROR__?: string;
+  __M9_BG__?: string;
 }

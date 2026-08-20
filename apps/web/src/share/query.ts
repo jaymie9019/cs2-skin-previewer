@@ -8,7 +8,7 @@
  *   float=0.056                 clamped to kit wear remap unless unlock=1 / wear=full
  *   sN=id,x,y,rot,wear          N = 0..3  (same as M5; omit / id 0 = empty)
  *   view=inspect|front|back     omit = inspect
- *   bg=studio|warm|cool         omit = studio
+ *   bg=studio|warm|cool|sun     omit = studio (IBL look, not just a plate)
  *   unlock=1  /  wear=full      wear slider 0–1 (else kit remap)
  *
  * Optional screenshot flags (preserved, not part of the inspect):
@@ -35,6 +35,11 @@ import {
 } from "../kits/catalog";
 import { clampSeed } from "../seed/seedToPatternUv";
 import {
+  ENV_LOOK_IDS,
+  resolveEnvLook,
+  type EnvLookId,
+} from "../env/catalog";
+import {
   MAX_STICKER_LAYERS,
   parseStickerQuery,
   serializeSlot,
@@ -47,10 +52,11 @@ export type ViewerWeapon = typeof WEAPON_AK47;
 const WEAPON_ALIASES = new Set(["ak47", "ak-47", "weapon_ak47", "ak"]);
 
 export type InspectView = "inspect" | "front" | "back";
-export type BackgroundPlate = "studio" | "warm" | "cool";
+/** M9: `bg=` selects an IBL look (PMREM). Alias kept for M7 call sites. */
+export type BackgroundPlate = EnvLookId;
 
 export const INSPECT_VIEWS = ["inspect", "front", "back"] as const;
-export const BACKGROUND_PLATES = ["studio", "warm", "cool"] as const;
+export const BACKGROUND_PLATES = ENV_LOOK_IDS;
 
 export type ShareState = {
   weapon: ViewerWeapon;
@@ -147,17 +153,9 @@ export function parseShareQuery(params: URLSearchParams): ParsedShareQuery {
     }
   }
 
-  let bg: BackgroundPlate = "studio";
-  const bgRaw = params.get("bg");
-  if (bgRaw != null && bgRaw.trim() !== "") {
-    const b = bgRaw.trim().toLowerCase();
-    if (b === "studio" || b === "warm" || b === "cool") {
-      bg = b;
-    } else {
-      rejected.push("bg");
-      bg = "studio";
-    }
-  }
+  const bgResolved = resolveEnvLook(params.get("bg"));
+  const bg: BackgroundPlate = bgResolved.id;
+  if (bgResolved.rejected) rejected.push("bg");
 
   const stickers = parseStickerQuery(params);
   rejected.push(...stickers.rejected);

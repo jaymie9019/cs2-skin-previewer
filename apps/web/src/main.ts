@@ -17,7 +17,6 @@ import {
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
   KITS,
@@ -67,6 +66,13 @@ import {
   type InspectView,
   type ViewerWeapon,
 } from "./share/query";
+import {
+  ENV_LOOKS,
+  envLookPlateHex,
+  isEnvLookId,
+  type EnvLookId,
+} from "./env/catalog";
+import { createEnvironmentScene, disposeEnvironmentScene } from "./env/author";
 
 /** 3/4 view that reads as a rifle (model is ~1m along +Z). */
 const FIXED_CAMERA = new Vector3(0.95, 0.42, 1.05);
@@ -80,12 +86,6 @@ const VIEW_PRESETS: Record<InspectView, { camera: Vector3; target: Vector3 }> = 
   inspect: { camera: FIXED_CAMERA, target: FIXED_TARGET },
   front: { camera: FRONT_CAMERA, target: FIXED_TARGET },
   back: { camera: BACK_CAMERA, target: FIXED_TARGET },
-};
-
-const BG_COLORS: Record<BackgroundPlate, number> = {
-  studio: 0x14161a,
-  warm: 0x2a2218,
-  cool: 0x1a1e24,
 };
 
 const MASKS_URL = "/assets/composite/weapon_rif_ak47_masks.png";
@@ -136,26 +136,28 @@ function formatFloat(value: number): string {
 }
 
 function releaseDocumentHold(): void {
-  void fetch("/m8-release", { method: "POST" }).catch(() => {
-    void fetch("/m7-release", { method: "POST" }).catch(() => {
-      void fetch("/m6-release", { method: "POST" }).catch(() => {
-        void fetch("/m5-release", { method: "POST" }).catch(() => {
-          void fetch("/m4-release", { method: "POST" }).catch(() => {
-            void fetch("/m3-release", { method: "POST" }).catch(() => {
-              void fetch("/m2-release", { method: "POST" }).catch(() => {
-                void fetch("/m1-release", { method: "POST" }).catch(() => {
-                  // Dev-only gate; ignore if the middleware is absent (preview/build).
-                });
-              });
-            });
-          });
-        });
-      });
+  const paths = [
+    "/m9-release",
+    "/m8-release",
+    "/m7-release",
+    "/m6-release",
+    "/m5-release",
+    "/m4-release",
+    "/m3-release",
+    "/m2-release",
+    "/m1-release",
+  ];
+  const fire = (i: number): void => {
+    if (i >= paths.length) return;
+    void fetch(paths[i], { method: "POST" }).catch(() => {
+      fire(i + 1);
     });
-  });
+  };
+  fire(0);
 }
 
 function markReady(): void {
+  window.__M9_READY__ = true;
   window.__M8_READY__ = true;
   window.__M7_READY__ = true;
   window.__M6_READY__ = true;
@@ -169,6 +171,7 @@ function markReady(): void {
 }
 
 function markError(message: string): void {
+  window.__M9_ERROR__ = message;
   window.__M8_ERROR__ = message;
   window.__M7_ERROR__ = message;
   window.__M6_ERROR__ = message;
@@ -183,7 +186,7 @@ function markError(message: string): void {
 }
 
 const scene = new Scene();
-scene.background = new Color(BG_COLORS[share.bg ?? "studio"]);
+scene.background = new Color(ENV_LOOKS[share.bg ?? "studio"].plate);
 
 const camera = new PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.01, 20);
 camera.position.copy(VIEW_PRESETS[share.view ?? "inspect"].camera);
@@ -207,14 +210,20 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = SRGBColorSpace;
 document.body.append(canvas);
 
-// Conservative IBL: RoomEnvironment -> PMREM so metal actually reflects
-// something. Keep the dark studio; do not chase Dust II / Skincraft sun.
+// M9 IBL: bake each named look through PMREM. studio is the same
+// RoomEnvironment path as M6 so default Case Hardened stays in class.
+// warm / cool / sun are authored Three scenes, not ripped map cubemaps.
 const pmrem = new PMREMGenerator(renderer);
-const room = new RoomEnvironment();
-const envRt = pmrem.fromScene(room, 0.04);
-scene.environment = envRt.texture;
-room.dispose();
+const envMaps = new Map<EnvLookId, Texture>();
+for (const look of Object.values(ENV_LOOKS)) {
+  const envScene = createEnvironmentScene(look.id);
+  const rt = pmrem.fromScene(envScene, 0.04);
+  envMaps.set(look.id, rt.texture);
+  disposeEnvironmentScene(envScene);
+}
 pmrem.dispose();
+scene.environment = envMaps.get("studio") ?? null;
+scene.environmentIntensity = ENV_LOOKS.studio.environmentIntensity;
 
 const hemi = new HemisphereLight(0xd7e6ff, 0x3d2a1c, 1.22);
 scene.add(hemi);
@@ -302,6 +311,7 @@ function syncShareUrl(): void {
   window.__M7_WEAR_MIN__ = bounds.min;
   window.__M7_WEAR_MAX__ = bounds.max;
   window.__M7_UNLOCK__ = currentUnlockWear;
+  window.__M9_BG__ = currentBg;
 }
 
 function setButtonActive(row: Element | null, attr: string, value: string): void {
@@ -321,12 +331,30 @@ function applyView(view: InspectView): void {
   syncShareUrl();
 }
 
+function applyLights(id: EnvLookId): void {
+  const look = ENV_LOOKS[id];
+  const lights = look.lights;
+  hemi.color.setHex(lights.hemiSky);
+  hemi.groundColor.setHex(lights.hemiGround);
+  hemi.intensity = lights.hemiIntensity;
+  key.color.setHex(lights.keyColor);
+  key.intensity = lights.keyIntensity;
+  key.position.set(lights.keyPosition[0], lights.keyPosition[1], lights.keyPosition[2]);
+  fill.color.setHex(lights.fillColor);
+  fill.intensity = lights.fillIntensity;
+  fill.position.set(lights.fillPosition[0], lights.fillPosition[1], lights.fillPosition[2]);
+  scene.environment = envMaps.get(id) ?? envMaps.get("studio") ?? null;
+  scene.environmentIntensity = look.environmentIntensity;
+}
+
 function applyBackground(bg: BackgroundPlate): void {
   currentBg = bg;
-  const hex = BG_COLORS[bg];
-  scene.background = new Color(hex);
-  document.body.style.background = `#${hex.toString(16).padStart(6, "0")}`;
+  const look = ENV_LOOKS[bg];
+  scene.background = new Color(look.plate);
+  document.body.style.background = envLookPlateHex(bg);
+  applyLights(bg);
   setButtonActive(bgRow, "data-bg", bg);
+  window.__M9_BG__ = bg;
   syncShareUrl();
 }
 
@@ -573,7 +601,7 @@ if (bgRow instanceof HTMLElement) {
     const t = ev.target;
     if (!(t instanceof HTMLElement)) return;
     const b = t.getAttribute("data-bg");
-    if (b === "studio" || b === "warm" || b === "cool") applyBackground(b);
+    if (isEnvLookId(b)) applyBackground(b);
   });
 }
 
@@ -857,7 +885,7 @@ Promise.all([
     const box = new Box3().setFromObject(root);
     const size = box.getSize(new Vector3());
     const center = box.getCenter(new Vector3());
-    console.info("[m8] AK-47 paint styles", {
+    console.info("[m9] AK-47 env lighting", {
       size,
       center,
       seed: currentSeed,

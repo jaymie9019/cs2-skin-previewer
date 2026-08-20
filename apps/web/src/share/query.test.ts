@@ -215,3 +215,33 @@ describe("M7 official catalog kits + wear clamp + view/bg", () => {
     expect(s4.rejected).toContain("s4");
   });
 });
+
+describe("M9 bg= environment IBL looks", () => {
+  it("round-trips bg=warm and bg=sun", () => {
+    const warm = parseShareQuery(params("kit=44&seed=923&float=0.056&bg=warm"));
+    expect(warm.bg).toBe("warm");
+    expect(warm.rejected).toEqual([]);
+    expect(serializeShareQuery(warm).get("bg")).toBe("warm");
+
+    const sun = parseShareQuery(params("kit=44&bg=sun"));
+    expect(sun.bg).toBe("sun");
+    expect(serializeShareQuery(sun).get("bg")).toBe("sun");
+    expect(sameInspect(shareStateFromParsed(parseShareQuery(serializeShareQuery(sun))), shareStateFromParsed(sun))).toBe(
+      true,
+    );
+  });
+
+  it("omitted bg defaults to studio and is not serialized", () => {
+    const q = parseShareQuery(params("kit=44"));
+    expect(q.bg).toBe("studio");
+    expect(q.rejected).not.toContain("bg");
+    expect(serializeShareQuery(q).has("bg")).toBe(false);
+  });
+
+  it("unknown bg=skincraft falls back to studio and is rejected", () => {
+    const q = parseShareQuery(params("bg=skincraft"));
+    expect(q.bg).toBe("studio");
+    expect(q.rejected).toContain("bg");
+    expect(serializeShareQuery(q).has("bg")).toBe(false);
+  });
+});
