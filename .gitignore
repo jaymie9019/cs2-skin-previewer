@@ -1,0 +1,51 @@
+# Official Valve / CS2 game files — never commit
+/cs2/
+cs2/
+*.vpk
+*.vpk.*
+*_dir.vpk
+*_000.vpk
+*.vmdl_c
+*.vtex_c
+*.vmat_c
+*.vsnd_c
+*.vmesh_c
+*.vphys_c
+
+# SteamCMD / Steam caches
+steamcmd/
+Steam/
+
+# Large official textures / extracted game dumps
+*.vtex
+extracted/
+vpk-extract/
+official/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Node (M1+)
+node_modules/
+dist/
+.vite/
+
+# Keep local exported glb for dev, but ignore huge dumps
+assets/*.bin
+assets/**/*.png
+assets/**/*.jpg
+assets/**/*.tga
+assets/**/*.vtex
+
+# Extracted official textures written next to glTF exports
+assets/*.png
+assets/*.jpg
+assets/*_physics.glb
+
+# CLI zip / local tool caches if ever copied in-tree
+*.zip
+cli-linux-x64.zip
