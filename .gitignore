@@ -49,3 +49,6 @@ assets/*_physics.glb
 # CLI zip / local tool caches if ever copied in-tree
 *.zip
 cli-linux-x64.zip
+
+# Local packed preview with official textures — do not publish
+assets/*.packed.glb

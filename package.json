@@ -1,0 +1,13 @@
+{
+  "name": "cs2-skin-previewer",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w cs2-skin-previewer-web",
+    "build": "npm run build -w cs2-skin-previewer-web",
+    "preview": "npm run preview -w cs2-skin-previewer-web"
+  }
+}
