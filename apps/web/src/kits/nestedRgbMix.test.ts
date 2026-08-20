@@ -143,3 +143,35 @@ describe("kit 14 nested RGB must not crush plywood to Color1", () => {
     expect(redBand[0]).toBeGreaterThan(redBand[1] + 0.4);
   });
 });
+
+describe("style 5 anodized uses hydrographic mix + mask override", () => {
+  it("applies mask.g → Color2 like style 2", () => {
+    const out = mixNestedAlbedo({
+      style: 5,
+      pattern: [0, 0, 0],
+      wearTex: 0,
+      grunge: WHITE,
+      floatAmt: 0,
+      colors: COLORS,
+      maskG: 1,
+      maskB: 0,
+    });
+    expect(out[0]).toBeCloseTo(C2[0], 5);
+    expect(out[1]).toBeCloseTo(C2[1], 5);
+    expect(out[2]).toBeCloseTo(C2[2], 5);
+  });
+
+  it("does not multiply pattern by spray wear", () => {
+    const worn = mixNestedAlbedo({
+      style: 5,
+      pattern: [1, 0, 0],
+      wearTex: 1,
+      grunge: WHITE,
+      floatAmt: 1,
+      colors: COLORS,
+    });
+    expect(worn[0]).toBeCloseTo(C1[0], 5);
+    expect(worn[1]).toBeCloseTo(C1[1], 5);
+    expect(worn[2]).toBeCloseTo(C1[2], 5);
+  });
+});

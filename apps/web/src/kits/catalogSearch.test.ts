@@ -16,7 +16,7 @@ describe("official AK-47 catalog search / wear (M7)", () => {
     expect(OFFICIAL_AK47_KITS).toHaveLength(61);
     expect(OFFICIAL_AK47_KITS.some((k) => k.name_en.toLowerCase() === "fade")).toBe(false);
     expect(OFFICIAL_AK47_KITS.some((k) => k.name_zh === "渐变之色")).toBe(false);
-    expect(KITS).toHaveLength(3);
+    expect(KITS.length).toBeGreaterThanOrEqual(8);
   });
 
   it("filterOfficialKits matches en / zh / index / internal", () => {
@@ -57,14 +57,20 @@ describe("official AK-47 catalog search / wear (M7)", () => {
     expect(clampFloatToKit(0.8, bloodsport, false)).toBeCloseTo(0.45, 8);
   });
 
-  it("hasPaintPreview / viewerKitFor only for 14 / 44 / 122", () => {
+  it("hasPaintPreview / viewerKitFor for Live kits; leftover listed kits stay vanilla", () => {
     expect(hasPaintPreview(14)).toBe(true);
     expect(hasPaintPreview(44)).toBe(true);
     expect(hasPaintPreview(122)).toBe(true);
-    expect(hasPaintPreview(72)).toBe(false);
-    expect(hasPaintPreview(226)).toBe(false);
+    expect(hasPaintPreview(72)).toBe(true);
+    expect(hasPaintPreview(226)).toBe(true);
+    expect(hasPaintPreview(282)).toBe(true);
+    expect(hasPaintPreview(456)).toBe(true);
+    expect(hasPaintPreview(524)).toBe(true);
+    expect(hasPaintPreview(639)).toBe(true);
+    expect(hasPaintPreview(180)).toBe(false);
     expect(viewerKitFor(officialKit(44))?.paintIndex).toBe(44);
-    expect(viewerKitFor(officialKit(72))).toBeNull();
+    expect(viewerKitFor(officialKit(72))?.paintIndex).toBe(72);
+    expect(viewerKitFor(officialKit(180))).toBeNull();
   });
 
   it("isOfficialAk47KitQuery accepts listed kits and rejects Fade", () => {

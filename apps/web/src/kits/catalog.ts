@@ -1,5 +1,5 @@
 /**
- * AK-47 viewer kits (M4). Official records come from
+ * AK-47 viewer kits (M4 + M8). Official records come from
  * data/ak47_paint_kits.json (items_game [kit]weapon_ak47).
  * Do not invent kits (there is no AK-47 Fade / 渐变之色).
  *
@@ -69,6 +69,10 @@ export type ViewerKit = {
   grungePath: string;
   patternScale: number;
   ignoreWeaponSizeScale: boolean;
+  /** UV-authored wrap (custom / gunsmith). Pattern matrix stays identity. */
+  uvAligned: boolean;
+  /** Pattern is a full-color albedo (styles 7 / 9), not nested-RGB weights. */
+  patternAsAlbedo: boolean;
   colors: readonly [Rgb, Rgb, Rgb, Rgb];
   patternGain: number;
   paintRoughness: number;
@@ -80,6 +84,13 @@ export type ViewerKit = {
 
 const SHARED_WEAR = "/assets/paints/aq_oiled/paint_wear.png";
 const SHARED_GRUNGE = "/assets/paints/aq_oiled/gun_grunge.png";
+
+/** Same plywood island as kit 14 — Blue Laminate's official film is the same file. */
+const LAMINATE_GRAIN: GrainWindow = {
+  origin: [1040 / 2048, 1440 / 2048],
+  size: [512 / 2048, 256 / 2048],
+  tile: 2,
+};
 
 /** Official 61-kit catalog. Source of truth for names / style / wear. */
 export const OFFICIAL_AK47_KITS: readonly OfficialAk47Kit[] = officialKits as OfficialAk47Kit[];
@@ -107,6 +118,8 @@ function viewerKit(
     paintMetalness: number;
     maskMode: MaskMode;
     grainWindow?: GrainWindow | null;
+    uvAligned?: boolean;
+    patternAsAlbedo?: boolean;
     aliases: readonly string[];
   },
 ): ViewerKit {
@@ -126,6 +139,8 @@ function viewerKit(
     grungePath: SHARED_GRUNGE,
     patternScale: extras.patternScale,
     ignoreWeaponSizeScale: extras.ignoreWeaponSizeScale,
+    uvAligned: extras.uvAligned ?? false,
+    patternAsAlbedo: extras.patternAsAlbedo ?? false,
     colors: extras.colors,
     patternGain: extras.patternGain,
     paintRoughness: extras.paintRoughness,
@@ -198,16 +213,173 @@ export const KIT_RED_LAMINATE: ViewerKit = viewerKit(14, {
   paintRoughness: 0.45,
   paintMetalness: 0.08,
   maskMode: "furniture",
-  grainWindow: {
-    origin: [1040 / 2048, 1440 / 2048],
-    size: [512 / 2048, 256 / 2048],
-    tile: 2,
-  },
+  grainWindow: LAMINATE_GRAIN,
   aliases: ["14", "redlam", "redlaminate", "red-laminate", "hy_ak47lam", "红色层压板"],
 });
 
-/** Exactly the three M4 viewer kits, all from the official AK-47 catalog. */
-export const KITS: readonly ViewerKit[] = [KIT_CASE_HARDENED, KIT_JUNGLE_SPRAY, KIT_RED_LAMINATE];
+/**
+ * Kit 72 / sp_mesh_tan / style 3 Spray-Paint.
+ * Nested RGB of chainlink.png. Same spray mask as Jungle (wood +
+ * receiver + mag). Tan / charcoal mesh from sp_mesh_tan.vmat.
+ * F_PAINT_STYLE 2 (= items_game style 3), g_flPatternTexCoordScale 1.75.
+ */
+export const KIT_SAFARI_MESH: ViewerKit = viewerKit(72, {
+  slug: "safarimesh",
+  patternPath: "/assets/paints/sp_mesh_tan/chainlink.png",
+  patternScale: 1.75,
+  ignoreWeaponSizeScale: false,
+  colors: [
+    [0.42745, 0.411764, 0.329411],
+    [0.074509, 0.078431, 0.082352],
+    [0.30196, 0.313725, 0.262745],
+    [0.286274, 0.278431, 0.219607],
+  ],
+  patternGain: 1,
+  paintRoughness: 0.6,
+  paintMetalness: 0.12,
+  maskMode: "spray",
+  aliases: ["72", "safari", "safarimesh", "safari-mesh", "sp_mesh_tan", "狩猎网格"],
+});
+
+/**
+ * Kit 226 / hy_ak47lam_blue / style 2 Hydrographic.
+ * Same official film as Red Laminate (laminate_ak47_psd_2ce8f5f0.vtex)
+ * extracted from hy_ak47lam_blue.vmat — blue g_vColor0..3, not a
+ * recolor of kit 14's ViewerKit. Furniture plywood, metal gunmetal.
+ * Wear remap 0.02–0.4. Same grainWindow (same atlas).
+ */
+export const KIT_BLUE_LAMINATE: ViewerKit = viewerKit(226, {
+  slug: "bluelaminate",
+  patternPath: "/assets/paints/hy_ak47lam_blue/laminate_ak47.png",
+  patternScale: 1,
+  ignoreWeaponSizeScale: true,
+  colors: [
+    [0.207843, 0.196078, 0.192157],
+    [0.133333, 0.337255, 0.745098],
+    [0.592157, 0.537255, 0.498039],
+    [0.352941, 0.701961, 0.921569],
+  ],
+  patternGain: 1,
+  paintRoughness: 0.45,
+  paintMetalness: 0.08,
+  maskMode: "furniture",
+  grainWindow: LAMINATE_GRAIN,
+  aliases: ["226", "bluelam", "bluelaminate", "blue-laminate", "hy_ak47lam_blue", "蓝色层压板"],
+});
+
+/**
+ * Kit 282 / cu_ak47_cobra / style 7 Custom Paint Job.
+ * UV-authored full-color wrap (elegantredv1_1.png). Not nested RGB.
+ * Receiver / metal only — furniture stays wood (Redline in-game intent).
+ * F_PAINT_STYLE 6, g_bIgnoreWeaponSizeScale 1, g_flPaintMetalness 1.
+ */
+export const KIT_REDLINE: ViewerKit = viewerKit(282, {
+  slug: "redline",
+  patternPath: "/assets/paints/cu_ak47_cobra/elegantredv1_1.png",
+  patternScale: 1,
+  ignoreWeaponSizeScale: true,
+  uvAligned: true,
+  patternAsAlbedo: true,
+  colors: [
+    [1, 1, 1],
+    [1, 1, 1],
+    [1, 1, 1],
+    [1, 1, 1],
+  ],
+  patternGain: 1,
+  paintRoughness: 0.4,
+  paintMetalness: 1,
+  maskMode: "metal",
+  aliases: ["282", "redline", "cobra", "cu_ak47_cobra", "红线"],
+});
+
+/**
+ * Kit 456 / am_bamboo_jungle / style 5 Anodized Multicolored.
+ * Nested RGB of bamboo_jungle.png + mask G/B overrides (same formula
+ * as hydrographic). Anodized candy coat on metal (masks.r), not furniture.
+ * F_PAINT_STYLE 4, g_bIgnoreWeaponSizeScale 1, scale 1.4, roughness 0.6.
+ */
+export const KIT_HYDROPONIC: ViewerKit = viewerKit(456, {
+  slug: "hydroponic",
+  patternPath: "/assets/paints/am_bamboo_jungle/bamboo_jungle.png",
+  patternScale: 1.4,
+  ignoreWeaponSizeScale: true,
+  colors: [
+    [0.921569, 0.945098, 0.87451],
+    [0.847059, 0.282353, 0.282353],
+    [0.462745, 0.439216, 0.415686],
+    [0.564706, 0.713726, 0.164706],
+  ],
+  patternGain: 1,
+  paintRoughness: 0.6,
+  paintMetalness: 0.88,
+  maskMode: "metal",
+  aliases: ["456", "hydroponic", "bamboo", "am_bamboo_jungle", "水栽竹"],
+});
+
+/**
+ * Kit 524 / gs_ak47_supercharged / style 9 Gunsmith.
+ * Custom-like albedo (ak47_supercharged.png) on all paintable parts.
+ * Patina-on-metal split is not implemented — approximation of the
+ * workshop "patina + custom" combo. F_PAINT_STYLE 8, metalness 0, roughness 0.4.
+ */
+export const KIT_FUEL_INJECTOR: ViewerKit = viewerKit(524, {
+  slug: "fuelinjector",
+  patternPath: "/assets/paints/gs_ak47_supercharged/ak47_supercharged.png",
+  patternScale: 1,
+  ignoreWeaponSizeScale: true,
+  uvAligned: true,
+  patternAsAlbedo: true,
+  colors: [
+    [0.890196, 0.792157, 0.717647],
+    [1, 1, 1],
+    [1, 1, 1],
+    [0.831373, 0.831373, 0.831373],
+  ],
+  patternGain: 1,
+  paintRoughness: 0.4,
+  paintMetalness: 0,
+  maskMode: "spray",
+  aliases: ["524", "fuel", "fuelinjector", "fuel-injector", "gs_ak47_supercharged", "燃料喷射器"],
+});
+
+/**
+ * Kit 639 / gs_ak47_bloodsport / style 9 Gunsmith.
+ * Custom-like albedo (ak47_bloodsport.png) on all paintable parts.
+ * F_PAINT_STYLE 8, g_flPaintMetalness 1, roughness 0.4, wear 0–0.45.
+ */
+export const KIT_BLOODSPORT: ViewerKit = viewerKit(639, {
+  slug: "bloodsport",
+  patternPath: "/assets/paints/gs_ak47_bloodsport/ak47_bloodsport.png",
+  patternScale: 1,
+  ignoreWeaponSizeScale: true,
+  uvAligned: true,
+  patternAsAlbedo: true,
+  colors: [
+    [1, 1, 1],
+    [1, 1, 1],
+    [0.843137, 0.827451, 0.827451],
+    [0.698039, 0.756863, 0.917647],
+  ],
+  patternGain: 1,
+  paintRoughness: 0.4,
+  paintMetalness: 1,
+  maskMode: "spray",
+  aliases: ["639", "bloodsport", "gs_ak47_bloodsport", "血腥运动"],
+});
+
+/** M8 representative set: existing 3 + Safari / Blue Lam / Redline / Hydroponic / two gunsmiths. */
+export const KITS: readonly ViewerKit[] = [
+  KIT_CASE_HARDENED,
+  KIT_JUNGLE_SPRAY,
+  KIT_RED_LAMINATE,
+  KIT_SAFARI_MESH,
+  KIT_BLUE_LAMINATE,
+  KIT_REDLINE,
+  KIT_HYDROPONIC,
+  KIT_FUEL_INJECTOR,
+  KIT_BLOODSPORT,
+];
 
 export function kitLabel(kit: ViewerKit): string {
   return `${kit.nameEn} / ${kit.nameZh}`;
@@ -248,10 +420,8 @@ export function resolveKit(query: string | null | undefined): ViewerKit {
   );
 }
 
-const PAINT_PREVIEW_INDEXES = new Set<number>([14, 44, 122]);
-
 export function hasPaintPreview(paintIndex: number): boolean {
-  return PAINT_PREVIEW_INDEXES.has(paintIndex);
+  return KITS.some((k) => k.paintIndex === paintIndex);
 }
 
 export function viewerKitFor(official: OfficialAk47Kit): ViewerKit | null {

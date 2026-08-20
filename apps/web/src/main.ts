@@ -136,14 +136,16 @@ function formatFloat(value: number): string {
 }
 
 function releaseDocumentHold(): void {
-  void fetch("/m7-release", { method: "POST" }).catch(() => {
-    void fetch("/m6-release", { method: "POST" }).catch(() => {
-      void fetch("/m5-release", { method: "POST" }).catch(() => {
-        void fetch("/m4-release", { method: "POST" }).catch(() => {
-          void fetch("/m3-release", { method: "POST" }).catch(() => {
-            void fetch("/m2-release", { method: "POST" }).catch(() => {
-              void fetch("/m1-release", { method: "POST" }).catch(() => {
-                // Dev-only gate; ignore if the middleware is absent (preview/build).
+  void fetch("/m8-release", { method: "POST" }).catch(() => {
+    void fetch("/m7-release", { method: "POST" }).catch(() => {
+      void fetch("/m6-release", { method: "POST" }).catch(() => {
+        void fetch("/m5-release", { method: "POST" }).catch(() => {
+          void fetch("/m4-release", { method: "POST" }).catch(() => {
+            void fetch("/m3-release", { method: "POST" }).catch(() => {
+              void fetch("/m2-release", { method: "POST" }).catch(() => {
+                void fetch("/m1-release", { method: "POST" }).catch(() => {
+                  // Dev-only gate; ignore if the middleware is absent (preview/build).
+                });
               });
             });
           });
@@ -154,6 +156,7 @@ function releaseDocumentHold(): void {
 }
 
 function markReady(): void {
+  window.__M8_READY__ = true;
   window.__M7_READY__ = true;
   window.__M6_READY__ = true;
   window.__M5_READY__ = true;
@@ -166,6 +169,7 @@ function markReady(): void {
 }
 
 function markError(message: string): void {
+  window.__M8_ERROR__ = message;
   window.__M7_ERROR__ = message;
   window.__M6_ERROR__ = message;
   window.__M5_ERROR__ = message;
@@ -330,7 +334,8 @@ function applySeed(seed: number): void {
   if (currentKit) {
     const uv = seedToPatternUv(seed, kitSeedOptions(currentKit));
     currentSeed = uv.seed;
-    const pattern = currentKit.ignoreWeaponSizeScale ? IDENTITY : uv.pattern.matrix;
+    const pattern =
+      currentKit.uvAligned || currentKit.grainWindow != null ? IDENTITY : uv.pattern.matrix;
     for (const hook of patternHooks) {
       hook.setLayers({
         pattern,
@@ -779,7 +784,7 @@ Promise.all([
   gltfLoader.loadAsync(MODEL_URL),
   ...EXTRACTED_STICKERS.map((s) =>
     loadExtracted(s.id, s.colorPath, s.wearPath, s.holoMaskPath, s.spectrumPath).catch((err) => {
-      console.warn("[m7] sticker pack failed; continuing without it", s.id, err);
+      console.warn("[m8] sticker pack failed; continuing without it", s.id, err);
       return null;
     }),
   ),
@@ -852,7 +857,7 @@ Promise.all([
     const box = new Box3().setFromObject(root);
     const size = box.getSize(new Vector3());
     const center = box.getCenter(new Vector3());
-    console.info("[m7] AK-47 catalog HUD", {
+    console.info("[m8] AK-47 paint styles", {
       size,
       center,
       seed: currentSeed,

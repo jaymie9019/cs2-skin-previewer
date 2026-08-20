@@ -6,9 +6,14 @@
  * composites with a *per-kit* mask (not a global wood-vs-metal split).
  *
  * Style 8 Patina (Case Hardened): existing M3 mix, metal-only mask.
- * Style 3 Spray (Jungle): nested RGB, wear * pattern before mix, spray mask.
- * Style 2 Hydrographic (Red Laminate): nested RGB + mask G/B overrides,
- *   furniture mask. Pattern is 2D UV (workshop hydrographic).
+ * Style 3 Spray (Jungle / Safari Mesh): nested RGB, wear * pattern, spray mask.
+ * Style 2 Hydrographic (Red / Blue Laminate): nested RGB + mask G/B,
+ *   furniture mask + grainWindow.
+ * Style 5 Anodized Multicolored (Hydroponic): nested RGB + mask G/B,
+ *   metal mask (candy coat). Same mix as style 2 (pattern.wiki).
+ * Style 7 Custom (Redline): UV-aligned albedo sample, metal mask.
+ * Style 9 Gunsmith (Fuel Injector / Bloodsport): custom-like albedo,
+ *   spray mask. Patina-on-metal split is not implemented.
  *
  * Style 3 officially uses triplanar; this viewer uses 2D UV with the
  * documented style-3 scale (weapon_length/36 * patternScale).
@@ -58,14 +63,21 @@ export type PatternHook = {
   setPaintEnabled: (enabled: boolean) => void;
 };
 
-function prepColorMap(tex: Texture, clamp: boolean): Texture {
-  tex.colorSpace = SRGBColorSpace;
+function clampPattern(kit: ViewerKit): boolean {
+  return kit.uvAligned || kit.grainWindow != null;
+}
+
+function prepColorMap(tex: Texture, kit: ViewerKit): Texture {
+  const clamp = clampPattern(kit);
+  const albedo = kit.patternAsAlbedo;
+  tex.colorSpace = albedo || !clamp ? SRGBColorSpace : NoColorSpace;
   tex.wrapS = clamp ? ClampToEdgeWrapping : RepeatWrapping;
   tex.wrapT = clamp ? ClampToEdgeWrapping : RepeatWrapping;
   if (clamp) {
-    // UV-authored hydrographic film: same space as masks/cavity, RGB are mix weights.
+    // UV-authored film / wrap: same space as masks/cavity.
+    // Hydrographic mix-weights stay linear (NoColorSpace); custom albedo is sRGB.
     tex.flipY = false;
-    tex.colorSpace = NoColorSpace;
+    if (!albedo) tex.colorSpace = NoColorSpace;
   }
   tex.needsUpdate = true;
   return tex;
@@ -95,7 +107,12 @@ function maskModeId(mode: ViewerKit["maskMode"]): number {
 }
 
 export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMaps): PatternHook {
-  prepColorMap(maps.pattern, false);
+  // Start as a tiled color map; setKit overwrites wrap / color space per kit.
+  prepColorMap(maps.pattern, {
+    uvAligned: false,
+    grainWindow: null,
+    patternAsAlbedo: true,
+  } as ViewerKit);
   prepDataRepeat(maps.wear);
   prepDataRepeat(maps.grunge);
   prepDataClamp(maps.masks);
@@ -135,9 +152,9 @@ export function attachPatternMap(material: MeshStandardMaterial, maps: PatternMa
       floatUniform.value = clampFloat(floatAmt);
     },
     setKit(kit, pattern) {
-      prepColorMap(pattern, kit.ignoreWeaponSizeScale);
+      prepColorMap(pattern, kit);
       patternMapUniform.value = pattern;
-      clampPatternUniform.value = kit.ignoreWeaponSizeScale ? 1 : 0;
+      clampPatternUniform.value = clampPattern(kit) ? 1 : 0;
       styleUniform.value = kit.style;
       maskModeUniform.value = maskModeId(kit.maskMode);
       patternGainUniform.value = kit.patternGain;
@@ -256,7 +273,7 @@ float cs2PaintMask = 0.0;
 	vec3 cGrunge = mix( vec3( 1.0 ), grungeRgb, gAmt );
 	vec3 painted;
 
-	if ( uStyle > 7.5 ) {
+	if ( abs( uStyle - 8.0 ) < 0.5 ) {
 		float flPatinaBlend = smoothstep( 0.1, 0.2, wearTex * flAo * flCavity * flCavity * uFloat );
 		float flOilRub = saturate( flCavity * flAo - uFloat * 0.1 ) - flGrunge;
 		flOilRub = smoothstep( 0.0, 0.15, flOilRub + 0.08 );
@@ -268,6 +285,11 @@ float cs2PaintMask = 0.0;
 		vec3 cScratches = uPatinaC0 * fPatternLum;
 		cPatina = mix( cPatina, cScratches, flPatinaBlend );
 		painted = saturate( cPatina * cGrunge );
+	} else if ( uStyle > 6.5 ) {
+		// Style 7 Custom / 9 Gunsmith: UV-aligned albedo, wear to substrate.
+		painted = saturate( pattern * cGrunge );
+		float wearOff = smoothstep( 0.2, 0.9, wearTex * uFloat );
+		cs2PaintMask *= ( 1.0 - wearOff );
 	} else {
 		vec3 p = pattern;
 		if ( abs( uStyle - 2.0 ) < 0.5 ) {
@@ -283,7 +305,7 @@ float cs2PaintMask = 0.0;
 		vec3 color = mix( uPatinaC0, uPatinaC1, saturate( p.r ) );
 		color = mix( color, uPatinaC2, saturate( p.g ) );
 		color = mix( color, uPatinaC3, saturate( p.b ) );
-		if ( abs( uStyle - 2.0 ) < 0.5 ) {
+		if ( abs( uStyle - 2.0 ) < 0.5 || abs( uStyle - 5.0 ) < 0.5 ) {
 			color = mix( color, uPatinaC2, saturate( masks.g ) );
 			color = mix( color, uPatinaC3, saturate( masks.b ) );
 			float wearOff = smoothstep( 0.2, 0.9, wearTex * uFloat );
@@ -308,6 +330,6 @@ float cs2PaintMask = 0.0;
 	metalnessFactor = mix( metalnessFactor, uPaintMetalness, cs2PaintMask );`,
       );
   };
-  material.customProgramCacheKey = () => "m7-paint-enabled";
+  material.customProgramCacheKey = () => "m8-paint-styles";
   return hook;
 }

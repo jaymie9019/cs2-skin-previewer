@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  KIT_BLUE_LAMINATE,
   KIT_CASE_HARDENED,
   KIT_JUNGLE_SPRAY,
   KIT_RED_LAMINATE,
+  KIT_REDLINE,
+  KIT_SAFARI_MESH,
 } from "../kits/catalog";
 import { emptySlots } from "../stickers/slots";
 import {
@@ -121,20 +124,34 @@ describe("invalid kit / s4 rejected", () => {
 });
 
 describe("M7 official catalog kits + wear clamp + view/bg", () => {
-  it("accepts official listed kits (72 Safari Mesh, 226 Blue Laminate) and serializes their index", () => {
+  it("resolves kit=72 / 226 / 282 to ViewerKits (Live) and serializes their index", () => {
     const safari = parseShareQuery(params("kit=72"));
     expect(safari.rejected).not.toContain("kit");
     expect(safari.official.paint_index).toBe(72);
     expect(safari.official.name_en).toBe("Safari Mesh");
-    expect(safari.kit).toBeNull();
+    expect(safari.kit).toBe(KIT_SAFARI_MESH);
     expect(serializeShareQuery(safari).get("kit")).toBe("72");
 
     const blue = parseShareQuery(params("kit=226"));
     expect(blue.rejected).not.toContain("kit");
     expect(blue.official.paint_index).toBe(226);
     expect(blue.official.name_en).toBe("Blue Laminate");
-    expect(blue.kit).toBeNull();
+    expect(blue.kit).toBe(KIT_BLUE_LAMINATE);
     expect(serializeShareQuery(blue).get("kit")).toBe("226");
+
+    const redline = parseShareQuery(params("kit=282"));
+    expect(redline.rejected).not.toContain("kit");
+    expect(redline.kit).toBe(KIT_REDLINE);
+    expect(serializeShareQuery(redline).get("kit")).toBe("282");
+  });
+
+  it("keeps leftover listed kits (180 Fire Serpent) as official + vanilla", () => {
+    const fire = parseShareQuery(params("kit=180"));
+    expect(fire.rejected).not.toContain("kit");
+    expect(fire.official.paint_index).toBe(180);
+    expect(fire.official.name_en).toBe("Fire Serpent");
+    expect(fire.kit).toBeNull();
+    expect(serializeShareQuery(fire).get("kit")).toBe("180");
   });
 
   it("clamps float to Blue Laminate 0.02–0.4 when wear is locked", () => {

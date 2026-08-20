@@ -22,7 +22,7 @@ Changing Kit / Seed / Float / stickers / view / background updates the query str
 Static catalog table (search + inspect links): http://127.0.0.1:5173/catalog/ak47.html
 
 ## Shareable URL (M6 + M7)
-Opening a URL restores the same inspect. Grammar: weapon=ak47 (only AK for now), kit=<official paint index or slug>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool. Unknown kit (fade / 38 / 999) and s4 are rejected. Official listed kits without a shader (e.g. kit=72 Safari Mesh) are accepted and show the vanilla AK. Full grammar: docs/MILESTONE_7.md.
+Opening a URL restores the same inspect. Grammar: weapon=ak47 (only AK for now), kit=<official paint index or slug>, seed=0-999, float (clamped to that kit’s wear remap unless unlock=1), sN=id,x,y,rot,wear (N=0..3), view=inspect|front|back, bg=studio|warm|cool. Unknown kit (fade / 38 / 999) and s4 are rejected. Official listed kits without a shader (e.g. kit=180 Fire Serpent) are accepted and show the vanilla AK. Live kits include 14 / 44 / 72 / 122 / 226 / 282 / 456 / 524 / 639. Full grammar: docs/MILESTONE_7.md + docs/MILESTONE_8.md.
 Example: ?weapon=ak47&kit=44&seed=923&float=0.056&s0=259,0.02,-0.01,15,0.4
 Example: ?weapon=ak47&kit=226&view=front&bg=warm
 
@@ -38,11 +38,17 @@ From `apps/web`: `npm install` then `npm run dev`.
 
 ## Kits + seed + float (M4)
 
-The Kit dropdown switches among three official AK-47 finishes from `data/ak47_paint_kits.json` (no Fade — AK-47 has none). Labels are English + 中文. Query `kit=44` / `kit=122` / `kit=14` (or slug). Seed (0-999) and Float (0-1) still update live. `capture=1` or `fixed=1` locks the camera.
+The Kit dropdown and left catalog list all 61 official AK-47 finishes from `data/ak47_paint_kits.json` (no Fade — AK-47 has none). Nine have a live paint shader. Labels are English + 中文. Query `kit=44` / `kit=122` / `kit=14` / `kit=72` / `kit=226` / `kit=282` (or slug). Seed (0-999) and Float (clamped to the kit remap) still update live. `capture=1` or `fixed=1` locks the camera.
 
 - Case Hardened / 表面淬火 (44, style 8) — metal-only Patina
 - Jungle Spray / 丛林涂装 (122, style 3) — matte camo on receiver + furniture
 - Red Laminate / 红色层压板 (14, style 2) — hydrographic on wood furniture
+- Safari Mesh / 狩猎网格 (72, style 3) — tan spray mesh
+- Blue Laminate / 蓝色层压板 (226, style 2) — furniture plywood, blue palette
+- Redline / 红线 (282, style 7) — custom wrap on metal
+- Hydroponic / 水栽竹 (456, style 5) — anodized metal
+- Fuel Injector / 燃料喷射器 (524, style 9) — gunsmith albedo
+- Bloodsport / 血腥运动 (639, style 9) — gunsmith albedo
 
 Official PNGs are gitignored; see `assets/paints/README.md`.
 
@@ -60,4 +66,8 @@ Tests: from apps/web, npx vitest run (or apps/web/run-tests.sh). Notes: docs/MIL
 
 ## Catalog HUD (M7)
 
-All 61 official AK-47 kits from `data/ak47_paint_kits.json` are listed (en + 中文). Search filters the left panel. Click a row to inspect. Wear slider is clamped to that kit’s remap (Blue Laminate 0.02–0.4, Redline 0.1–0.7, …); check Unlock 0–1 to ignore it. View: Inspect / Front / Back. Background plates: Studio / Warm / Cool (solid colors we authored — not map videos). Kits 14 / 44 / 122 have a live paint shader; the other 58 fall back to the unpainted AK plus a “preview not implemented / 尚未做涂装” badge. Static table: `/catalog/ak47.html`. Notes: `docs/MILESTONE_7.md`.
+All 61 official AK-47 kits from `data/ak47_paint_kits.json` are listed (en + 中文). Search filters the left panel. Click a row to inspect. Wear slider is clamped to that kit’s remap (Blue Laminate 0.02–0.4, Redline 0.1–0.7, …); check Unlock 0–1 to ignore it. View: Inspect / Front / Back. Background plates: Studio / Warm / Cool (solid colors we authored — not map videos). Nine kits have a live paint shader (14 / 44 / 72 / 122 / 226 / 282 / 456 / 524 / 639); the other 52 fall back to the unpainted AK plus a “preview not implemented / 尚未做涂装” badge. Static table: `/catalog/ak47.html`. Notes: `docs/MILESTONE_7.md`, `docs/MILESTONE_8.md`.
+
+## Paint styles (M8)
+
+Representative live set — not all 61. Styles covered: Hydrographic, Spray-Paint, Anodized Multicolored, Custom Paint Job, Patina, Gunsmith. Official PNGs stay gitignored. Notes: `docs/MILESTONE_8.md`.

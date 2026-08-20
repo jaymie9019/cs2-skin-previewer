@@ -1,8 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
+  KIT_BLUE_LAMINATE,
+  KIT_BLOODSPORT,
   KIT_CASE_HARDENED,
+  KIT_FUEL_INJECTOR,
+  KIT_HYDROPONIC,
   KIT_JUNGLE_SPRAY,
   KIT_RED_LAMINATE,
+  KIT_REDLINE,
+  KIT_SAFARI_MESH,
   KITS,
   OFFICIAL_AK47_KITS,
   kitLabel,
@@ -52,25 +58,50 @@ describe("resolveKit (query kit=)", () => {
     expect(resolveKit("14")).toBe(KIT_RED_LAMINATE);
     expect(resolveKit("redlaminate")).toBe(KIT_RED_LAMINATE);
     expect(resolveKit("hy_ak47lam")).toBe(KIT_RED_LAMINATE);
+    expect(resolveKit("72")).toBe(KIT_SAFARI_MESH);
+    expect(resolveKit("safarimesh")).toBe(KIT_SAFARI_MESH);
+    expect(resolveKit("226")).toBe(KIT_BLUE_LAMINATE);
+    expect(resolveKit("282")).toBe(KIT_REDLINE);
+    expect(resolveKit("redline")).toBe(KIT_REDLINE);
+    expect(resolveKit("456")).toBe(KIT_HYDROPONIC);
+    expect(resolveKit("524")).toBe(KIT_FUEL_INJECTOR);
+    expect(resolveKit("639")).toBe(KIT_BLOODSPORT);
   });
 });
 
-describe("M4 kit catalog (three official AK kits, distinct styles)", () => {
-  it("has exactly three official kits with distinct styles", () => {
-    expect(KITS).toHaveLength(3);
-    expect(new Set(KITS.map((k) => k.style)).size).toBe(3);
+describe("M8 kit catalog (representative official AK kits, ≥4 styles)", () => {
+  it("has at least eight official kits and at least four styles", () => {
+    expect(KITS.length).toBeGreaterThanOrEqual(8);
+    expect(new Set(KITS.map((k) => k.style)).size).toBeGreaterThanOrEqual(4);
     expect(KIT_CASE_HARDENED.style).toBe(8);
     expect(KIT_JUNGLE_SPRAY.style).toBe(3);
     expect(KIT_RED_LAMINATE.style).toBe(2);
     expect(KIT_CASE_HARDENED.maskMode).toBe("metal");
     expect(KIT_JUNGLE_SPRAY.maskMode).toBe("spray");
     expect(KIT_RED_LAMINATE.maskMode).toBe("furniture");
+    expect(KIT_SAFARI_MESH.style).toBe(3);
+    expect(KIT_SAFARI_MESH.maskMode).toBe("spray");
+    expect(KIT_BLUE_LAMINATE.style).toBe(2);
+    expect(KIT_BLUE_LAMINATE.maskMode).toBe("furniture");
+    expect(KIT_REDLINE.style).toBe(7);
+    expect(KIT_REDLINE.maskMode).toBe("metal");
+    expect(KIT_REDLINE.patternAsAlbedo).toBe(true);
+    expect(KIT_HYDROPONIC.style).toBe(5);
+    expect(KIT_HYDROPONIC.maskMode).toBe("metal");
+    expect(KIT_FUEL_INJECTOR.style).toBe(9);
+    expect(KIT_BLOODSPORT.style).toBe(9);
   });
 
   it("labels use English + 中文 from the JSON", () => {
     expect(kitLabel(KIT_CASE_HARDENED)).toBe("Case Hardened / 表面淬火");
     expect(kitLabel(KIT_JUNGLE_SPRAY)).toBe("Jungle Spray / 丛林涂装");
     expect(kitLabel(KIT_RED_LAMINATE)).toBe("Red Laminate / 红色层压板");
+    expect(kitLabel(KIT_SAFARI_MESH)).toBe("Safari Mesh / 狩猎网格");
+    expect(kitLabel(KIT_BLUE_LAMINATE)).toBe("Blue Laminate / 蓝色层压板");
+    expect(kitLabel(KIT_REDLINE)).toBe("Redline / 红线");
+    expect(kitLabel(KIT_HYDROPONIC)).toBe("Hydroponic / 水栽竹");
+    expect(kitLabel(KIT_FUEL_INJECTOR)).toBe("Fuel Injector / 燃料喷射器");
+    expect(kitLabel(KIT_BLOODSPORT)).toBe("Bloodsport / 血腥运动");
   });
 
   it("switching kit changes style, pattern path, colors, and mask", () => {
@@ -159,8 +190,32 @@ describe("isViewerKitQuery", () => {
   it("accepts viewer kits and rejects Fade / unknown", () => {
     expect(isViewerKitQuery("44")).toBe(true);
     expect(isViewerKitQuery("redlaminate")).toBe(true);
+    expect(isViewerKitQuery("72")).toBe(true);
+    expect(isViewerKitQuery("282")).toBe(true);
     expect(isViewerKitQuery("")).toBe(false);
     expect(isViewerKitQuery("fade")).toBe(false);
     expect(isViewerKitQuery("38")).toBe(false);
+    expect(isViewerKitQuery("180")).toBe(false);
+  });
+});
+
+describe("kit 226 Blue Laminate extras (vmat + grain window)", () => {
+  it("uses the official blue palette and the same film class as Red Laminate", () => {
+    expect(KIT_BLUE_LAMINATE.patternScale).toBe(1);
+    expect(KIT_BLUE_LAMINATE.ignoreWeaponSizeScale).toBe(true);
+    expect(KIT_BLUE_LAMINATE.maskMode).toBe("furniture");
+    expect(KIT_BLUE_LAMINATE.patternPath).not.toBe(KIT_RED_LAMINATE.patternPath);
+    expect(KIT_BLUE_LAMINATE.colors[1][2]).toBeCloseTo(0.745098, 5);
+    expect(KIT_BLUE_LAMINATE.colors[1][0]).toBeCloseTo(0.133333, 5);
+    expect(KIT_BLUE_LAMINATE.wearRemapMin).toBeCloseTo(0.02, 8);
+    expect(KIT_BLUE_LAMINATE.wearRemapMax).toBeCloseTo(0.4, 8);
+  });
+
+  it("reuses the plywood grain window (same official atlas)", () => {
+    expect(KIT_BLUE_LAMINATE.grainWindow).toEqual(KIT_RED_LAMINATE.grainWindow);
+    expect(KIT_SAFARI_MESH.grainWindow).toBeNull();
+    expect(KIT_REDLINE.grainWindow).toBeNull();
+    expect(KIT_REDLINE.uvAligned).toBe(true);
+    expect(KIT_HYDROPONIC.uvAligned).toBe(false);
   });
 });

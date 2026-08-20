@@ -21,6 +21,8 @@ M0–M6 stay as shipped (AK-47, 3 kits, stickers, share URL). New work is M7+.
 | milestone-4 | 3 official kits (44 / 122 / 14) |
 | milestone-5 | 4 sticker layers |
 | milestone-6 | Shareable URL + conservative IBL |
+| milestone-7 | Catalog HUD + wear clamp + views |
+| milestone-8 | Representative live paint styles (9 kits / 6 styles) |
 
 ## Gap vs a Skincraft-class site
 
@@ -45,7 +47,7 @@ Site chrome around the existing viewer.
 - `docs/MILESTONE_7.md` + baselines + tag `milestone-7`
 
 ### M8 — Paint-style coverage on AK
-Make more of the 61 kits actually look like themselves.
+**Done** (`milestone-8`): 9 live kits, 6 styles. Make more of the 61 kits actually look like themselves.
 
 - Implement remaining workshop styles we do not have (at least custom / gunsmith / anodized as documented)
 - Extract textures with Source2Viewer-CLI; gitignore official PNGs

@@ -1,6 +1,6 @@
 /**
- * Nested RGB colorization for styles 2 / 3
- * (hydrographic, spray-paint).
+ * Nested RGB colorization for styles 2 / 3 / 5
+ * (hydrographic, spray-paint, anodized multicolored).
  *
  *   color = Color0
  *   color = mix(color, Color1, pattern.r)
@@ -16,8 +16,10 @@
  * Color0 charcoal + Color1 red *is* the laminate.
  *
  * Style 3 spray: wear multiplies pattern RGB *before* the nested mix.
- * Style 2 hydrographic: wears directly to the substrate (caller fades
- * the paint mask with the wear map); this function still applies grunge.
+ * Style 2 hydrographic and style 5 anodized: wear directly to the
+ * substrate (caller fades the paint mask); this function still applies
+ * grunge. Style 5 uses the same nested lerp + mask G/B as style 2
+ * (pattern.wiki); anodized coverage is the per-kit metal mask.
  *
  *   https://pattern.wiki/wiki/pattern_colors
  *   https://www.counter-strike.net/workshop/workshopfinishes/
@@ -72,7 +74,7 @@ export type NestedMixInput = {
 };
 
 /**
- * Painted albedo for styles 2/3 (linear). Caller still lerps with the
+ * Painted albedo for styles 2/3/5 (linear). Caller still lerps with the
  * original glTF albedo using the per-kit paint mask.
  */
 export function mixNestedAlbedo(input: NestedMixInput): RgbMut {
@@ -88,7 +90,7 @@ export function mixNestedAlbedo(input: NestedMixInput): RgbMut {
 
   let color: RgbMut = nestedRgbColorize(pattern, c0, c1, c2, c3);
 
-  if (style === 2) {
+  if (style === 2 || style === 5) {
     color = hydroMaskOverride(color, input.maskG ?? 0, input.maskB ?? 0, c2, c3);
   }
 

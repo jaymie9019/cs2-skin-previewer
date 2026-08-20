@@ -79,3 +79,107 @@ Copy into `assets/composite/`:
 | --- | --- | --- |
 | `weapon_rif_ak47_masks.png` | `.../composite_inputs/weapon_rif_ak47_masks_tga_dd37657.vtex` | Paint-by-number. R = Patina/anodized (metal). |
 | `weapon_rif_ak47_cavity.png` | `.../composite_inputs/weapon_rif_ak47_cavity_psd_952ab3.vtex` | Packed RGBA: R cavity, G AO, A no-paint. |
+
+## Safari Mesh — `sp_mesh_tan` / kit 72 / style 3 Spray-Paint
+
+```bash
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/sp_mesh_tan.vmat_c" \
+  -o /tmp/sp_mesh_tan
+```
+
+Copy into `assets/paints/sp_mesh_tan/`:
+
+| File | VPK source | Role |
+| --- | --- | --- |
+| `chainlink.png` | `.../paints/spray/chainlink_psd_f51b2b81.vtex` | Pattern RGB blend mask |
+
+vmat: `F_PAINT_STYLE` 2 (= items_game style 3), `g_flPatternTexCoordScale` 1.75,
+`g_vColor0..3` tan / charcoal / olive / khaki. No `g_flPaintRoughness` (viewer uses 0.6 spray default).
+
+## Blue Laminate — `hy_ak47lam_blue` / kit 226 / style 2 Hydrographic
+
+```bash
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/hy_ak47lam_blue.vmat_c" \
+  -o /tmp/hy_ak47lam_blue
+```
+
+Copy into `assets/paints/hy_ak47lam_blue/`:
+
+| File | VPK source | Role |
+| --- | --- | --- |
+| `laminate_ak47.png` | `.../paints/hydrographic/laminate_ak47_psd_2ce8f5f0.vtex` | UV-aligned hydrographic film (same compiled texture as kit 14) |
+
+vmat: `F_PAINT_STYLE` 1 (= items_game style 2), `g_bIgnoreWeaponSizeScale` 1,
+`g_flPaintRoughness` 0.45, `g_vColor0..3` charcoal / blue / tan / light blue.
+Wear remap 0.02–0.4. Same grain window as Red Laminate.
+
+## Redline — `cu_ak47_cobra` / kit 282 / style 7 Custom Paint Job
+
+```bash
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/cu_ak47_cobra.vmat_c" \
+  -o /tmp/cu_ak47_cobra
+```
+
+Copy into `assets/paints/cu_ak47_cobra/`:
+
+| File | VPK source | Role |
+| --- | --- | --- |
+| `elegantredv1_1.png` | `.../paints/custom/workshop/elegantredv1_1_tga_515b3d45.vtex` | UV-aligned custom albedo |
+
+vmat: `F_PAINT_STYLE` 6 (= items_game style 7), `g_bIgnoreWeaponSizeScale` 1,
+`g_flPaintMetalness` 1. Optional `elegantredv1_1_rough.png` is not loaded (M8 uses constant 0.4).
+
+## Hydroponic — `am_bamboo_jungle` / kit 456 / style 5 Anodized Multicolored
+
+```bash
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/am_bamboo_jungle.vmat_c" \
+  -o /tmp/am_bamboo_jungle
+```
+
+Copy into `assets/paints/am_bamboo_jungle/`:
+
+| File | VPK source | Role |
+| --- | --- | --- |
+| `bamboo_jungle.png` | `.../paints/anodized_multi/bamboo_jungle_psd_ed8ca5eb.vtex` | Pattern RGB blend mask |
+
+vmat: `F_PAINT_STYLE` 4 (= items_game style 5), `g_bIgnoreWeaponSizeScale` 1,
+`g_flPatternTexCoordScale` 1.4, `g_flPaintRoughness` 0.6,
+`g_vColor0..3` cream / red / gray / lime.
+
+## Fuel Injector — `gs_ak47_supercharged` / kit 524 / style 9 Gunsmith
+
+```bash
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/gs_ak47_supercharged.vmat_c" \
+  -o /tmp/gs_ak47_supercharged
+```
+
+Copy into `assets/paints/gs_ak47_supercharged/`:
+
+| File | VPK source | Role |
+| --- | --- | --- |
+| `ak47_supercharged.png` | `.../paints/gunsmith/workshop/ak47_supercharged_tga_ef27ba3e.vtex` | UV-aligned gunsmith albedo |
+
+vmat: `F_PAINT_STYLE` 8 (= items_game style 9), `g_bIgnoreWeaponSizeScale` 1,
+`g_flPaintRoughness` 0.4, `g_flPaintMetalness` 0. Extra masks/normal not loaded.
+
+## Bloodsport — `gs_ak47_bloodsport` / kit 639 / style 9 Gunsmith
+
+```bash
+$CLI -i $VPK -d --game $GI \
+  -f "materials/models/weapons/customization/paints/vmats/gs_ak47_bloodsport.vmat_c" \
+  -o /tmp/gs_ak47_bloodsport
+```
+
+Copy into `assets/paints/gs_ak47_bloodsport/`:
+
+| File | VPK source | Role |
+| --- | --- | --- |
+| `ak47_bloodsport.png` | `.../paints/gunsmith/workshop/ak47_bloodsport_tga_814c7428.vtex` | UV-aligned gunsmith albedo |
+
+vmat: `F_PAINT_STYLE` 8 (= items_game style 9), `g_bIgnoreWeaponSizeScale` 1,
+`g_flPaintRoughness` 0.4, `g_flPaintMetalness` 1. Wear remap 0–0.45.
